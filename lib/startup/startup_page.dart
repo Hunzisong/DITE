@@ -19,8 +19,9 @@ class StartupPage extends StatelessWidget {
               )),
               SizedBox(
                 height: 280,
-                child: Icon(Icons.headset_off,
-                    size: 180, color: Colors.blueAccent),
+                child: Image(
+                  image: AssetImage('images/carefordeaf.png'),
+                ),
               ),
               UserButton(
                 text: 'Login here!',
