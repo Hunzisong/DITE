@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:heard/login.dart';
-import 'package:heard/navigation.dart';
+import 'package:heard/startup/login.dart';
+import 'package:heard/home/navigation.dart';
+import 'package:heard/startup/startup_page.dart';
 
 void main() => runApp(App());
 
@@ -9,7 +10,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Navigation(),
+      home: StartupPage(),
     );
   }
 }

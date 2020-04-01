@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:heard/home.dart';
-import 'package:heard/schedule.dart';
-import 'package:heard/settings.dart';
-import 'package:heard/transaction.dart';
+import 'package:heard/home/home.dart';
+import 'package:heard/home/schedule.dart';
+import 'package:heard/home/settings.dart';
+import 'package:heard/home/transaction.dart';
 
 class Navigation extends StatefulWidget {
   @override
