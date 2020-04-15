@@ -1,74 +1,51 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:heard/constants.dart';
 import 'package:heard/startup/login.dart';
+import 'package:heard/widgets/widgets.dart';
 
 class StartupPage extends StatelessWidget {
-  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
         body: Padding(
-          padding: EdgeInsets.symmetric(vertical: 55.0, horizontal: 30.0),
+          padding: Paddings.startupMain,
           child: ListView(
             physics: NeverScrollableScrollPhysics(),
             children: <Widget>[
-              Center(
-                  child: Text(
-                'HEARD',
-                style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
-              )),
               SizedBox(
-                height: 280,
+                height: Dimensions.d_15,
+              ),
+              Container(
+                padding: Paddings.vertical_15,
+                height: Dimensions.d_280,
                 child: Image(
-                  image: AssetImage('images/carefordeaf.png'),
+                  image: AssetImage('images/diteLogo.png'),
                 ),
               ),
+              SizedBox(
+                height: Dimensions.d_30,
+              ),
               UserButton(
-                text: 'Login here!',
-                color: Colors.grey[350],
+                text: 'Log Masuk Sini!',
+                height: Dimensions.d_65,
+                color: Colours.grey,
                 onClick: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Login()),
+                    CupertinoPageRoute(builder: (context) => Login()),
                   );
                 },
               ),
               UserButton(
-                text: 'New? Sign up now!',
-                color: Colors.blue[200],
+                text: 'Daftar Sini!',
+                height: Dimensions.d_65,
+                color: Colours.blue,
                 onClick: () {},
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class UserButton extends StatelessWidget {
-  final String text;
-  final Color color;
-  final Function onClick;
-  UserButton({this.text, this.color, this.onClick});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 18, horizontal: 5),
-      child: ButtonTheme(
-        height: 60.0,
-        minWidth: double.infinity,
-        child: RaisedButton(
-          elevation: 5.0,
-          color: color,
-          onPressed: onClick,
-          child: Text(
-            text,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
-          ),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
         ),
       ),
     );
