@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 
 class Paddings {
   static EdgeInsetsGeometry startupMain = EdgeInsets.symmetric(vertical: 50.0, horizontal: 30.0);
+  static EdgeInsetsGeometry signUpPage = EdgeInsets.symmetric(vertical: 35.0, horizontal: 30.0);
   static EdgeInsetsGeometry horizontal_5 = EdgeInsets.symmetric(horizontal: 5.0);
   static EdgeInsetsGeometry horizontal_20 = EdgeInsets.symmetric(horizontal: 20.0);
+  static EdgeInsetsGeometry vertical_5 = EdgeInsets.symmetric(vertical: 5.0);
   static EdgeInsetsGeometry vertical_15 = EdgeInsets.symmetric(vertical: 15.0);
+  static EdgeInsetsGeometry vertical_18 = EdgeInsets.symmetric(vertical: 18.0);
 }
 
 class Dimensions {
@@ -38,3 +41,5 @@ class Colours {
   static Color success = Color(0xFF0AC380);
   static Color fail = Colors.redAccent;
 }
+
+enum gender {male, female}
