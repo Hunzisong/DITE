@@ -3,7 +3,15 @@ import 'package:heard/constants.dart';
 import 'package:heard/home/navigation.dart';
 import 'package:heard/widgets/widgets.dart';
 
-class Login extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  TextEditingController phoneNumberText = TextEditingController();
+  TextEditingController passwordText = TextEditingController();
+
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
@@ -19,16 +27,21 @@ class Login extends StatelessWidget {
                   children: <Widget>[
                     SizedBox(
                       height: Dimensions.d_140,
-                      child: Image.asset(
-                        'images/diteLogo.png',
+                      child: Hero(
+                        tag: 'appLogo',
+                        child: Image(
+                          image: AssetImage('images/diteLogo.png'),
+                        ),
                       ),
                     ),
                     SizedBox(height: Dimensions.d_30),
                     InputField(
-                      labelText: 'Phone Number',
+                      controller: phoneNumberText,
+                      labelText: 'Nombor Telefon',
                     ),
                     InputField(
-                      labelText: 'Password',
+                      controller: passwordText,
+                      labelText: 'Kata Laluan',
                       isPassword: true,
                     ),
                     SizedBox(height: Dimensions.d_15),
@@ -40,16 +53,24 @@ class Login extends StatelessWidget {
                           context,
                           MaterialPageRoute(builder: (context) => Navigation()),
                         );
+                        phoneNumberText.dispose();
+                        passwordText.dispose();
+                        Navigator.pop(context);
                       },
                     ),
                     UserButton(
                       text: 'Log Masuk Sebagai BIM',
                       color: Colours.lightBlue,
                       onClick: () {
+                        /// EXAMPLE: How to obtain the text from text field to use for verification
+                        print('phone number: ${phoneNumberText.text}\npassword: ${passwordText.text}');
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => Navigation()),
                         );
+                        phoneNumberText.dispose();
+                        passwordText.dispose();
+                        Navigator.pop(context);
                       },
                     ),
                     Padding(
@@ -57,7 +78,7 @@ class Login extends StatelessWidget {
                       child: GestureDetector(
                         onTap: () {},
                         child: Text(
-                          'I\'ve forgot my password',
+                          'Saya terlupa kata laluan',
                           style: TextStyle(
                               color: Colours.darkBlue,
                               decoration: TextDecoration.underline,
