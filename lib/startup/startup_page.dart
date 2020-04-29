@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
-import 'package:heard/startup/login.dart';
+import 'package:heard/startup/login_page.dart';
+import 'package:heard/startup/signup_page.dart';
 import 'package:heard/widgets/widgets.dart';
 
 class StartupPage extends StatelessWidget {
@@ -20,8 +21,11 @@ class StartupPage extends StatelessWidget {
               Container(
                 padding: Paddings.vertical_15,
                 height: Dimensions.d_280,
-                child: Image(
-                  image: AssetImage('images/diteLogo.png'),
+                child: Hero(
+                  tag: 'appLogo',
+                  child: Image(
+                    image: AssetImage('images/diteLogo.png'),
+                  ),
                 ),
               ),
               SizedBox(
@@ -34,7 +38,7 @@ class StartupPage extends StatelessWidget {
                 onClick: () {
                   Navigator.push(
                     context,
-                    CupertinoPageRoute(builder: (context) => Login()),
+                    MaterialPageRoute(builder: (context) => LoginPage()),
                   );
                 },
               ),
@@ -42,7 +46,12 @@ class StartupPage extends StatelessWidget {
                 text: 'Daftar Sini!',
                 height: Dimensions.d_65,
                 color: Colours.blue,
-                onClick: () {},
+                onClick: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SignUpPage()),
+                  );
+                },
               ),
             ],
           ),
