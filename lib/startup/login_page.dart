@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
 import 'package:heard/home/navigation.dart';
+import 'package:heard/startup/verification_page.dart';
 import 'package:heard/widgets/widgets.dart';
+import 'package:heard/services/auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -9,11 +12,15 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final formKey = new GlobalKey<FormState>();
   TextEditingController phoneNumberText = TextEditingController();
   TextEditingController passwordText = TextEditingController();
+  String verificationId;
+  bool codeSent = false;
 
   Widget build(BuildContext context) {
-    return SafeArea(
+    return Form(
+      key: formKey,
       child: Scaffold(
           backgroundColor: Colours.white,
           body: Padding(
@@ -49,13 +56,9 @@ class _LoginPageState extends State<LoginPage> {
                       text: 'Log Masuk Sebagai Pengguna',
                       color: Colours.grey,
                       onClick: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Navigation()),
-                        );
-                        phoneNumberText.dispose();
-                        passwordText.dispose();
-                        Navigator.pop(context);
+                        verifyPhone(phoneNumberText.text);
+                        //phoneNumberText.dispose();
+                        //passwordText.dispose();
                       },
                     ),
                     UserButton(
@@ -68,8 +71,8 @@ class _LoginPageState extends State<LoginPage> {
                           context,
                           MaterialPageRoute(builder: (context) => Navigation()),
                         );
-                        phoneNumberText.dispose();
-                        passwordText.dispose();
+                        //phoneNumberText.dispose();
+                        //passwordText.dispose();
                         Navigator.pop(context);
                       },
                     ),
@@ -93,5 +96,47 @@ class _LoginPageState extends State<LoginPage> {
             ),
           )),
     );
+  }
+
+  Future<void> verifyPhone(phoneNo) async {
+    final PhoneVerificationCompleted verified = (AuthCredential authResult) {
+      AuthService().signIn(context, authResult);
+    };
+
+    final PhoneVerificationFailed verificationFailed =
+        (AuthException authException) {
+      debugPrint('${authException.message}');
+    };
+
+    final PhoneCodeSent smsSent = (String verId, [int forceResend]) {
+      this.verificationId = verId;
+      setState(() {
+        this.codeSent = true;
+      });
+    };
+
+    final PhoneCodeAutoRetrievalTimeout autoTimeout = (String verId) {
+      this.verificationId = verId;
+      setState(() {
+        this.codeSent = true;
+      });
+    };
+
+    FirebaseAuth.instance.verifyPhoneNumber (
+        phoneNumber: phoneNo,
+        timeout: const Duration(seconds: 5),
+        verificationCompleted: verified,
+        verificationFailed: verificationFailed,
+        codeSent: smsSent,
+        codeAutoRetrievalTimeout: autoTimeout
+    );
+
+    if(codeSent) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) =>
+              VerificationPage(verificationId: this.verificationId)
+          ));
+    }
   }
 }
