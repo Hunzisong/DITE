@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
 import 'package:heard/widgets/widgets.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:heard/services/auth_service.dart';
+import 'package:heard/startup/verification_page.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -11,6 +14,8 @@ class _SignUpPageState extends State<SignUpPage> {
   ///todo: change this variable to be more dynamic in the future
   ///change the variable to see difference between SLI and normal user.
   bool isSLI = true;
+  String verificationId;
+  bool codeSent = false;
 
   gender _gender;
 
@@ -44,16 +49,6 @@ class _SignUpPageState extends State<SignUpPage> {
                     InputField(
                       controller: TextFieldMap.phoneNumber,
                       labelText: 'Nombor Telefon',
-                    ),
-                    InputField(
-                      controller: TextFieldMap.password,
-                      labelText: 'Kata Laluan',
-                      isPassword: true,
-                    ),
-                    InputField(
-                      controller: TextFieldMap.confirmPassword,
-                      labelText: 'Pengesahan Kata Laluan',
-                      isPassword: true,
                     ),
                     SizedBox(height: Dimensions.d_15),
                     isSLI
@@ -140,7 +135,9 @@ class _SignUpPageState extends State<SignUpPage> {
                     UserButton(
                       text: 'Daftar Sekarang',
                       color: Colours.blue,
-                      onClick: () {},
+                      onClick: () {
+                        verifyPhone(TextFieldMap.phoneNumber.text);
+                      },
                     ),
                   ],
                 ),
@@ -148,6 +145,48 @@ class _SignUpPageState extends State<SignUpPage> {
             ],
           )),
     );
+  }
+
+  Future<void> verifyPhone(phoneNo) async {
+    final PhoneVerificationCompleted verified = (AuthCredential authResult) {
+      AuthService().signIn(context, authResult);
+    };
+
+    final PhoneVerificationFailed verificationFailed =
+        (AuthException authException) {
+      debugPrint('${authException.message}');
+    };
+
+    final PhoneCodeSent smsSent = (String verId, [int forceResend]) {
+      this.verificationId = verId;
+      setState(() {
+        this.codeSent = true;
+      });
+    };
+
+    final PhoneCodeAutoRetrievalTimeout autoTimeout = (String verId) {
+      this.verificationId = verId;
+      setState(() {
+        this.codeSent = true;
+      });
+    };
+
+    FirebaseAuth.instance.verifyPhoneNumber (
+        phoneNumber: phoneNo,
+        timeout: const Duration(seconds: 5),
+        verificationCompleted: verified,
+        verificationFailed: verificationFailed,
+        codeSent: smsSent,
+        codeAutoRetrievalTimeout: autoTimeout
+    );
+
+    if(codeSent) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) =>
+              VerificationPage(verificationId: this.verificationId)
+          ));
+    }
   }
 }
 
@@ -196,8 +235,6 @@ class TextFieldMap {
   static TextEditingController firstName = TextEditingController();
   static TextEditingController lastName = TextEditingController();
   static TextEditingController phoneNumber = TextEditingController();
-  static TextEditingController password = TextEditingController();
-  static TextEditingController confirmPassword = TextEditingController();
 }
 
 class CheckBoxMap {
