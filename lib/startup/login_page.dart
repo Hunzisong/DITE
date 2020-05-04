@@ -4,6 +4,7 @@ import 'package:heard/startup/verification_page.dart';
 import 'package:heard/widgets/widgets.dart';
 import 'package:heard/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -14,6 +15,7 @@ class _LoginPageState extends State<LoginPage> {
   final formKey = new GlobalKey<FormState>();
   TextEditingController phoneNumberText = TextEditingController();
   TextEditingController passwordText = TextEditingController();
+  bool showLoadingAnimation = false;
   String verificationId;
   bool codeSent = false;
 
@@ -22,63 +24,71 @@ class _LoginPageState extends State<LoginPage> {
       key: formKey,
       child: Scaffold(
           backgroundColor: Colours.white,
-          body: ListView(
-            children: <Widget>[
-              Padding(
-                padding: Paddings.startupMain,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(
-                      height: Dimensions.d_140,
-                      child: Hero(
-                        tag: 'appLogo',
-                        child: Image(
-                          image: AssetImage('images/diteLogo.png'),
+          body: ModalProgressHUD(
+            inAsyncCall: showLoadingAnimation,
+            color: Colours.darkGrey,
+            child: ListView(
+              children: <Widget>[
+                Padding(
+                  padding: Paddings.startupMain,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(
+                        height: Dimensions.d_140,
+                        child: Hero(
+                          tag: 'appLogo',
+                          child: Image(
+                            image: AssetImage('images/diteLogo.png'),
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: Dimensions.d_30),
-                    InputField(
-                      controller: phoneNumberText,
-                      labelText: 'Nombor Telefon',
-                    ),
-                    SizedBox(height: Dimensions.d_15),
-                    UserButton(
-                      text: 'Log Masuk Sebagai Pengguna',
-                      color: Colours.grey,
-                      onClick: () async {
-                        await verifyPhone(phoneNumberText.text);
-                      },
-                    ),
-                    UserButton(
-                      text: 'Log Masuk Sebagai JBIM',
-                      color: Colours.lightBlue,
-                      onClick: () async {
-                        /// EXAMPLE: How to obtain the text from text field to use for verification
-                        print('phone number: ${phoneNumberText.text}\npassword: ${passwordText.text}');
-                        await verifyPhone(phoneNumberText.text);
-                      },
-                    ),
-                    Padding(
-                      padding: Paddings.vertical_15,
-                      child: GestureDetector(
-                        onTap: () {},
-                        child: Text(
-                          'Saya terlupa kata laluan',
-                          style: TextStyle(
-                              color: Colours.darkBlue,
-                              decoration: TextDecoration.underline,
-                              fontWeight: FontWeight.bold,
-                              fontSize: FontSizes.smallerText),
+                      SizedBox(height: Dimensions.d_30),
+                      InputField(
+                        controller: phoneNumberText,
+                        labelText: 'Nombor Telefon',
+                      ),
+                      SizedBox(height: Dimensions.d_15),
+                      UserButton(
+                        text: 'Log Masuk Sebagai Pengguna',
+                        color: Colours.grey,
+                        onClick: () async {
+                          setState(() {
+                            showLoadingAnimation = true;
+                          });
+                          await verifyPhone(phoneNumberText.text);
+                        },
+                      ),
+                      UserButton(
+                        text: 'Log Masuk Sebagai JBIM',
+                        color: Colours.lightBlue,
+                        onClick: () async {
+                          setState(() {
+                            showLoadingAnimation = true;
+                          });
+                          await verifyPhone(phoneNumberText.text);
+                        },
+                      ),
+                      Padding(
+                        padding: Paddings.vertical_15,
+                        child: GestureDetector(
+                          onTap: () {},
+                          child: Text(
+                            'Saya terlupa kata laluan',
+                            style: TextStyle(
+                                color: Colours.darkBlue,
+                                decoration: TextDecoration.underline,
+                                fontWeight: FontWeight.bold,
+                                fontSize: FontSizes.smallerText),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           )),
     );
   }
