@@ -21,7 +21,6 @@ class _VerificationPageState extends State<VerificationPage> {
         child: Scaffold(
             backgroundColor: Colours.white,
             body: ModalProgressHUD(
-              color: Colours.darkGrey,
               inAsyncCall: showLoadingAnimation,
               child: ListView(
                 physics: NeverScrollableScrollPhysics(),

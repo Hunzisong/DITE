@@ -26,7 +26,6 @@ class _LoginPageState extends State<LoginPage> {
           backgroundColor: Colours.white,
           body: ModalProgressHUD(
             inAsyncCall: showLoadingAnimation,
-            color: Colours.darkGrey,
             child: ListView(
               children: <Widget>[
                 Padding(
