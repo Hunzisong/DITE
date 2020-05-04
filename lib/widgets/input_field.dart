@@ -5,18 +5,21 @@ class InputField extends StatelessWidget {
   final isPassword;
   final labelText;
   final keyboardType;
+  final isShortInput;
   final TextEditingController controller;
 
-  InputField({this.isPassword = false, this.labelText = '', this.keyboardType, @required this.controller});
+  InputField({this.isPassword = false, this.labelText = '', this.keyboardType, this.isShortInput = false, @required this.controller});
 
   Widget build(BuildContext context) {
     return Padding(
-      padding: Paddings.vertical_18,
+      padding: isShortInput ? EdgeInsets.symmetric(vertical: Dimensions.d_30, horizontal: Dimensions.d_100) : Paddings.vertical_18,
       child: Material(
+        color: Colours.white,
         child: TextField(
           controller: controller,
           obscureText: isPassword,
           keyboardType: keyboardType,
+          textAlign: isShortInput ? TextAlign.center : TextAlign.start,
           decoration: InputDecoration(
             contentPadding: Paddings.horizontal_5,
             labelText: labelText,
