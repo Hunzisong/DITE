@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
-import 'package:heard/home/navigation.dart';
 import 'package:heard/startup/verification_page.dart';
 import 'package:heard/widgets/widgets.dart';
 import 'package:heard/services/auth_service.dart';
@@ -23,12 +22,11 @@ class _LoginPageState extends State<LoginPage> {
       key: formKey,
       child: Scaffold(
           backgroundColor: Colours.white,
-          body: Padding(
-            padding: Paddings.startupMain,
-            child: ListView(
-              physics: NeverScrollableScrollPhysics(),
-              children: <Widget>[
-                Column(
+          body: ListView(
+            children: <Widget>[
+              Padding(
+                padding: Paddings.startupMain,
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -46,34 +44,21 @@ class _LoginPageState extends State<LoginPage> {
                       controller: phoneNumberText,
                       labelText: 'Nombor Telefon',
                     ),
-                    InputField(
-                      controller: passwordText,
-                      labelText: 'Kata Laluan',
-                      isPassword: true,
-                    ),
                     SizedBox(height: Dimensions.d_15),
                     UserButton(
                       text: 'Log Masuk Sebagai Pengguna',
                       color: Colours.grey,
-                      onClick: () {
-                        verifyPhone(phoneNumberText.text);
-                        //phoneNumberText.dispose();
-                        //passwordText.dispose();
+                      onClick: () async {
+                        await verifyPhone(phoneNumberText.text);
                       },
                     ),
                     UserButton(
-                      text: 'Log Masuk Sebagai BIM',
+                      text: 'Log Masuk Sebagai JBIM',
                       color: Colours.lightBlue,
-                      onClick: () {
+                      onClick: () async {
                         /// EXAMPLE: How to obtain the text from text field to use for verification
                         print('phone number: ${phoneNumberText.text}\npassword: ${passwordText.text}');
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Navigation()),
-                        );
-                        //phoneNumberText.dispose();
-                        //passwordText.dispose();
-                        Navigator.pop(context);
+                        await verifyPhone(phoneNumberText.text);
                       },
                     ),
                     Padding(
@@ -92,10 +77,19 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ],
                 ),
-              ],
-            ),
+              ),
+            ],
           )),
     );
+  }
+
+  void pushVerificationPage() {
+    Navigator.pop(context);
+    Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) =>
+            VerificationPage(verificationId: this.verificationId)
+        ));
   }
 
   Future<void> verifyPhone(phoneNo) async {
@@ -113,6 +107,7 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         this.codeSent = true;
       });
+      pushVerificationPage();
     };
 
     final PhoneCodeAutoRetrievalTimeout autoTimeout = (String verId) {
@@ -122,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
       });
     };
 
-    FirebaseAuth.instance.verifyPhoneNumber (
+    await FirebaseAuth.instance.verifyPhoneNumber (
         phoneNumber: phoneNo,
         timeout: const Duration(seconds: 5),
         verificationCompleted: verified,
@@ -130,13 +125,5 @@ class _LoginPageState extends State<LoginPage> {
         codeSent: smsSent,
         codeAutoRetrievalTimeout: autoTimeout
     );
-
-    if(codeSent) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) =>
-              VerificationPage(verificationId: this.verificationId)
-          ));
-    }
   }
 }
