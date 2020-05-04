@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 
 class Paddings {
   static EdgeInsetsGeometry startupMain = EdgeInsets.symmetric(vertical: 50.0, horizontal: 30.0);
-  static EdgeInsetsGeometry signUpPage = EdgeInsets.symmetric(vertical: 35.0, horizontal: 30.0);
+  static EdgeInsetsGeometry signUpPage = EdgeInsets.only(bottom: 35.0, left: 30.0, right: 30.0);
   static EdgeInsetsGeometry horizontal_5 = EdgeInsets.symmetric(horizontal: 5.0);
   static EdgeInsetsGeometry horizontal_20 = EdgeInsets.symmetric(horizontal: 20.0);
   static EdgeInsetsGeometry vertical_5 = EdgeInsets.symmetric(vertical: 5.0);
   static EdgeInsetsGeometry vertical_15 = EdgeInsets.symmetric(vertical: 15.0);
   static EdgeInsetsGeometry vertical_18 = EdgeInsets.symmetric(vertical: 18.0);
+  static EdgeInsetsGeometry vertical_35 = EdgeInsets.symmetric(vertical: 35.0);
 }
 
 class Dimensions {
@@ -19,6 +20,7 @@ class Dimensions {
   static double d_30 = 30.0;
   static double d_45 = 45.0;
   static double d_65 = 65.0;
+  static double d_100 = 100.0;
   static double d_140 = 140.0;
   static double d_280 = 280.0;
 }
