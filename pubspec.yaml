@@ -28,6 +28,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   firebase_auth: ^0.16.0
+  modal_progress_hud: ^0.1.3
 
 
 
