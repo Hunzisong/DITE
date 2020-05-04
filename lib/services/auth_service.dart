@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:heard/home/navigation.dart';
 import 'package:heard/startup/startup_page.dart';
 
@@ -23,6 +22,7 @@ class AuthService {
       print("Error caught signing in");
     }).then((user) {
       if (user != null) {
+        Navigator.pop(context);
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => Navigation()),
