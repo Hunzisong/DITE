@@ -84,6 +84,19 @@ class _HomeState extends State<Home> {
                               subtitle: Text(newsFeed[index].subtitle),
                             ));
                       })),
+
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: RaisedButton(
+                  onPressed: (){},
+                  child: const Icon(
+                    Icons.videocam,
+                    color: Colors.white,
+                    size: 35.0,
+                  ),
+                  color: Colors.blue,
+                ),
+              ),
             ],
           ),
         ),
