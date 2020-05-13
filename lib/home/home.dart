@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heard/Videochatcomponents/index.dart';  // the video call join page
 
 class Home extends StatefulWidget {
   @override
@@ -88,7 +89,14 @@ class _HomeState extends State<Home> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: RaisedButton(
-                  onPressed: (){},
+                  onPressed: (){
+                    Navigator.push(
+                      context,
+
+                      // move to the video call page
+                      MaterialPageRoute(builder: (context) => IndexPage()),
+                    );
+                  },
                   child: const Icon(
                     Icons.videocam,
                     color: Colors.white,
