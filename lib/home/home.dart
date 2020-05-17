@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:heard/Videochatcomponents/index.dart';  // the video call join page
+import 'package:heard/video_chat_components/index.dart';  // the video call join page
 
 class Home extends StatefulWidget {
   @override
