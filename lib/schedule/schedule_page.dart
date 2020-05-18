@@ -1,11 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
-import 'package:heard/widgets/widgets.dart';
-
-import '../constants.dart';
-import '../constants.dart';
-import '../constants.dart';
 
 class SchedulePage extends StatefulWidget {
   @override
@@ -15,89 +9,165 @@ class SchedulePage extends StatefulWidget {
 class _SchedulePageState extends State<SchedulePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-            "Jadual",
-          style: TextStyle(
-            fontSize: FontSizes.title,
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colours.orange,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios, color: Colours.white),
+            onPressed: () {
+              Navigator.pop(context);
+            },
           ),
+          title: Text('Jadual',
+            style: TextStyle(
+                fontSize: FontSizes.mainTitle,
+                fontWeight: FontWeight.bold,
+                color: Colours.white),
+          ),
+          centerTitle: true,
+          elevation: 0.0,
         ),
-        centerTitle: true,
-        backgroundColor:Colours.blue,
-      ),
-      body: ListView(
-        children: <Widget>[
-          Column(
-          crossAxisAlignment:CrossAxisAlignment.stretch,
+        backgroundColor: Colours.white,
+        body: ListView(
           children: <Widget>[
-            Container(
-              color: Colours.blue,
-              height: Dimensions.d_45,
-              child: Row(
-                mainAxisAlignment:MainAxisAlignment.spaceBetween ,
-                children: <Widget>[
-                  Text(
-                    '  Isnin',
-                    style: TextStyle(
-                      fontSize: FontSizes.title,
-                      fontWeight: FontWeight.bold,
-                      color: Colours.white,
-                    ),
-                  ),
-                  IconButton(
-                      icon: Icon(
-                        Icons.add_circle,
-                        color: Colours.white,
-                      ),
-                      onPressed: (){}
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              color: Colours.white,
-              height: Dimensions.d_100,
-              child: Row(
-                children: <Widget>[
-                  Container(
-                    child:Row(
-                      mainAxisAlignment:MainAxisAlignment.spaceBetween ,
-                      children: <Widget>[
-                        Text(
-                          "1000 - 1230",
-                          style: TextStyle(
-                            fontSize: FontSizes.buttonText,
-                            color: Colours.white,
-                          ),
-                        ),
-                        IconButton(
-                            icon: Icon(
-                              Icons.cancel,
-                              color: Colours.white,
-                              size: Dimensions.d_30,
-                            ),
-                            onPressed: (){}
-                        ),
-                      ],
-                    ),
-                    decoration: BoxDecoration(
-                      color:Colours.lightBlue,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(30.0)
-                      ),
-                    ),
-                    margin: EdgeInsets.all(15.0),
-                    padding: EdgeInsets.all(10.0),
-                  ),
-                ],
-              ),
-            ),
-          ],
+            Column(
+            crossAxisAlignment:CrossAxisAlignment.stretch,
+            children: <Widget>[
+              ScheduleSlot(title: 'Isnin', timeSlots: [
+                '1000 - 1230',
+                '1100 - 1330',
+                '1100 - 1430',
+                '1100 - 1530',
+              ],),
+              ScheduleSlot(title: 'Selesa', timeSlots: [
+                '1100 - 1630',
+                '1100 - 1730',
+              ],),
+              ScheduleSlot(title: 'Rabu', timeSlots: [
+                '1000 - 1630',
+              ],),
+              ScheduleSlot(title: 'Khamis'),
+              ScheduleSlot(title: 'Jumaat', timeSlots: [
+                '1000 - 1230',
+                '1000 - 1030',
+                '1130 - 1330',
+              ],),
+            ],
+          ),
+        ]
         ),
-      ]
       ),
     );
   }
 }
 
+class ScheduleSlot extends StatelessWidget {
+  final String title;
+  final List<String> timeSlots;
+
+  ScheduleSlot({this.title, this.timeSlots = const []});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        Card(
+          color: Colours.lightOrange,
+          shape: ContinuousRectangleBorder(
+            borderRadius: BorderRadius.zero,
+          ) ,
+          borderOnForeground: true,
+          elevation: 0,
+          margin: EdgeInsets.fromLTRB(0,0,0,0),
+          child: ListTile(
+            title: Padding(
+              padding: Paddings.horizontal_5,
+              child: Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: FontSizes.title,
+                        fontWeight: FontWeight.bold,
+                        color: Colours.darkGrey,
+                      ),
+                    ),
+            ),
+            trailing: IconButton(
+                    icon: Icon(
+                      Icons.add_circle,
+                      color: Colours.darkGrey,
+                      size: Dimensions.d_30,
+                    ),
+                    onPressed: (){}
+                ),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: Dimensions.d_15, vertical: Dimensions.d_10),
+          child: TimeSlots(timeSlots: timeSlots,),
+        ),
+      ],
+    );
+  }
+}
+
+
+class TimeSlotList extends StatefulWidget {
+  final List<String> timeSlots;
+
+  TimeSlotList({this.timeSlots});
+
+  @override
+  State createState() => TimeSlotListState();
+}
+
+class TimeSlotListState extends State<TimeSlotList> {
+  Iterable<Widget> get timeSlotWidgets sync* {
+    for (final String timeSlot in widget.timeSlots) {
+      yield Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: Chip(
+          deleteIconColor: Colours.white,
+          backgroundColor: Colours.orange,
+          label: Text(timeSlot),
+          labelStyle: TextStyle(
+            fontSize: FontSizes.normal,
+            fontWeight: FontWeight.w500,
+            color: Colours.darkGrey
+          ),
+          onDeleted: () {
+            setState(() {
+              widget.timeSlots.removeWhere((String entry) {
+                return entry == timeSlot;
+              });
+            });
+          },
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      children: timeSlotWidgets.toList(),
+    );
+  }
+}
+
+class TimeSlots extends StatefulWidget {
+  final List<String> timeSlots;
+
+  TimeSlots({this.timeSlots});
+
+  @override
+  _TimeSlotsState createState() => _TimeSlotsState();
+}
+
+class _TimeSlotsState extends State<TimeSlots> {
+  @override
+  Widget build(BuildContext context) {
+    return TimeSlotList(timeSlots: widget.timeSlots,);
+  }
+}

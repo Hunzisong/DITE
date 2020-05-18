@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heard/schedule/schedule_page.dart';
 
 class Schedule extends StatefulWidget {
   @override
@@ -8,6 +9,6 @@ class Schedule extends StatefulWidget {
 class _ScheduleState extends State<Schedule> {
   @override
   Widget build(BuildContext context) {
-    return Text("This page for schedule");
+    return SchedulePage();
   }
 }
