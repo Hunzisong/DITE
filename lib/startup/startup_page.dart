@@ -46,7 +46,7 @@ class StartupPage extends StatelessWidget {
                   UserButton(
                     text: 'Daftar Sebagai Pengguna',
                     height: Dimensions.d_65,
-                    color: Colours.lightBlue,
+                    color: Colours.blue,
                     onClick: () {
                       Navigator.push(
                         context,
@@ -57,7 +57,7 @@ class StartupPage extends StatelessWidget {
                   UserButton(
                     text: 'Daftar Sebagai JBIM',
                     height: Dimensions.d_65,
-                    color: Colours.blue,
+                    color: Colours.orange,
                     onClick: () {
                       Navigator.push(
                         context,

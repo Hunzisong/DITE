@@ -51,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
                       SizedBox(height: Dimensions.d_15),
                       UserButton(
                         text: 'Log Masuk Sebagai Pengguna',
-                        color: Colours.grey,
+                        color: Colours.blue,
                         onClick: () async {
                           setState(() {
                             showLoadingAnimation = true;
@@ -61,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       UserButton(
                         text: 'Log Masuk Sebagai JBIM',
-                        color: Colours.lightBlue,
+                        color: Colours.orange,
                         onClick: () async {
                           setState(() {
                             showLoadingAnimation = true;
