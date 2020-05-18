@@ -20,14 +20,17 @@ class Dimensions {
   static double d_30 = 30.0;
   static double d_45 = 45.0;
   static double d_65 = 65.0;
+  static double d_85 = 85.0;
   static double d_100 = 100.0;
   static double d_140 = 140.0;
   static double d_280 = 280.0;
 }
 
 class FontSizes {
-  static double title = 25.0;
+  static double mainTitle = 25.0;
+  static double title = 20.0;
   static double buttonText = 20.0;
+  static double biggerText = 18.0;
   static double normal = 16.0;
   static double smallerText = 15.0;
 }
@@ -40,7 +43,7 @@ class Colours {
   static Color lightOrange = Color(0xFFFFE2D8);
   static Color orange = Color(0xFFFFA382);
   static Color grey = Colors.grey[350];
-  static Color darkGrey = Colors.grey[600];
+  static Color darkGrey = Colors.grey[800];
   static Color black = Colors.black87;
   static Color success = Color(0xFF0AC380);
   static Color fail = Colors.redAccent;
