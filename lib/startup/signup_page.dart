@@ -4,6 +4,7 @@ import 'package:heard/widgets/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:heard/services/auth_service.dart';
 import 'package:heard/startup/verification_page.dart';
+import 'package:http/http.dart' as http;
 
 class SignUpPage extends StatefulWidget {
   final bool isSLI;
@@ -34,11 +35,14 @@ class _SignUpPageState extends State<SignUpPage> {
     textFieldMap.disposeTexts();
   }
 
+  final globalKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     bool isSLI = widget.isSLI;
     return SafeArea(
       child: Scaffold(
+          key: globalKey,
           appBar: AppBar(
             backgroundColor: Colours.white,
             leading: IconButton(
@@ -50,7 +54,9 @@ class _SignUpPageState extends State<SignUpPage> {
             title: Text(
               isSLI ? 'Pendaftaran JBIM' : 'Pendaftaran',
               style: TextStyle(
-                  fontSize: FontSizes.title, fontWeight: FontWeight.bold, color: Colours.black),
+                  fontSize: FontSizes.title,
+                  fontWeight: FontWeight.bold,
+                  color: Colours.black),
             ),
             centerTitle: true,
             elevation: 0.0,
@@ -163,7 +169,27 @@ class _SignUpPageState extends State<SignUpPage> {
                       text: 'Daftar Sekarang',
                       color: Colours.blue,
                       onClick: () {
-                        verifyPhone(textFieldMap.phoneNumber.text);
+                        if (allFieldsFilled(isSLI) == false) {
+                          final termsConditionsSnackBar = SnackBar(
+                              content: Text(
+                                  'Sila isi bidang yang kosong dahulu'));
+                          globalKey.currentState
+                              .showSnackBar(termsConditionsSnackBar);
+                        }
+                        else if (checkBoxMap.termsAndConditions == false) {
+                          final termsConditionsSnackBar = SnackBar(
+                              content: Text(
+                                  'Sila setuju dengan terma dan syarat dahulu'));
+                          globalKey.currentState
+                              .showSnackBar(termsConditionsSnackBar);
+                        } else {
+                          verifyPhone(textFieldMap.phoneNumber.text);
+                          createNewUser(
+                              isSLI: isSLI,
+                              textInput: textFieldMap,
+                              checkInput: checkBoxMap,
+                              gender: _gender);
+                        }
                       },
                     ),
                   ],
@@ -174,13 +200,42 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
+  bool allFieldsFilled(bool isSLI) {
+    return !isSLI ? textFieldMap.phoneNumber.text.isNotEmpty &&
+        textFieldMap.lastName.text.isNotEmpty &&
+        textFieldMap.firstName.text.isNotEmpty :
+        textFieldMap.phoneNumber.text.isNotEmpty &&
+        textFieldMap.lastName.text.isNotEmpty &&
+        textFieldMap.firstName.text.isNotEmpty &&
+        _gender != null;
+  }
+
+  Future<void> createNewUser(
+      {bool isSLI,
+      TextFieldMap textInput,
+      CheckBoxMap checkInput,
+      gender gender}) async {
+    if (!isSLI) {
+//      var response = await http.post(
+//          'https://virtserver.swaggerhub.com/dite/heard/1.0.0/user/create',
+//          body: {
+//            'Authorization': 'test1',
+//            'first_name': textInput.firstName.text,
+//            'last_name': textInput.lastName.text,
+//            'phone_no': textInput.phoneNumber.text,
+//            'profile_pic': 'test1'
+//          });
+//      print('response ${response.statusCode}');
+    }
+  }
+
   void pushVerificationPage() {
     Navigator.pop(context);
     Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) =>
-            VerificationPage(verificationId: this.verificationId)
-        ));
+        MaterialPageRoute(
+            builder: (context) =>
+                VerificationPage(verificationId: this.verificationId)));
   }
 
   Future<void> verifyPhone(phoneNo) async {
