@@ -35,7 +35,7 @@ class _VerificationPageState extends State<VerificationPage> {
                             child: Text(
                               'Pengesahan Akaun',
                               style: TextStyle(
-                                  fontSize: FontSizes.title,
+                                  fontSize: FontSizes.mainTitle,
                                   fontWeight: FontWeight.bold,
                                   color: Colours.black),
                             ),

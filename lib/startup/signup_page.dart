@@ -54,7 +54,7 @@ class _SignUpPageState extends State<SignUpPage> {
             title: Text(
               isSLI ? 'Pendaftaran JBIM' : 'Pendaftaran',
               style: TextStyle(
-                  fontSize: FontSizes.title,
+                  fontSize: FontSizes.mainTitle,
                   fontWeight: FontWeight.bold,
                   color: Colours.black),
             ),
