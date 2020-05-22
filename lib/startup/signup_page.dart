@@ -169,6 +169,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       text: 'Daftar Sekarang',
                       color: Colours.blue,
                       onClick: () {
+
                         if (allFieldsFilled(isSLI) == false) {
                           final termsConditionsSnackBar = SnackBar(
                               content: Text(
@@ -183,6 +184,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           globalKey.currentState
                               .showSnackBar(termsConditionsSnackBar);
                         } else {
+                          createDialog(context);   // Dialog for confirmation, and navigate to verification page
                           verifyPhone(textFieldMap.phoneNumber.text);
                           createNewUser(
                               isSLI: isSLI,
@@ -332,4 +334,27 @@ class CheckBoxMap {
   bool hasExperience = false;
   bool isFluent = false;
   bool termsAndConditions = false;
+}
+
+createDialog(BuildContext context) {
+  return showDialog(context: context, builder: (context) {
+    return AlertDialog(
+      title: Text("Confirmation"),
+      content: Text("You've successfully created an account, please press Next to proceed to the verification page."),
+      actions: <Widget>[
+        MaterialButton(
+          elevation: 5.0,
+          color: Colours.grey,
+          child: Text('Next'),
+          onPressed: (){
+            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => VerificationPage()),
+            );
+          },
+        )
+      ],
+    );
+  });
 }
