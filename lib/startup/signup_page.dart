@@ -169,22 +169,22 @@ class _SignUpPageState extends State<SignUpPage> {
                       text: 'Daftar Sekarang',
                       color: Colours.blue,
                       onClick: () {
-
                         if (allFieldsFilled(isSLI) == false) {
                           final termsConditionsSnackBar = SnackBar(
-                              content: Text(
-                                  'Sila isi bidang yang kosong dahulu'));
+                              content:
+                                  Text('Sila isi bidang yang kosong dahulu'));
                           globalKey.currentState
                               .showSnackBar(termsConditionsSnackBar);
-                        }
-                        else if (checkBoxMap.termsAndConditions == false) {
+                        } else if (checkBoxMap.termsAndConditions == false) {
                           final termsConditionsSnackBar = SnackBar(
                               content: Text(
                                   'Sila setuju dengan terma dan syarat dahulu'));
                           globalKey.currentState
                               .showSnackBar(termsConditionsSnackBar);
                         } else {
-                          createDialog(context);   // Dialog for confirmation, and navigate to verification page
+                          createDialog(
+                              context: context,
+                              isSLI: isSLI); // Dialog for confirmation, and navigate to verification page
                           verifyPhone(textFieldMap.phoneNumber.text);
                           createNewUser(
                               isSLI: isSLI,
@@ -203,13 +203,14 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   bool allFieldsFilled(bool isSLI) {
-    return !isSLI ? textFieldMap.phoneNumber.text.isNotEmpty &&
-        textFieldMap.lastName.text.isNotEmpty &&
-        textFieldMap.firstName.text.isNotEmpty :
-        textFieldMap.phoneNumber.text.isNotEmpty &&
-        textFieldMap.lastName.text.isNotEmpty &&
-        textFieldMap.firstName.text.isNotEmpty &&
-        _gender != null;
+    return !isSLI
+        ? textFieldMap.phoneNumber.text.isNotEmpty &&
+            textFieldMap.lastName.text.isNotEmpty &&
+            textFieldMap.firstName.text.isNotEmpty
+        : textFieldMap.phoneNumber.text.isNotEmpty &&
+            textFieldMap.lastName.text.isNotEmpty &&
+            textFieldMap.firstName.text.isNotEmpty &&
+            _gender != null;
   }
 
   Future<void> createNewUser(
@@ -336,25 +337,64 @@ class CheckBoxMap {
   bool termsAndConditions = false;
 }
 
-createDialog(BuildContext context) {
-  return showDialog(context: context, builder: (context) {
-    return AlertDialog(
-      title: Text("Confirmation"),
-      content: Text("You've successfully created an account, please press Next to proceed to the verification page."),
-      actions: <Widget>[
-        MaterialButton(
-          elevation: 5.0,
-          color: Colours.grey,
-          child: Text('Next'),
-          onPressed: (){
-            Navigator.pop(context);
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => VerificationPage()),
-            );
-          },
-        )
-      ],
-    );
-  });
+createDialog({BuildContext context, bool isSLI}) {
+  return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return Dialog(
+          child: Container(
+            height: Dimensions.d_280,
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: Dimensions.d_15, horizontal: Dimensions.d_30),
+              child: ListView(
+                children: <Widget>[
+                  Padding(
+                    padding: Paddings.vertical_5,
+                    child: Text(
+                      "Pengesahan",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: FontSizes.title,
+                          color: Colours.darkGrey),
+                    ),
+                  ),
+                  SizedBox(
+                    height: Dimensions.d_30,
+                  ),
+                  Padding(
+                    padding: Paddings.horizontal_5,
+                    child: Text(
+                      'Daftar berjaya! Sila klik Teruskan untuk menyerus ke halaman pengesahan.',
+                      style: TextStyle(
+                          fontSize: FontSizes.biggerText, color: Colours.darkGrey),
+                    ),
+                  ),
+                  SizedBox(
+                    height: Dimensions.d_30,
+                  ),
+                  UserButton(
+                    text: 'Teruskan',
+                    color: isSLI ? Colours.orange : Colours.blue,
+                    onClick: () {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => VerificationPage()),
+                      );
+                    },
+                  )
+                ],
+              ),
+            ),
+          ),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(Dimensions.d_10))),
+          elevation: Dimensions.d_15,
+        );
+      });
 }
