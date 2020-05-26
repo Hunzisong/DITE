@@ -42,174 +42,166 @@ class _SignUpPageState extends State<SignUpPage> {
     bool isSLI = widget.isSLI;
     return SafeArea(
       child: Scaffold(
-          key: globalKey,
-          appBar: AppBar(
-            backgroundColor: Colours.white,
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back_ios, color: Colors.black),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            title: Text(
-              isSLI ? 'Pendaftaran JBIM' : 'Pendaftaran',
-              style: TextStyle(
-                  fontSize: FontSizes.mainTitle,
-                  fontWeight: FontWeight.bold,
-                  color: Colours.black),
-            ),
-            centerTitle: true,
-            elevation: 0.0,
-          ),
+        key: globalKey,
+        appBar: AppBar(
           backgroundColor: Colours.white,
-          body: ListView(
-            children: <Widget>[
-              Padding(
-                padding: Paddings.signUpPage,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    InputField(
-                      controller: textFieldMap.firstName,
-                      labelText: 'Nama Pertama',
-                    ),
-                    InputField(
-                      controller: textFieldMap.lastName,
-                      labelText: 'Nama Keluarga',
-                    ),
-                    InputField(
-                      controller: textFieldMap.phoneNumber,
-                      labelText: 'Nombor Telefon',
-                    ),
-                    SizedBox(height: Dimensions.d_15),
-                    isSLI
-                        ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Padding(
-                                padding: Paddings.vertical_5,
-                                child: Text(
-                                  'Jantina',
-                                  style: TextStyle(
-                                      fontSize: FontSizes.normal,
-                                      fontWeight: FontWeight.w500),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios, color: Colors.black),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          title: Text(
+            isSLI ? 'Pendaftaran JBIM' : 'Pendaftaran',
+            style: TextStyle(
+                fontSize: FontSizes.mainTitle,
+                fontWeight: FontWeight.bold,
+                color: Colours.black),
+          ),
+          centerTitle: true,
+          elevation: 0.0,
+        ),
+        backgroundColor: Colours.white,
+        body: ListView(
+          children: <Widget>[
+            Padding(
+              padding: Paddings.signUpPage,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  InputField(
+                    controller: textFieldMap.fullName,
+                    labelText: 'Nama Penuh',
+                  ),
+                  InputField(
+                    controller: textFieldMap.phoneNumber,
+                    labelText: 'Nombor Telefon',
+                  ),
+                  SizedBox(height: Dimensions.d_15),
+                  isSLI
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Padding(
+                              padding: Paddings.vertical_5,
+                              child: Text(
+                                'Jantina',
+                                style: TextStyle(
+                                    fontSize: FontSizes.normal,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: RadioListTile(
+                                      title: Text('Lelaki'),
+                                      value: gender.male,
+                                      groupValue: _gender,
+                                      onChanged: (gender value) {
+                                        setState(() {
+                                          _gender = value;
+                                        });
+                                      }),
                                 ),
-                              ),
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: RadioListTile(
-                                        title: Text('Lelaki'),
-                                        value: gender.male,
-                                        groupValue: _gender,
-                                        onChanged: (gender value) {
-                                          setState(() {
-                                            _gender = value;
-                                          });
-                                        }),
-                                  ),
-                                  Expanded(
-                                    child: RadioListTile(
-                                        title: Text('Perempuan'),
-                                        value: gender.female,
-                                        groupValue: _gender,
-                                        onChanged: (gender value) {
-                                          setState(() {
-                                            _gender = value;
-                                          });
-                                        }),
-                                  ),
-                                ],
-                              ),
-                              CheckBoxTile(
-                                value: checkBoxMap.hasExperience,
-                                onChanged: (bool value) {
-                                  setState(() {
-                                    checkBoxMap.hasExperience = value;
-                                  });
-                                },
-                                text:
-                                    '\t\tSaya berpengalaman dalam bidang perubatan﻿',
-                              ),
-                              CheckBoxTile(
-                                value: checkBoxMap.isFluent,
-                                onChanged: (bool value) {
-                                  setState(() {
-                                    checkBoxMap.isFluent = value;
-                                  });
-                                },
-                                text:
-                                    '\t\tSaya fasih berbahasa Isyarat Malaysia',
-                              ),
-                            ],
-                          )
-                        : SizedBox(height: 0),
-                    CheckBoxTile(
-                      value: checkBoxMap.termsAndConditions,
-                      onChanged: (bool value) {
-                        setState(() {
-                          checkBoxMap.termsAndConditions = value;
-                        });
-                      },
-                      text: '\t\tSaya bersetuju dengan ',
-                      textLink: GestureDetector(
-                        onTap: () {},
-                        child: Text(
-                          'Terma dan Syarat',
-                          style: TextStyle(
-                              color: Colours.darkBlue,
-                              decoration: TextDecoration.underline,
-                              fontWeight: FontWeight.bold,
-                              fontSize: FontSizes.smallerText),
-                        ),
+                                Expanded(
+                                  child: RadioListTile(
+                                      title: Text('Perempuan'),
+                                      value: gender.female,
+                                      groupValue: _gender,
+                                      onChanged: (gender value) {
+                                        setState(() {
+                                          _gender = value;
+                                        });
+                                      }),
+                                ),
+                              ],
+                            ),
+                            CheckBoxTile(
+                              value: checkBoxMap.hasExperience,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  checkBoxMap.hasExperience = value;
+                                });
+                              },
+                              text:
+                                  '\t\tSaya berpengalaman dalam bidang perubatan﻿',
+                            ),
+                            CheckBoxTile(
+                              value: checkBoxMap.isFluent,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  checkBoxMap.isFluent = value;
+                                });
+                              },
+                              text: '\t\tSaya fasih berbahasa Isyarat Malaysia',
+                            ),
+                          ],
+                        )
+                      : SizedBox(height: 0),
+                  CheckBoxTile(
+                    value: checkBoxMap.termsAndConditions,
+                    onChanged: (bool value) {
+                      setState(() {
+                        checkBoxMap.termsAndConditions = value;
+                      });
+                    },
+                    text: '\t\tSaya bersetuju dengan ',
+                    textLink: GestureDetector(
+                      onTap: () {},
+                      child: Text(
+                        'Terma dan Syarat',
+                        style: TextStyle(
+                            color: Colours.darkBlue,
+                            decoration: TextDecoration.underline,
+                            fontWeight: FontWeight.bold,
+                            fontSize: FontSizes.smallerText),
                       ),
                     ),
-                    UserButton(
-                      text: 'Daftar Sekarang',
-                      color: Colours.blue,
-                      onClick: () {
-                        if (allFieldsFilled(isSLI) == false) {
-                          final termsConditionsSnackBar = SnackBar(
-                              content:
-                                  Text('Sila isi bidang yang kosong dahulu'));
-                          globalKey.currentState
-                              .showSnackBar(termsConditionsSnackBar);
-                        } else if (checkBoxMap.termsAndConditions == false) {
-                          final termsConditionsSnackBar = SnackBar(
-                              content: Text(
-                                  'Sila setuju dengan terma dan syarat dahulu'));
-                          globalKey.currentState
-                              .showSnackBar(termsConditionsSnackBar);
-                        } else {
-                          createDialog(
-                              context: context,
-                              isSLI: isSLI); // Dialog for confirmation, and navigate to verification page
-                          verifyPhone(textFieldMap.phoneNumber.text);
-                          createNewUser(
-                              isSLI: isSLI,
-                              textInput: textFieldMap,
-                              checkInput: checkBoxMap,
-                              gender: _gender);
-                        }
-                      },
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          )),
+            ),
+          ],
+        ),
+        bottomNavigationBar: UserButton(
+          text: 'Daftar Sekarang',
+          color: isSLI ? Colours.orange : Colours.blue,
+          padding: EdgeInsets.all(Dimensions.d_30),
+          onClick: () {
+            if (allFieldsFilled(isSLI) == false) {
+              final termsConditionsSnackBar =
+                  SnackBar(content: Text('Sila isi bidang yang kosong dahulu'));
+              globalKey.currentState.showSnackBar(termsConditionsSnackBar);
+            } else if (checkBoxMap.termsAndConditions == false) {
+              final termsConditionsSnackBar = SnackBar(
+                  content: Text('Sila setuju dengan terma dan syarat dahulu'));
+              globalKey.currentState.showSnackBar(termsConditionsSnackBar);
+            } else {
+              createDialog(
+                  context: context,
+                  isSLI:
+                      isSLI); // Dialog for confirmation, and navigate to verification page
+              verifyPhone(textFieldMap.phoneNumber.text);
+              createNewUser(
+                  isSLI: isSLI,
+                  textInput: textFieldMap,
+                  checkInput: checkBoxMap,
+                  gender: _gender);
+            }
+          },
+        ),
+      ),
     );
   }
 
   bool allFieldsFilled(bool isSLI) {
     return !isSLI
         ? textFieldMap.phoneNumber.text.isNotEmpty &&
-            textFieldMap.lastName.text.isNotEmpty &&
-            textFieldMap.firstName.text.isNotEmpty
+            textFieldMap.fullName.text.isNotEmpty
         : textFieldMap.phoneNumber.text.isNotEmpty &&
-            textFieldMap.lastName.text.isNotEmpty &&
-            textFieldMap.firstName.text.isNotEmpty &&
+            textFieldMap.fullName.text.isNotEmpty &&
             _gender != null;
   }
 
@@ -320,13 +312,11 @@ class _CheckBoxTileState extends State<CheckBoxTile> {
 }
 
 class TextFieldMap {
-  TextEditingController firstName = TextEditingController();
-  TextEditingController lastName = TextEditingController();
+  TextEditingController fullName = TextEditingController();
   TextEditingController phoneNumber = TextEditingController();
 
   void disposeTexts() {
-    firstName.dispose();
-    lastName.dispose();
+    fullName.dispose();
     phoneNumber.dispose();
   }
 }
@@ -369,7 +359,8 @@ createDialog({BuildContext context, bool isSLI}) {
                     child: Text(
                       'Daftar berjaya! Sila klik Teruskan untuk menyerus ke halaman pengesahan.',
                       style: TextStyle(
-                          fontSize: FontSizes.biggerText, color: Colours.darkGrey),
+                          fontSize: FontSizes.biggerText,
+                          color: Colours.darkGrey),
                     ),
                   ),
                   SizedBox(
@@ -379,6 +370,7 @@ createDialog({BuildContext context, bool isSLI}) {
                     text: 'Teruskan',
                     color: isSLI ? Colours.orange : Colours.blue,
                     onClick: () {
+                      // Popping all previous pages of the application before proceeding to verification page
                       Navigator.pop(context);
                       Navigator.pop(context);
                       Navigator.push(
