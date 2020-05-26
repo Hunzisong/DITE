@@ -15,6 +15,9 @@ class Dimensions {
   static double buttonRadius = 30.0;
   static double buttonHeight = 55.0;
   static double dialogHeight = 400.0;
+  static double d_1 = 1.0;
+  static double d_2 = 2.0;
+  static double d_3 = 3.0;
   static double d_5 = 5.0;
   static double d_10 = 10.0;
   static double d_15 = 15.0;
