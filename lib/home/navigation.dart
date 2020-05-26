@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:heard/home/home.dart';
-import 'package:heard/home/schedule.dart';
-import 'package:heard/home/settings.dart';
+import 'package:heard/constants.dart';
+import 'package:heard/home/on_demand.dart';
+import 'package:heard/home/reservation.dart';
+import 'package:heard/home/profile.dart';
 import 'package:heard/home/transaction.dart';
 
 class Navigation extends StatefulWidget {
@@ -10,32 +11,40 @@ class Navigation extends StatefulWidget {
 }
 
 class _NavigationState extends State<Navigation> {
+  final bool isSLI = false;
   int _currentPageIndex = 0;
-  final List<Widget> _pages = [Home(), Schedule(), Transaction(), Settings()];
+  final List<Widget> _pages = [OnDemand(), Reservation(), Transaction(), Profile()];
+  final List<String> _titles = ['Cari', 'Tempahan', 'Transaksi', 'Profil'];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Heard Deaf Project'),
+        title: Text(_titles[_currentPageIndex],
+        style: TextStyle(
+          fontSize: FontSizes.mainTitle,
+          fontWeight: FontWeight.bold
+        ),),
+        centerTitle: true,
+        backgroundColor: isSLI ? Colours.orange : Colours.blue,
       ),
       body: _pages[_currentPageIndex],
       bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           onTap: (index) => onTabTapped(index),
           currentIndex: _currentPageIndex,
-          backgroundColor: Colors.blue,
-          selectedItemColor: Colors.blue[900],
+          backgroundColor: isSLI ? Colours.orange : Colours.blue,
+          selectedItemColor: isSLI ? Colours.darkGrey : Colours.darkBlue,
           unselectedItemColor: Colors.white,
-          items: const <BottomNavigationBarItem>[
+          items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-                icon: Icon(Icons.home), title: Text('Home')),
+                icon: Icon(Icons.search, size: Dimensions.d_30), title: Text('Cari')),
             BottomNavigationBarItem(
-                icon: Icon(Icons.schedule), title: Text('Schedule')),
+                icon: Icon(Icons.calendar_today, size: Dimensions.d_30), title: Text('Tempahan')),
             BottomNavigationBarItem(
-                icon: Icon(Icons.attach_money), title: Text('Transaction')),
+                icon: Icon(Icons.history, size: Dimensions.d_30), title: Text('Transaksi')),
             BottomNavigationBarItem(
-                icon: Icon(Icons.settings), title: Text('Settings')),
+                icon: Icon(Icons.account_circle, size: Dimensions.d_30), title: Text('Profil')),
           ]),
     );
   }
