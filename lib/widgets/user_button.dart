@@ -3,11 +3,12 @@ import 'package:heard/constants.dart';
 
 class UserButton extends StatelessWidget {
   final String text;
+  final Color textColour;
   final Color color;
   final Function onClick;
   final double height;
   final EdgeInsetsGeometry padding;
-  UserButton({this.text, this.color, this.onClick, this.height, this.padding});
+  UserButton({this.text, this.textColour, this.color, this.onClick, this.height, this.padding});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,7 @@ class UserButton extends StatelessWidget {
           child: Text(
             text,
             style: TextStyle(
-                fontSize: FontSizes.buttonText, fontWeight: FontWeight.bold, color: Colours.white),
+                fontSize: FontSizes.buttonText, fontWeight: FontWeight.bold, color: textColour == null ? Colours.white : textColour),
           ),
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(Dimensions.buttonRadius)),
