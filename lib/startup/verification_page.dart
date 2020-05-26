@@ -20,6 +20,24 @@ class _VerificationPageState extends State<VerificationPage> {
     return SafeArea(
         child: Scaffold(
             backgroundColor: Colours.white,
+            appBar: AppBar(
+              backgroundColor: Colours.white,
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back_ios, color: Colors.black),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              title: Text(
+                'Pengesahan Akaun',
+                style: TextStyle(
+                    fontSize: FontSizes.mainTitle,
+                    fontWeight: FontWeight.bold,
+                    color: Colours.black),
+              ),
+              centerTitle: true,
+              elevation: 0.0,
+            ),
             body: ModalProgressHUD(
               inAsyncCall: showLoadingAnimation,
               child: ListView(
@@ -30,16 +48,6 @@ class _VerificationPageState extends State<VerificationPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Padding(
-                            padding: Paddings.vertical_18,
-                            child: Text(
-                              'Pengesahan Akaun',
-                              style: TextStyle(
-                                  fontSize: FontSizes.mainTitle,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colours.black),
-                            ),
-                          ),
                           SizedBox(height: Dimensions.d_65),
                           Text(
                             "Masukkan kod dihantar melalui SMS",
