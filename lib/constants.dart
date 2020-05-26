@@ -43,7 +43,7 @@ class Colours {
   static Color white = Colors.white;
   static Color lightBlue = Colors.blue[100];
   static Color blue = Color(0xFF75A9F1);
-  static Color darkBlue = Color(0xFF3A7AF9);
+  static Color darkBlue = Color(0xFF1964F9);
   static Color lightOrange = Color(0xFFFFE2D8);
   static Color orange = Color(0xFFFFA382);
   static Color grey = Colors.grey[350];
