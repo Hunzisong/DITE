@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:heard/services/auth_service.dart';
 import 'package:heard/widgets/user_button.dart';
 
-class Settings extends StatefulWidget {
+class Profile extends StatefulWidget {
   @override
-  _SettingsState createState() => _SettingsState();
+  _ProfileState createState() => _ProfileState();
 }
 
-class _SettingsState extends State<Settings> {
+class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Container(

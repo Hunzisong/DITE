@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
 import 'package:heard/schedule/schedule_page.dart';
 
-class Schedule extends StatefulWidget {
+class Reservation extends StatefulWidget {
   @override
-  _ScheduleState createState() => _ScheduleState();
+  _ReservationState createState() => _ReservationState();
 }
 
-class _ScheduleState extends State<Schedule>
+class _ReservationState extends State<Reservation>
     with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
