@@ -12,7 +12,10 @@ class UserButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: padding == null ? EdgeInsets.symmetric(vertical: Dimensions.d_15, horizontal: Dimensions.d_5) : padding,
+      padding: padding == null
+          ? EdgeInsets.symmetric(
+              vertical: Dimensions.d_15, horizontal: Dimensions.d_5)
+          : padding,
       child: ButtonTheme(
         height: height == null ? Dimensions.buttonHeight : height,
         minWidth: double.infinity,
@@ -22,10 +25,11 @@ class UserButton extends StatelessWidget {
           onPressed: onClick,
           child: Text(
             text,
-            style: TextStyle(fontSize: FontSizes.buttonText, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                fontSize: FontSizes.buttonText, fontWeight: FontWeight.bold, color: Colours.white),
           ),
-          shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimensions.buttonRadius)),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(Dimensions.buttonRadius)),
         ),
       ),
     );
