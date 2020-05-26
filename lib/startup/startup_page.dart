@@ -30,7 +30,7 @@ class StartupPage extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    height: Dimensions.d_30,
+                    height: Dimensions.d_15,
                   ),
                   UserButton(
                     text: 'Log Masuk',
@@ -43,10 +43,44 @@ class StartupPage extends StatelessWidget {
                       );
                     },
                   ),
+                  SizedBox(
+                    height: Dimensions.d_15,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(Dimensions.d_10),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Expanded(
+                          child: Divider(
+                            color: Colours.darkGrey,
+                            thickness: Dimensions.d_1,
+                          ),
+                        ),
+                        Expanded(
+                          flex: 4,
+                          child: Text(
+                            '\t\tPengguna baru? Daftar sekarang!',
+                            style: TextStyle(
+                              color: Colours.darkGrey,
+                              fontWeight: FontWeight.w500
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Divider(
+                            color: Colours.darkGrey,
+                            thickness: Dimensions.d_1,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   UserButton(
                     text: 'Daftar Sebagai Pengguna',
-                    height: Dimensions.d_65,
+                    height: Dimensions.buttonHeight,
                     color: Colours.blue,
+                    padding: EdgeInsets.symmetric(horizontal: Dimensions.d_5),
                     onClick: () {
                       Navigator.push(
                         context,
@@ -56,7 +90,7 @@ class StartupPage extends StatelessWidget {
                   ),
                   UserButton(
                     text: 'Daftar Sebagai JBIM',
-                    height: Dimensions.d_65,
+                    height: Dimensions.buttonHeight,
                     color: Colours.orange,
                     onClick: () {
                       Navigator.push(
