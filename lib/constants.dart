@@ -12,9 +12,11 @@ class Paddings {
 }
 
 class Dimensions {
+  static double checkBoxSize = 24.0;
   static double buttonRadius = 30.0;
   static double buttonHeight = 55.0;
   static double dialogHeight = 400.0;
+  static double d_0 = 0.0;
   static double d_1 = 1.0;
   static double d_2 = 2.0;
   static double d_3 = 3.0;
@@ -33,7 +35,7 @@ class Dimensions {
 class FontSizes {
   static double mainTitle = 25.0;
   static double title = 20.0;
-  static double buttonText = 20.0;
+  static double buttonText = 19.0;
   static double biggerText = 18.0;
   static double normal = 16.0;
   static double smallerText = 15.0;
