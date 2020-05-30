@@ -59,13 +59,14 @@ class StartupPage extends StatelessWidget {
                           ),
                         ),
                         Expanded(
-                          flex: 4,
+                          flex: 6,
                           child: Text(
-                            '\t\tPengguna baru? Daftar sekarang!',
+                            'Pengguna baru? Daftar sekarang!',
                             style: TextStyle(
                               color: Colours.darkGrey,
                               fontWeight: FontWeight.w500
                             ),
+                            textAlign: TextAlign.center ,
                           ),
                         ),
                         Expanded(
