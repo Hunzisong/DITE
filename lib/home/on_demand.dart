@@ -32,18 +32,13 @@ class _OnDemandState extends State<OnDemand> {
                     ),
                   ),
                   SizedBox(height: Dimensions.d_15),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text('Servis on-demand:',
-                          style: TextStyle(fontWeight: FontWeight.bold,
-                              fontSize: FontSizes.normal)),
-                        Text('Cari JBIM dan mulakan video call sekarang.',
-                          style: TextStyle(fontSize: FontSizes.normal),)
-                      ],
-                    ),
+                  ListTile(
+                    contentPadding: EdgeInsets.all(Dimensions.d_0),
+                    title: Text('Servis on-demand:',
+                        style: TextStyle(fontWeight: FontWeight.bold,
+                            fontSize: FontSizes.normal)),
+                    subtitle: Text('Cari JBIM dan mulakan video call sekarang.',
+                      style: TextStyle(fontSize: FontSizes.normal, color: Colours.darkGrey),),
                   ),
                   SizedBox(height: Dimensions.d_65),
                   UserButton(
