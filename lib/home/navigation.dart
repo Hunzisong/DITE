@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
-import 'package:heard/home/on_demand.dart';
+import 'package:heard/home/on_demand/on_demand_sli_page.dart';
+import 'package:heard/home/on_demand/on_demand_user_page.dart';
 import 'package:heard/home/reservation.dart';
 import 'package:heard/home/profile.dart';
 import 'package:heard/home/transaction.dart';
@@ -11,10 +12,11 @@ class Navigation extends StatefulWidget {
 }
 
 class _NavigationState extends State<Navigation> {
-  final bool isSLI = false;
+  static bool isSLI = true;
   int _currentPageIndex = 0;
-  final List<Widget> _pages = [OnDemand(), Reservation(), Transaction(), Profile()];
-  final List<String> _titles = ['Cari', 'Tempahan', 'Transaksi', 'Profil'];
+  // determine whether its user or sli tab pages
+  final List<Widget> _pages = isSLI ? [OnDemandSLIPage(), Reservation(), Transaction(), Profile()] : [OnDemandUserPage(), Reservation(), Transaction(), Profile()];
+  final List<String> _titles = ['Permintaan', 'Tempahan', 'Transaksi', 'Profil'];
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +40,7 @@ class _NavigationState extends State<Navigation> {
           unselectedItemColor: Colors.white,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-                icon: Icon(Icons.search, size: Dimensions.d_30), title: Text('Cari')),
+                icon: Icon(Icons.search, size: Dimensions.d_30), title: Text('Permintaan')),
             BottomNavigationBarItem(
                 icon: Icon(Icons.calendar_today, size: Dimensions.d_30), title: Text('Tempahan')),
             BottomNavigationBarItem(
