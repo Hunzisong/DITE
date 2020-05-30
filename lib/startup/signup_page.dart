@@ -368,20 +368,20 @@ createDialog({BuildContext context, bool isSLI}) {
                       "Pengesahan",
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: FontSizes.title,
+                          fontWeight: FontWeight.w600,
+                          fontSize: FontSizes.mainTitle,
                           color: Colours.darkGrey),
                     ),
                   ),
                   SizedBox(
-                    height: Dimensions.d_30,
+                    height: Dimensions.d_45,
                   ),
                   Padding(
                     padding: Paddings.horizontal_5,
                     child: Text(
                       'Daftar berjaya! Sila klik Teruskan untuk menyerus ke halaman pengesahan.',
                       style: TextStyle(
-                          fontSize: FontSizes.biggerText,
+                          fontSize: FontSizes.smallerText,
                           color: Colours.darkGrey),
                     ),
                   ),
