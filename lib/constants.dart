@@ -23,6 +23,8 @@ class Dimensions {
   static double d_5 = 5.0;
   static double d_10 = 10.0;
   static double d_15 = 15.0;
+  static double d_20 = 20.0;
+  static double d_25 = 25.0;
   static double d_30 = 30.0;
   static double d_45 = 45.0;
   static double d_65 = 65.0;
@@ -48,6 +50,9 @@ class Colours {
   static Color darkBlue = Color(0xFF1964F9);
   static Color lightOrange = Color(0xFFFFE2D8);
   static Color orange = Color(0xFFFFA382);
+  static Color accept = Colors.green[300];
+  static Color cancel = Colors.red[300];
+  static Color lightGrey = Colors.grey[200];
   static Color grey = Colors.grey[350];
   static Color darkGrey = Colors.grey[800];
   static Color black = Colors.black87;
