@@ -29,6 +29,7 @@ class _OnDemandUserPageState extends State<OnDemandUserPage> {
             },
           )
         : pairingComplete
+
             /// TODO: Replace Container with finished page afterwards
             ? Center(
                 child: Text('Pairing Complete'),
@@ -48,7 +49,7 @@ class _OnDemandUserPageState extends State<OnDemandUserPage> {
                               image: AssetImage('images/onDemand.png'),
                             ),
                           ),
-                          SizedBox(height: Dimensions.d_15),
+                          SizedBox(height: Dimensions.d_30),
                           ListTile(
                             contentPadding: EdgeInsets.all(Dimensions.d_0),
                             title: Text('Servis permintaan segera:',
@@ -62,20 +63,20 @@ class _OnDemandUserPageState extends State<OnDemandUserPage> {
                                   color: Colours.darkGrey),
                             ),
                           ),
-                          SizedBox(height: Dimensions.d_65),
-                          UserButton(
-                            text: 'Carian',
-                            color: Colours.blue,
-                            onClick: () {
-                              setState(() {
-                                loadingScreen = true;
-                              });
-                            },
-                          ),
                         ],
                       ),
                     ),
                   ],
+                ),
+                bottomNavigationBar: UserButton(
+                  text: 'Carian',
+                  padding: EdgeInsets.all(Dimensions.d_30),
+                  color: Colours.blue,
+                  onClick: () {
+                    setState(() {
+                      loadingScreen = true;
+                    });
+                  },
                 ),
               );
   }

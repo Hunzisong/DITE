@@ -32,7 +32,9 @@ class OnDemandUserLoadingPage extends StatelessWidget {
             padding: EdgeInsets.only(top: Dimensions.d_15),
             child: Text(
               'Sedang memuatkan, sila bersabar ...',
-              style: TextStyle(fontSize: FontSizes.smallerText,),
+              style: TextStyle(fontSize: FontSizes.smallerText,
+              color: Colours.grey,
+              fontWeight: FontWeight.w500),
             ),
           )
         ],

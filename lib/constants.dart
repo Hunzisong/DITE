@@ -53,7 +53,7 @@ class Colours {
   static Color accept = Colors.green[300];
   static Color cancel = Colors.red[300];
   static Color lightGrey = Colors.grey[200];
-  static Color grey = Colors.grey[350];
+  static Color grey = Colors.grey[400];
   static Color darkGrey = Colors.grey[800];
   static Color black = Colors.black87;
   static Color success = Color(0xFF0AC380);

@@ -12,7 +12,7 @@ class Navigation extends StatefulWidget {
 }
 
 class _NavigationState extends State<Navigation> {
-  static bool isSLI = true;
+  static bool isSLI = false;
   int _currentPageIndex = 0;
   // determine whether its user or sli tab pages
   final List<Widget> _pages = isSLI ? [OnDemandSLIPage(), Reservation(), Transaction(), Profile()] : [OnDemandUserPage(), Reservation(), Transaction(), Profile()];
