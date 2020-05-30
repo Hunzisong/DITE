@@ -1,9 +1,11 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
 import 'package:heard/widgets/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:heard/services/auth_service.dart';
 import 'package:heard/startup/verification_page.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 
 class SignUpPage extends StatefulWidget {
@@ -96,7 +98,12 @@ class _SignUpPageState extends State<SignUpPage> {
                               children: <Widget>[
                                 Expanded(
                                   child: RadioListTile(
-                                      title: Text('Lelaki'),
+                                      dense: true,
+                                      title: Text(
+                                        'Lelaki',
+                                        style: TextStyle(
+                                            fontSize: FontSizes.smallerText),
+                                      ),
                                       value: gender.male,
                                       groupValue: _gender,
                                       onChanged: (gender value) {
@@ -107,7 +114,12 @@ class _SignUpPageState extends State<SignUpPage> {
                                 ),
                                 Expanded(
                                   child: RadioListTile(
-                                      title: Text('Perempuan'),
+                                      dense: true,
+                                      title: Text(
+                                        'Perempuan',
+                                        style: TextStyle(
+                                            fontSize: FontSizes.smallerText),
+                                      ),
                                       value: gender.female,
                                       groupValue: _gender,
                                       onChanged: (gender value) {
@@ -118,6 +130,9 @@ class _SignUpPageState extends State<SignUpPage> {
                                 ),
                               ],
                             ),
+                            SizedBox(
+                              height: Dimensions.d_15,
+                            ),
                             CheckBoxTile(
                               value: checkBoxMap.hasExperience,
                               onChanged: (bool value) {
@@ -126,7 +141,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                 });
                               },
                               text:
-                                  '\t\tSaya berpengalaman dalam bidang perubatan﻿',
+                                  'Saya berpengalaman dalam bidang perubatan﻿',
                             ),
                             CheckBoxTile(
                               value: checkBoxMap.isFluent,
@@ -135,7 +150,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                   checkBoxMap.isFluent = value;
                                 });
                               },
-                              text: '\t\tSaya fasih berbahasa Isyarat Malaysia',
+                              text: 'Saya fasih berbahasa Isyarat Malaysia',
                             ),
                           ],
                         )
@@ -147,18 +162,8 @@ class _SignUpPageState extends State<SignUpPage> {
                         checkBoxMap.termsAndConditions = value;
                       });
                     },
-                    text: '\t\tSaya bersetuju dengan ',
-                    textLink: GestureDetector(
-                      onTap: () {},
-                      child: Text(
-                        'Terma dan Syarat',
-                        style: TextStyle(
-                            color: Colours.darkBlue,
-                            decoration: TextDecoration.underline,
-                            fontWeight: FontWeight.bold,
-                            fontSize: FontSizes.smallerText),
-                      ),
-                    ),
+                    text: 'Saya bersetuju dengan ',
+                    textLink: 'Terma dan Syarat'
                   ),
                 ],
               ),
@@ -272,13 +277,15 @@ class CheckBoxTile extends StatefulWidget {
   final bool value;
   final Function onChanged;
   final String text;
-  final Widget textLink;
+  final String textLink;
+  final String textLinkURL;
 
   CheckBoxTile(
       {this.onChanged,
       this.value,
       this.text,
-      this.textLink = const SizedBox(height: 0)});
+      this.textLink,
+      this.textLinkURL});
 
   @override
   _CheckBoxTileState createState() => _CheckBoxTileState();
@@ -287,25 +294,40 @@ class CheckBoxTile extends StatefulWidget {
 class _CheckBoxTileState extends State<CheckBoxTile> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: Paddings.vertical_15,
-      child: Row(
-        children: <Widget>[
-          SizedBox(
-            height: 24,
-            width: 24,
-            child: Checkbox(
-              value: widget.value,
-              onChanged: widget.onChanged,
+    return ListTile(
+      contentPadding: EdgeInsets.all(Dimensions.d_0),
+      leading: SizedBox(
+        height: Dimensions.checkBoxSize,
+        width: Dimensions.checkBoxSize,
+        child: Checkbox(
+          value: widget.value,
+          onChanged: widget.onChanged,
+        ),
+      ),
+      title: RichText(
+        text: TextSpan(
+          children: [
+            TextSpan(
+              text: widget.text,
+              style: TextStyle(
+                color: Colours.darkGrey,
+                  fontWeight: FontWeight.w600, fontSize: FontSizes.smallerText),
             ),
-          ),
-          Text(
-            widget.text,
-            style: TextStyle(
-                fontWeight: FontWeight.w600, fontSize: FontSizes.smallerText),
-          ),
-          widget.textLink
-        ],
+            TextSpan(
+              text: widget.textLink,
+              style: TextStyle(
+                  color: Colours.darkBlue,
+                  decoration: TextDecoration.underline,
+                  fontWeight: FontWeight.bold,
+                  fontSize: FontSizes.smallerText),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                /// todo: add url link for terms and conditions
+//                  launch(widget.textLinkURL);
+                },
+            )
+          ]
+        ),
       ),
     );
   }
