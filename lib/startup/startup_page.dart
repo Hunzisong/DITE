@@ -34,7 +34,7 @@ class StartupPage extends StatelessWidget {
                   ),
                   UserButton(
                     text: 'Log Masuk',
-                    textColour: Colours.darkGrey,
+                    textColour: Colours.black,
                     height: Dimensions.d_65,
                     color: Colours.grey,
                     onClick: () {
