@@ -83,7 +83,7 @@ class OnDemandSuccessPage extends StatelessWidget {
                 )
               )
             ),
-            Expanded(
+            Flexible(
               child: Container(
                 decoration: BoxDecoration(
                   border: Border(
@@ -100,12 +100,9 @@ class OnDemandSuccessPage extends StatelessWidget {
                         width: MediaQuery.of(context).size.width / 2 - paddingLR,
                         child: InkWell(
                           onTap: onTapMessage,
-                          child: Hero(
-                              tag: 'message',
-                              child: Image(
-                                  image: AssetImage('images/message.png')
-                              )
-                          ),
+                          child: Image(
+                              image: AssetImage('images/message.png')
+                          )
                         )
                       ),
                       SizedBox(
@@ -119,12 +116,9 @@ class OnDemandSuccessPage extends StatelessWidget {
                           ),
                           child: InkWell(
                             onTap: onTapVideo,
-                            child: Hero(
-                                tag: 'video',
-                                child: Image(
-                                    image: AssetImage('images/video.png')
-                                )
-                            ),
+                            child: Image(
+                                image: AssetImage('images/video.png')
+                            )
                           )
                         )
                       ),
