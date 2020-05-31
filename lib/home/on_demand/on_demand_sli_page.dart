@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:heard/constants.dart';
+import 'package:heard/home/on_demand/on_demand_success.dart';
 import 'package:heard/widgets/slidable_list_tile.dart';
 import 'package:heard/widgets/widgets.dart';
 
@@ -27,9 +28,13 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage> {
   @override
   Widget build(BuildContext context) {
     return pairingComplete
-        /// TODO: Replace Container with finished page afterwards
-        ? Center(
-            child: Text('Pairing Complete'),
+        ? OnDemandSuccessPage(
+            isSLI: true,
+            onCancelClick: () {
+              setState(() {
+                pairingComplete = false;
+              });
+            },
           )
         : Scaffold(
             backgroundColor: Colours.white,
@@ -65,12 +70,13 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage> {
                     return SlidableListTile(
                       name: mockNameList[index],
                       onTap: () {
-                        createDialog(context: context,
-                        onAcceptClick: () {
-                          setState(() {
-                            pairingComplete = true;
-                          });
-                        });
+                        createDialog(
+                            context: context,
+                            onAcceptClick: () {
+                              setState(() {
+                                pairingComplete = true;
+                              });
+                            });
                       },
                     );
                   },
