@@ -26,7 +26,9 @@ class Dimensions {
   static double d_20 = 20.0;
   static double d_25 = 25.0;
   static double d_30 = 30.0;
+  static double d_35 = 35.0;
   static double d_45 = 45.0;
+  static double d_55 = 55.0;
   static double d_65 = 65.0;
   static double d_85 = 85.0;
   static double d_100 = 100.0;
@@ -54,7 +56,7 @@ class Colours {
   static Color accept = Colors.green[300];
   static Color cancel = Colors.red[300];
   static Color lightGrey = Colors.grey[200];
-  static Color grey = Colors.grey[400];
+  static Color grey = Colors.grey[350];
   static Color darkGrey = Colors.grey[800];
   static Color black = Colors.black87;
   static Color success = Color(0xFF0AC380);
