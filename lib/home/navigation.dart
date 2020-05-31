@@ -7,19 +7,25 @@ import 'package:heard/home/profile.dart';
 import 'package:heard/home/transaction.dart';
 
 class Navigation extends StatefulWidget {
+  final bool isSLI;
+
+  Navigation({this.isSLI = false});
+
   @override
   _NavigationState createState() => _NavigationState();
 }
 
 class _NavigationState extends State<Navigation> {
-  static bool isSLI = false;
+
   int _currentPageIndex = 0;
-  // determine whether its user or sli tab pages
-  final List<Widget> _pages = isSLI ? [OnDemandSLIPage(), Reservation(), Transaction(), Profile()] : [OnDemandUserPage(), Reservation(), Transaction(), Profile()];
+  List<Widget> _pages;
   final List<String> _titles = ['Permintaan', 'Tempahan', 'Transaksi', 'Profil'];
 
   @override
   Widget build(BuildContext context) {
+    if (_pages == null)
+      // determine whether its user or sli tab pages
+      _pages  = widget.isSLI ? [OnDemandSLIPage(), Reservation(), Transaction(), Profile()] : [OnDemandUserPage(), Reservation(), Transaction(), Profile()];
     return Scaffold(
       appBar: AppBar(
         title: Text(_titles[_currentPageIndex],
@@ -28,15 +34,15 @@ class _NavigationState extends State<Navigation> {
           fontWeight: FontWeight.bold
         ),),
         centerTitle: true,
-        backgroundColor: isSLI ? Colours.orange : Colours.blue,
+        backgroundColor: widget.isSLI ? Colours.orange : Colours.blue,
       ),
       body: _pages[_currentPageIndex],
       bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           onTap: (index) => onTabTapped(index),
           currentIndex: _currentPageIndex,
-          backgroundColor: isSLI ? Colours.orange : Colours.blue,
-          selectedItemColor: isSLI ? Colours.darkGrey : Colours.darkBlue,
+          backgroundColor: widget.isSLI ? Colours.orange : Colours.blue,
+          selectedItemColor: widget.isSLI ? Colours.darkGrey : Colours.darkBlue,
           unselectedItemColor: Colors.white,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
