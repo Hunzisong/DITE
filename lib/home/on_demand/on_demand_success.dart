@@ -58,30 +58,29 @@ class OnDemandSuccessPage extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: Dimensions.d_25)
             ),
             SizedBox(height: Dimensions.d_15),
-            Container(
-              width: MediaQuery.of(context).size.width - paddingLR * 2,
-              child: Center(
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      width: Dimensions.d_130,
-                      child: Align(
+            Row(
+              children: <Widget>[
+                Container(
+                  width: ((MediaQuery.of(context).size.width - (2 * paddingLR)) / 2 - Dimensions.d_100/2),
+                ),
+                Container(
+                    width: ((MediaQuery.of(context).size.width - (2 * paddingLR)) / 2 + Dimensions.d_100/2), //half the screen + half of profile image size to align with the profile pic
+                    child: Column(
+                      children: <Widget>[
+                        Align(
                           alignment: Alignment.centerLeft,
                           child: Text("Jantina : \t${this.gender ?? "Lelaki"}"),
-                      )
-                    ),
-                    SizedBox(height: Dimensions.d_5),
-                    Container(
-                        width: Dimensions.d_130,
-                        child: Align(
+                        ),
+                        SizedBox(height: Dimensions.d_5),
+                        Align(
                           alignment: Alignment.centerLeft,
                           child: Text("Umur     : \t${this.age ?? "32"}"),
-                        )
-                    ),
-                    SizedBox(height: Dimensions.d_15),
-                  ],
-                )
-              )
+                        ),
+                        SizedBox(height: Dimensions.d_15),
+                      ],
+                    )
+                ),
+              ]
             ),
             Flexible(
               child: Container(
