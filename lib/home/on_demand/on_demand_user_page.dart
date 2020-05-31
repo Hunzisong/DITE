@@ -30,10 +30,13 @@ class _OnDemandUserPageState extends State<OnDemandUserPage> {
             },
           )
         : pairingComplete
-
-            /// TODO: Replace Container with finished page afterwards
-            ?
-            OnDemandSuccessPage()
+            ? OnDemandSuccessPage(
+                onCancelClick: () {
+                  setState(() {
+                    pairingComplete = false;
+                  });
+                },
+              )
             : Scaffold(
                 backgroundColor: Colours.white,
                 body: ListView(
