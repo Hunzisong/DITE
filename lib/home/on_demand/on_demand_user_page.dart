@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
 import 'package:heard/home/on_demand/on_demand_user_loading_page.dart';
+import 'package:heard/home/on_demand/on_demand_success.dart';
 import 'package:heard/widgets/widgets.dart';
 
 class OnDemandUserPage extends StatefulWidget {
@@ -31,9 +32,8 @@ class _OnDemandUserPageState extends State<OnDemandUserPage> {
         : pairingComplete
 
             /// TODO: Replace Container with finished page afterwards
-            ? Center(
-                child: Text('Pairing Complete'),
-              )
+            ?
+            OnDemandSuccessPage()
             : Scaffold(
                 backgroundColor: Colours.white,
                 body: ListView(
