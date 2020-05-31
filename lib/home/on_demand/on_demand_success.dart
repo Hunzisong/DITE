@@ -67,7 +67,7 @@ class OnDemandSuccessPage extends StatelessWidget {
                       width: Dimensions.d_130,
                       child: Align(
                           alignment: Alignment.centerLeft,
-                          child: Text("Jantina : ${this.gender ?? "Lelaki"}"),
+                          child: Text("Jantina : \t${this.gender ?? "Lelaki"}"),
                       )
                     ),
                     SizedBox(height: Dimensions.d_5),
@@ -75,7 +75,7 @@ class OnDemandSuccessPage extends StatelessWidget {
                         width: Dimensions.d_130,
                         child: Align(
                           alignment: Alignment.centerLeft,
-                          child: Text("Umur     : ${this.age ?? "32"}"),
+                          child: Text("Umur     : \t${this.age ?? "32"}"),
                         )
                     ),
                     SizedBox(height: Dimensions.d_15),
