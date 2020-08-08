@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
 import 'package:heard/services/auth_service.dart';
+import 'package:heard/startup/signup_page.dart';
 import 'package:heard/widgets/widgets.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class VerificationPage extends StatefulWidget {
   final String verificationId;
-  VerificationPage({Key key, @required this.verificationId}) : super(key: key);
+  final TextFieldMap userDetails;
+  VerificationPage({Key key, @required this.verificationId, this.userDetails}) : super(key: key);
 
   @override
   _VerificationPageState createState() => _VerificationPageState();
@@ -68,6 +70,7 @@ class _VerificationPageState extends State<VerificationPage> {
                               });
                               AuthService().signInWithOTP(
                                   context,
+                                  widget.userDetails,
                                   verificationNumberController.text,
                                   widget.verificationId);
                             },

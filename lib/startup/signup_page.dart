@@ -1,12 +1,12 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
+import 'package:heard/widgets/pop_up_dialog.dart';
 import 'package:heard/widgets/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:heard/services/auth_service.dart';
 import 'package:heard/startup/verification_page.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:http/http.dart' as http;
+//import 'package:http/http.dart' as http;
 
 class SignUpPage extends StatefulWidget {
   final bool isSLI;
@@ -37,14 +37,14 @@ class _SignUpPageState extends State<SignUpPage> {
     textFieldMap.disposeTexts();
   }
 
-  final globalKey = GlobalKey<ScaffoldState>();
+//  final globalKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     bool isSLI = widget.isSLI;
     return SafeArea(
       child: Scaffold(
-        key: globalKey,
+//        key: globalKey,
         appBar: AppBar(
           backgroundColor: Colours.white,
           leading: IconButton(
@@ -77,6 +77,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     labelText: 'Nama Penuh',
                   ),
                   InputField(
+                    hintText: '+60123456789',
                     controller: textFieldMap.phoneNumber,
                     labelText: 'Nombor Telefon',
                   ),
@@ -176,24 +177,28 @@ class _SignUpPageState extends State<SignUpPage> {
           padding: EdgeInsets.all(Dimensions.d_30),
           onClick: () {
             if (allFieldsFilled(isSLI) == false) {
-              final termsConditionsSnackBar =
-                  SnackBar(content: Text('Sila isi bidang yang kosong dahulu'));
-              globalKey.currentState.showSnackBar(termsConditionsSnackBar);
-            } else if (checkBoxMap.termsAndConditions == false) {
-              final termsConditionsSnackBar = SnackBar(
-                  content: Text('Sila setuju dengan terma dan syarat dahulu'));
-              globalKey.currentState.showSnackBar(termsConditionsSnackBar);
-            } else {
-              createDialog(
+              popUpDialog(
                   context: context,
-                  isSLI:
-                      isSLI); // Dialog for confirmation, and navigate to verification page
-              verifyPhone(textFieldMap.phoneNumber.text);
-              createNewUser(
                   isSLI: isSLI,
-                  textInput: textFieldMap,
-                  checkInput: checkBoxMap,
-                  gender: _gender);
+                  header: 'Amaran',
+                  content: 'Sila isi bidang yang kosong dahulu',
+                  onClick: () {
+                    Navigator.pop(context);
+                  });
+            } else if (checkBoxMap.termsAndConditions == false) {
+              popUpDialog(
+                  context: context,
+                  isSLI: isSLI,
+                  header: 'Amaran',
+                  content: 'Sila setuju dengan terma dan syarat dahulu',
+                  onClick: () {
+                    Navigator.pop(context);
+                  });
+//              final termsConditionsSnackBar = SnackBar(
+//                  content: Text('Sila setuju dengan terma dan syarat dahulu'));
+//              globalKey.currentState.showSnackBar(termsConditionsSnackBar);
+            } else {
+              verifyPhone(textFieldMap.phoneNumber.text);
             }
           },
         ),
@@ -210,24 +215,27 @@ class _SignUpPageState extends State<SignUpPage> {
             _gender != null;
   }
 
-  Future<void> createNewUser(
-      {bool isSLI,
-      TextFieldMap textInput,
-      CheckBoxMap checkInput,
-      gender gender}) async {
-    if (!isSLI) {
+//  Future<void> createNewUser(
+//      {bool isSLI,
+//      TextFieldMap textInput,
+//      CheckBoxMap checkInput,
+//      gender gender}) async {
+//    if (!isSLI) {
+//      print('auth token: ${AuthService.authToken}');
 //      var response = await http.post(
-//          'https://virtserver.swaggerhub.com/dite/heard/1.0.0/user/create',
+//          'https://heard-project.herokuapp.com/user/create',
+//          headers: {
+//            'Authorization': AuthService.authToken,
+//          },
 //          body: {
-//            'Authorization': 'test1',
-//            'first_name': textInput.firstName.text,
-//            'last_name': textInput.lastName.text,
+//            'name': textInput.fullName.text,
 //            'phone_no': textInput.phoneNumber.text,
 //            'profile_pic': 'test1'
 //          });
 //      print('response ${response.statusCode}');
-    }
-  }
+//      print('response ${response.body}');
+//    }
+//  }
 
   void pushVerificationPage() {
     Navigator.pop(context);
@@ -235,12 +243,15 @@ class _SignUpPageState extends State<SignUpPage> {
         context,
         MaterialPageRoute(
             builder: (context) =>
-                VerificationPage(verificationId: this.verificationId)));
+                VerificationPage(verificationId: this.verificationId, userDetails: textFieldMap,)));
+    print('ver id: ${this.verificationId}');
   }
 
   Future<void> verifyPhone(phoneNo) async {
-    final PhoneVerificationCompleted verified = (AuthCredential authResult) {
+    final PhoneVerificationCompleted verified = (AuthCredential authResult) async {
+      print('first line');
       AuthService().signIn(context, authResult);
+      print('after');
     };
 
     final PhoneVerificationFailed verificationFailed =
@@ -252,8 +263,18 @@ class _SignUpPageState extends State<SignUpPage> {
       this.verificationId = verId;
       setState(() {
         this.codeSent = true;
+        popUpDialog(
+          context: context,
+          isSLI: widget.isSLI,
+          touchToDismiss: false,
+          header: 'Pengesahan',
+          content: 'Daftar berjaya! Sila klik Teruskan untuk menyerus ke halaman pengesahan.',
+          buttonText: 'Teruskan',
+          onClick: () {
+            pushVerificationPage();
+          }
+        );
       });
-      pushVerificationPage();
     };
 
     final PhoneCodeAutoRetrievalTimeout autoTimeout = (String verId) {
@@ -347,68 +368,4 @@ class CheckBoxMap {
   bool hasExperience = false;
   bool isFluent = false;
   bool termsAndConditions = false;
-}
-
-createDialog({BuildContext context, bool isSLI}) {
-  return showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return Dialog(
-          child: Container(
-            height: Dimensions.d_280,
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: Dimensions.d_15, horizontal: Dimensions.d_30),
-              child: ListView(
-                children: <Widget>[
-                  Padding(
-                    padding: Paddings.vertical_5,
-                    child: Text(
-                      "Pengesahan",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: FontSizes.mainTitle,
-                          color: Colours.darkGrey),
-                    ),
-                  ),
-                  SizedBox(
-                    height: Dimensions.d_45,
-                  ),
-                  Padding(
-                    padding: Paddings.horizontal_5,
-                    child: Text(
-                      'Daftar berjaya! Sila klik Teruskan untuk menyerus ke halaman pengesahan.',
-                      style: TextStyle(
-                          fontSize: FontSizes.smallerText,
-                          color: Colours.darkGrey),
-                    ),
-                  ),
-                  SizedBox(
-                    height: Dimensions.d_30,
-                  ),
-                  UserButton(
-                    text: 'Teruskan',
-                    color: isSLI ? Colours.orange : Colours.blue,
-                    onClick: () {
-                      // Popping all previous pages of the application before proceeding to verification page
-                      Navigator.pop(context);
-                      Navigator.pop(context);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => VerificationPage()),
-                      );
-                    },
-                  )
-                ],
-              ),
-            ),
-          ),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(Dimensions.d_10))),
-          elevation: Dimensions.d_15,
-        );
-      });
 }
