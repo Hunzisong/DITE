@@ -6,9 +6,10 @@ class InputField extends StatelessWidget {
   final labelText;
   final keyboardType;
   final isShortInput;
+  final hintText;
   final TextEditingController controller;
 
-  InputField({this.isPassword = false, this.labelText = '', this.keyboardType, this.isShortInput = false, @required this.controller});
+  InputField({this.isPassword = false, this.labelText = '', this.hintText = '', this.keyboardType, this.isShortInput = false, @required this.controller});
 
   Widget build(BuildContext context) {
     return Padding(
@@ -22,6 +23,8 @@ class InputField extends StatelessWidget {
           textAlign: isShortInput ? TextAlign.center : TextAlign.start,
           decoration: InputDecoration(
             contentPadding: Paddings.horizontal_5,
+            hintText: hintText,
+            hintStyle: TextStyle(color: Colours.grey),
             labelText: labelText,
             enabledBorder: UnderlineInputBorder(
                 borderSide: BorderSide(width: 3.0, color: Colours.grey)
