@@ -46,6 +46,7 @@ class _LoginPageState extends State<LoginPage> {
                       InputField(
                         controller: phoneNumberText,
                         labelText: 'Nombor Telefon',
+                        keyboardType: TextInputType.phone,
                       ),
                       SizedBox(height: Dimensions.d_15),
                       UserButton(
