@@ -16,6 +16,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: StartupPage(),
+//      home: Navigation(isSLI: true,),
     );
   }
 }
