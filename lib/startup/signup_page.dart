@@ -4,8 +4,8 @@ import 'package:heard/constants.dart';
 import 'package:heard/widgets/pop_up_dialog.dart';
 import 'package:heard/widgets/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:heard/services/auth_service.dart';
 import 'package:heard/startup/verification_page.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 //import 'package:http/http.dart' as http;
 
 class SignUpPage extends StatefulWidget {
@@ -17,6 +17,7 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  bool showLoadingAnimation = false;
   String verificationId;
   bool codeSent = false;
   TextFieldMap textFieldMap;
@@ -64,112 +65,115 @@ class _SignUpPageState extends State<SignUpPage> {
           elevation: 0.0,
         ),
         backgroundColor: Colours.white,
-        body: ListView(
-          children: <Widget>[
-            Padding(
-              padding: Paddings.signUpPage,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  InputField(
-                    controller: textFieldMap.fullName,
-                    labelText: 'Nama Penuh',
-                  ),
-                  InputField(
-                    hintText: '+60123456789',
-                    controller: textFieldMap.phoneNumber,
-                    labelText: 'Nombor Telefon',
-                  ),
-                  SizedBox(height: Dimensions.d_15),
-                  isSLI
-                      ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Padding(
-                              padding: Paddings.vertical_5,
-                              child: Text(
-                                'Jantina',
-                                style: TextStyle(
-                                    fontSize: FontSizes.normal,
-                                    fontWeight: FontWeight.w500),
+        body: ModalProgressHUD(
+          inAsyncCall: showLoadingAnimation,
+          child: ListView(
+            children: <Widget>[
+              Padding(
+                padding: Paddings.signUpPage,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    InputField(
+                      controller: textFieldMap.fullName,
+                      labelText: 'Nama Penuh',
+                    ),
+                    InputField(
+                      hintText: '+60123456789',
+                      controller: textFieldMap.phoneNumber,
+                      labelText: 'Nombor Telefon',
+                    ),
+                    SizedBox(height: Dimensions.d_15),
+                    isSLI
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: Paddings.vertical_5,
+                                child: Text(
+                                  'Jantina',
+                                  style: TextStyle(
+                                      fontSize: FontSizes.normal,
+                                      fontWeight: FontWeight.w500),
+                                ),
                               ),
-                            ),
-                            Row(
-                              children: <Widget>[
-                                Expanded(
-                                  child: RadioListTile(
-                                      dense: true,
-                                      title: Text(
-                                        'Lelaki',
-                                        style: TextStyle(
-                                            fontSize: FontSizes.smallerText),
-                                      ),
-                                      value: gender.male,
-                                      groupValue: _gender,
-                                      onChanged: (gender value) {
-                                        setState(() {
-                                          _gender = value;
-                                        });
-                                      }),
-                                ),
-                                Expanded(
-                                  child: RadioListTile(
-                                      dense: true,
-                                      title: Text(
-                                        'Perempuan',
-                                        style: TextStyle(
-                                            fontSize: FontSizes.smallerText),
-                                      ),
-                                      value: gender.female,
-                                      groupValue: _gender,
-                                      onChanged: (gender value) {
-                                        setState(() {
-                                          _gender = value;
-                                        });
-                                      }),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: Dimensions.d_15,
-                            ),
-                            CheckBoxTile(
-                              value: checkBoxMap.hasExperience,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  checkBoxMap.hasExperience = value;
-                                });
-                              },
-                              text:
-                                  'Saya berpengalaman dalam bidang perubatan﻿',
-                            ),
-                            CheckBoxTile(
-                              value: checkBoxMap.isFluent,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  checkBoxMap.isFluent = value;
-                                });
-                              },
-                              text: 'Saya fasih berbahasa Isyarat Malaysia',
-                            ),
-                          ],
-                        )
-                      : SizedBox(height: 0),
-                  CheckBoxTile(
-                    value: checkBoxMap.termsAndConditions,
-                    onChanged: (bool value) {
-                      setState(() {
-                        checkBoxMap.termsAndConditions = value;
-                      });
-                    },
-                    text: 'Saya bersetuju dengan ',
-                    textLink: 'Terma dan Syarat'
-                  ),
-                ],
+                              Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: RadioListTile(
+                                        dense: true,
+                                        title: Text(
+                                          'Lelaki',
+                                          style: TextStyle(
+                                              fontSize: FontSizes.smallerText),
+                                        ),
+                                        value: gender.male,
+                                        groupValue: _gender,
+                                        onChanged: (gender value) {
+                                          setState(() {
+                                            _gender = value;
+                                          });
+                                        }),
+                                  ),
+                                  Expanded(
+                                    child: RadioListTile(
+                                        dense: true,
+                                        title: Text(
+                                          'Perempuan',
+                                          style: TextStyle(
+                                              fontSize: FontSizes.smallerText),
+                                        ),
+                                        value: gender.female,
+                                        groupValue: _gender,
+                                        onChanged: (gender value) {
+                                          setState(() {
+                                            _gender = value;
+                                          });
+                                        }),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: Dimensions.d_15,
+                              ),
+                              CheckBoxTile(
+                                value: checkBoxMap.hasExperience,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    checkBoxMap.hasExperience = value;
+                                  });
+                                },
+                                text:
+                                    'Saya berpengalaman dalam bidang perubatan﻿',
+                              ),
+                              CheckBoxTile(
+                                value: checkBoxMap.isFluent,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    checkBoxMap.isFluent = value;
+                                  });
+                                },
+                                text: 'Saya fasih berbahasa Isyarat Malaysia',
+                              ),
+                            ],
+                          )
+                        : SizedBox(height: 0),
+                    CheckBoxTile(
+                      value: checkBoxMap.termsAndConditions,
+                      onChanged: (bool value) {
+                        setState(() {
+                          checkBoxMap.termsAndConditions = value;
+                        });
+                      },
+                      text: 'Saya bersetuju dengan ',
+                      textLink: 'Terma dan Syarat'
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         bottomNavigationBar: UserButton(
           text: 'Daftar Sekarang',
@@ -198,6 +202,9 @@ class _SignUpPageState extends State<SignUpPage> {
 //                  content: Text('Sila setuju dengan terma dan syarat dahulu'));
 //              globalKey.currentState.showSnackBar(termsConditionsSnackBar);
             } else {
+              setState(() {
+                showLoadingAnimation = true;
+              });
               verifyPhone(textFieldMap.phoneNumber.text);
             }
           },
@@ -243,14 +250,14 @@ class _SignUpPageState extends State<SignUpPage> {
         context,
         MaterialPageRoute(
             builder: (context) =>
-                VerificationPage(verificationId: this.verificationId, userDetails: textFieldMap,)));
+                VerificationPage(verificationId: this.verificationId, userDetails: textFieldMap, isNewUser: true)));
     print('ver id: ${this.verificationId}');
   }
 
   Future<void> verifyPhone(phoneNo) async {
     final PhoneVerificationCompleted verified = (AuthCredential authResult) async {
       print('first line');
-      AuthService().signIn(context, authResult);
+//      AuthService().signIn(context, authResult);
       print('after');
     };
 
