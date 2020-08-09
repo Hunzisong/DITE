@@ -184,7 +184,16 @@ class _SignUpPageState extends State<SignUpPage> {
                   context: context,
                   isSLI: isSLI,
                   header: 'Amaran',
-                  content: 'Sila isi bidang yang kosong dahulu',
+                  content: Padding(
+                    padding: EdgeInsets.symmetric(vertical: Dimensions.d_45),
+                    child: Text(
+                      'Sila isi bidang yang kosong dahulu',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Colours.darkGrey,
+                          fontSize: FontSizes.normal),
+                    ),
+                  ),
                   onClick: () {
                     Navigator.pop(context);
                   });
@@ -193,7 +202,16 @@ class _SignUpPageState extends State<SignUpPage> {
                   context: context,
                   isSLI: isSLI,
                   header: 'Amaran',
-                  content: 'Sila setuju dengan terma dan syarat dahulu',
+                  content: Padding(
+                    padding: EdgeInsets.symmetric(vertical: Dimensions.d_45),
+                    child: Text(
+                      'Sila setuju dengan terma dan syarat dahulu',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Colours.darkGrey,
+                          fontSize: FontSizes.normal),
+                    ),
+                  ),
                   onClick: () {
                     Navigator.pop(context);
                   });
@@ -274,7 +292,16 @@ class _SignUpPageState extends State<SignUpPage> {
           isSLI: widget.isSLI,
           touchToDismiss: false,
           header: 'Pengesahan',
-          content: 'Daftar berjaya! Sila klik Teruskan untuk menyerus ke halaman pengesahan.',
+          content: Padding(
+            padding: EdgeInsets.symmetric(vertical: Dimensions.d_45),
+            child: Text(
+              'Daftar berjaya! Sila klik Teruskan untuk menyerus ke halaman pengesahan.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Colours.darkGrey,
+                  fontSize: FontSizes.normal),
+            ),
+          ),
           buttonText: 'Teruskan',
           onClick: () {
             pushVerificationPage();
