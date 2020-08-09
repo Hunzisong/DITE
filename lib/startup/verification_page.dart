@@ -8,7 +8,9 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 class VerificationPage extends StatefulWidget {
   final String verificationId;
   final TextFieldMap userDetails;
-  VerificationPage({Key key, @required this.verificationId, this.userDetails}) : super(key: key);
+  final bool isNewUser;
+  VerificationPage({Key key, @required this.verificationId, this.userDetails, this.isNewUser})
+      : super(key: key);
 
   @override
   _VerificationPageState createState() => _VerificationPageState();
@@ -69,10 +71,11 @@ class _VerificationPageState extends State<VerificationPage> {
                                 showLoadingAnimation = true;
                               });
                               AuthService().signInWithOTP(
-                                  context,
-                                  widget.userDetails,
-                                  verificationNumberController.text,
-                                  widget.verificationId);
+                                  context: context,
+                                  isNewUser: widget.isNewUser,
+                                  userDetails: widget.userDetails,
+                                  smsCode: verificationNumberController.text,
+                                  verId: widget.verificationId);
                             },
                           ),
                         ],

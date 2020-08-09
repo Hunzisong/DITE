@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
 import 'package:heard/startup/verification_page.dart';
 import 'package:heard/widgets/widgets.dart';
-import 'package:heard/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
@@ -97,13 +96,13 @@ class _LoginPageState extends State<LoginPage> {
     Navigator.push(
         context,
         MaterialPageRoute(builder: (context) =>
-            VerificationPage(verificationId: this.verificationId)
+            VerificationPage(verificationId: this.verificationId, isNewUser: false)
         ));
   }
 
   Future<void> verifyPhone(phoneNo) async {
     final PhoneVerificationCompleted verified = (AuthCredential authResult) {
-      //AuthService().signIn(context, authResult);
+//      AuthService().signIn(context, authResult);
     };
 
     final PhoneVerificationFailed verificationFailed =
