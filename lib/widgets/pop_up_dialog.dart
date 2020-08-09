@@ -2,18 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
 import 'package:heard/widgets/widgets.dart';
 
-Future<void> popUpDialog({BuildContext context, bool isSLI, bool touchToDismiss = true, String header = '', @required String content, String buttonText = 'Tutup', Function onClick}) async{
+Future<void> popUpDialog(
+    {BuildContext context,
+    bool isSLI,
+    bool touchToDismiss = true,
+    double height,
+    String header = '',
+    @required Widget content,
+    String buttonText = 'Tutup',
+    Function onClick}) async {
   return showDialog(
       context: context,
       barrierDismissible: touchToDismiss,
       builder: (context) {
         return Dialog(
           child: Container(
-            height: Dimensions.d_280,
+            height: height != null ? height : Dimensions.d_280,
             child: Padding(
               padding: EdgeInsets.symmetric(
                   vertical: Dimensions.d_15, horizontal: Dimensions.d_30),
               child: ListView(
+                physics: NeverScrollableScrollPhysics(),
                 children: <Widget>[
                   Padding(
                     padding: Paddings.vertical_5,
@@ -26,26 +35,14 @@ Future<void> popUpDialog({BuildContext context, bool isSLI, bool touchToDismiss 
                           color: Colours.darkGrey),
                     ),
                   ),
-                  SizedBox(
-                    height: Dimensions.d_45,
-                  ),
                   Padding(
                     padding: Paddings.horizontal_5,
-                    child: Text(
-                      content,
-                      style: TextStyle(
-                          fontSize: FontSizes.smallerText,
-                          color: Colours.darkGrey),
-                    ),
-                  ),
-                  SizedBox(
-                    height: Dimensions.d_30,
+                    child: content
                   ),
                   UserButton(
-                    text: buttonText,
-                    color: isSLI ? Colours.orange : Colours.blue,
-                    onClick: onClick
-                  )
+                      text: buttonText,
+                      color: isSLI ? Colours.orange : Colours.blue,
+                      onClick: onClick)
                 ],
               ),
             ),
