@@ -13,16 +13,52 @@ class OnDemandSLIPage extends StatefulWidget {
 
 class _OnDemandSLIPageState extends State<OnDemandSLIPage> {
   bool pairingComplete = false;
-  List<String> mockNameList = [
-    'James Cooper',
-    'Daniel James',
-    'Kyle Jenner',
-    'Kim Possible',
-    'Arthur Knight',
-    'John Monash',
-    'Michael Lee',
-    'Takashi Hiro',
-    'Jerry Tomson'
+
+  List<UserInfoTemp> mockInfoList = [
+    UserInfoTemp().addInfo(
+        name: 'James Cooper',
+        hospital: 'Hospital Sg Buloh',
+        department: 'Jabatan Jantung',
+        messageToSLI: 'Jangan pakai baju warna merah jambu',
+        isEmergency: true),
+    UserInfoTemp().addInfo(
+        name: 'Kyle Jenner',
+        hospital: 'Hospital Sg Long',
+        department: 'Jabatan Tangan',
+        isEmergency: true),
+    UserInfoTemp().addInfo(
+        name: 'Kim Possible',
+        hospital: 'Hospital Sarawak',
+        department: 'Jabatan Rambut',
+        messageToSLI: 'Jangan pakai baju warna merah'),
+    UserInfoTemp().addInfo(
+        name: 'Arthur Knight',
+        hospital: 'Hospital Kuala Lumpur',
+        department: 'Jabatan Telinga'),
+    UserInfoTemp().addInfo(
+        name: 'John Monash',
+        hospital: 'Hospital Selangor',
+        department: 'Jabatan Muka'),
+    UserInfoTemp().addInfo(
+        name: 'Michael Lee',
+        hospital: 'Hospital Pahang',
+        department: 'Jabatan Mata'),
+    UserInfoTemp().addInfo(
+        name: 'Takashi Hiro',
+        hospital: 'Hospital Sabah',
+        department: 'Jabatan Kaki'),
+    UserInfoTemp().addInfo(
+        name: 'James Cooper',
+        hospital: 'Hospital Pulau Pinang',
+        department: 'Jabatan Mulut'),
+    UserInfoTemp().addInfo(
+        name: 'James Cooper',
+        hospital: 'Hospital Seremban',
+        department: 'Jabatan Arteri'),
+    UserInfoTemp().addInfo(
+        name: 'James Cooper',
+        hospital: 'Hospital Shah Alam',
+        department: 'Jabatan Badan'),
   ];
 
   @override
@@ -65,19 +101,99 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage> {
                   scrollDirection: Axis.vertical,
                   controller: ScrollController(),
                   shrinkWrap: true,
-                  itemCount: mockNameList.length,
+                  itemCount: mockInfoList.length,
                   itemBuilder: (context, index) {
                     return SlidableListTile(
-                      name: mockNameList[index],
-                      onTap: () {
-                        createDialog(
+                      isThreeLine: true,
+                      userInfo: mockInfoList[index],
+                      onAccept: () {
+                        popUpDialog(
                             context: context,
-                            onAcceptClick: () {
+                            isSLI: true,
+                            header: 'Pengesahan',
+                            content: Padding(
+                              padding: EdgeInsets.symmetric(vertical: Dimensions.d_45),
+                              child: Text(
+                                'Adakah anda pasti?',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colours.darkGrey,
+                                fontSize: FontSizes.normal),
+                              ),
+                            ),
+                            buttonText: 'Teruskan',
+                            onClick: () {
+                              Navigator.pop(context);
                               setState(() {
                                 pairingComplete = true;
                               });
                             });
                       },
+                      onTrailingButtonPress: IconButton(
+                        icon: Icon(Icons.info_outline),
+                        color: Colours.orange,
+                        iconSize: Dimensions.d_30,
+                        onPressed: () {
+                          popUpDialog(
+                            context: context,
+                            isSLI: true,
+                            height: Dimensions.d_130 * 3.5,
+                            onClick: () {
+                              Navigator.pop(context);
+                            },
+                            header: 'Maklumat',
+                            content: Column(
+                              children: <Widget>[
+                                ListTile(
+                                  contentPadding: EdgeInsets.all(Dimensions.d_20),
+                                  isThreeLine: true,
+                                  leading: Icon(
+                                    Icons.account_circle,
+                                    size: Dimensions.d_55,
+                                  ),
+                                  title: Text(
+                                    '${mockInfoList[index].userName}',
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  subtitle: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        '${mockInfoList[index].hospital}',
+                                        style: TextStyle(color: Colours.darkGrey),
+                                      ),
+                                      Text(
+                                        '(${mockInfoList[index].department})',
+                                        style: TextStyle(color: Colours.darkGrey),
+                                      ),
+                                      mockInfoList[index].isEmergency
+                                          ? Text(
+                                              '*Kecemasan',
+                                              style: TextStyle(color: Colours.fail),
+                                            )
+                                          : SizedBox.shrink(),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                  EdgeInsets.symmetric(vertical: Dimensions.d_15),
+                                  child: Container(
+                                    height: Dimensions.d_130,
+                                    decoration: BoxDecoration(
+                                        color: Colours.lightGrey,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(Dimensions.d_10))),
+                                    child: ListTile(
+                                      title: Text(mockInfoList[index].messageToSLI, style: TextStyle(fontSize: FontSizes.smallerText),),
+                                    )
+                                  ),
+                                )
+                              ],
+                            ),
+                          );
+                        },
+                      ),
                     );
                   },
                 )
@@ -87,61 +203,26 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage> {
   }
 }
 
-Future<dynamic> createDialog({BuildContext context, Function onAcceptClick}) {
-  return showDialog(
-      context: context,
-      builder: (context) {
-        return Dialog(
-          child: Container(
-            height: Dimensions.d_280,
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: Dimensions.d_15, horizontal: Dimensions.d_30),
-              child: ListView(
-                children: <Widget>[
-                  Padding(
-                    padding: Paddings.vertical_5,
-                    child: Text(
-                      "Pengesahan",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: FontSizes.mainTitle,
-                          color: Colours.darkGrey),
-                    ),
-                  ),
-                  SizedBox(
-                    height: Dimensions.d_65,
-                  ),
-                  Padding(
-                    padding: Paddings.horizontal_5,
-                    child: Text(
-                      'Adakah anda pasti?',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: FontSizes.biggerText,
-                          color: Colours.darkGrey),
-                    ),
-                  ),
-                  SizedBox(
-                    height: Dimensions.d_45,
-                  ),
-                  UserButton(
-                    text: 'Teruskan',
-                    color: Colours.orange,
-                    onClick: () {
-                      // Popping all previous pages of the application before proceeding to verification page
-                      Navigator.pop(context);
-                      onAcceptClick();
-                    },
-                  )
-                ],
-              ),
-            ),
-          ),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(Dimensions.d_10))),
-          elevation: Dimensions.d_15,
-        );
-      });
+class UserInfoTemp {
+  String userName;
+  String hospital;
+  String department;
+  String messageToSLI;
+  bool isEmergency;
+
+  UserInfoTemp addInfo(
+      {@required String name,
+      @required String hospital,
+      @required String department,
+      String messageToSLI = '',
+      bool isEmergency = false}) {
+    UserInfoTemp newPerson = UserInfoTemp();
+    newPerson.userName = name;
+    newPerson.hospital = hospital;
+    newPerson.department = department;
+    newPerson.messageToSLI = messageToSLI;
+    newPerson.isEmergency = isEmergency;
+
+    return newPerson;
+  }
 }
