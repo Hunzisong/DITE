@@ -16,33 +16,36 @@ class SlidableListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        Slidable(
-          actionPane: SlidableDrawerActionPane(),
-          actionExtentRatio: 0.25,
-          child: ListTile(
-            contentPadding: EdgeInsets.all(Dimensions.d_20),
-            isThreeLine: isThreeLine,
-            leading: Icon(
-              Icons.account_circle,
-              size: Dimensions.d_55,
+        Material(
+          color: userInfo.isEmergency ? Colours.lightOrange : Colours.white,
+          child: Slidable(
+            actionPane: SlidableDrawerActionPane(),
+            actionExtentRatio: 0.25,
+            child: ListTile(
+              contentPadding: EdgeInsets.all(Dimensions.d_20),
+              isThreeLine: isThreeLine,
+              leading: Icon(
+                Icons.account_circle,
+                size: Dimensions.d_55,
+              ),
+              title: Text('${userInfo.userName}', style: TextStyle(fontWeight: FontWeight.bold),),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text('${userInfo.hospital}', style: TextStyle(color: Colours.darkGrey),),
+                  userInfo.isEmergency ? Text('KECEMASAN', style: TextStyle(color: Colours.fail, fontSize: FontSizes.biggerText),) : SizedBox.shrink(),
+                ],
+              ),
+              trailing: onTrailingButtonPress != null ? onTrailingButtonPress : SizedBox.shrink(),
             ),
-            title: Text('${userInfo.userName}', style: TextStyle(fontWeight: FontWeight.bold),),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text('${userInfo.hospital}', style: TextStyle(color: Colours.darkGrey),),
-                userInfo.isEmergency ? Text('*Kecemasan', style: TextStyle(color: Colours.fail),) : SizedBox.shrink(),
-              ],
-            ),
-            trailing: onTrailingButtonPress != null ? onTrailingButtonPress : SizedBox.shrink(),
+            secondaryActions: <Widget>[
+              IconSlideAction(
+                  caption: 'Terima',
+                  color: Colours.accept,
+                  icon: Icons.done,
+                  onTap: onAccept),
+            ],
           ),
-          secondaryActions: <Widget>[
-            IconSlideAction(
-                caption: 'Terima',
-                color: Colours.accept,
-                icon: Icons.done,
-                onTap: onAccept),
-          ],
         ),
         Divider(
           height: Dimensions.d_0,

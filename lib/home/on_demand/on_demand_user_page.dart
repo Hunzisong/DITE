@@ -99,7 +99,7 @@ class _OnDemandUserPageState extends State<OnDemandUserPage> {
                               });
                             },
                             text:
-                                'Saya mem﻿inta perkhidmatan bagi pihak orang lain',
+                                'Saya mem﻿inta perkhidmatan JBIM bagi pihak orang lain',
                           ),
                           onDemandInputs.isBookingForOthers
                               ? Padding(
