@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
-import 'package:heard/services/auth_service.dart';
+import 'package:heard/firebase_services/auth_service.dart';
 import 'package:heard/startup/signup_page.dart';
 import 'package:heard/widgets/widgets.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';

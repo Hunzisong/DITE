@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:heard/services/auth_service.dart';
+import 'package:heard/firebase_services/auth_service.dart';
 import 'package:heard/widgets/user_button.dart';
 
 class Profile extends StatefulWidget {

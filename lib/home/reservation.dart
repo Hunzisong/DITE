@@ -22,11 +22,12 @@ class _ReservationState extends State<Reservation>
     super.build(context);
     return Center(
         child: FlatButton(
-      child: Text('Schedule Page'),
-      color: Colours.orange,
+      child: Text('Chat Page'),
+      color: Colours.darkGrey,
       onPressed: () {
         Navigator.push(
           context,
+          /// todo: push chat page here!
           MaterialPageRoute(builder: (context) => SchedulePage()),
         );
       },
