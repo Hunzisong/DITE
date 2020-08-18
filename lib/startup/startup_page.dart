@@ -1,13 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:heard/api/user_exists.dart';
 import 'package:heard/constants.dart';
 import 'package:heard/home/navigation.dart';
 import 'package:heard/startup/login_page.dart';
 import 'package:heard/startup/signup_page.dart';
 import 'package:heard/widgets/widgets.dart';
-import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 
 class StartupPage extends StatefulWidget {
@@ -34,26 +30,6 @@ class _StartupPageState extends State<StartupPage> {
     print('Firebase user: $user');
 
     if (user != null) {
-      IdTokenResult token = await user.getIdToken(refresh: false);
-      String tokenString = token.token.toString();
-      print('Auth token: $tokenString');
-
-      var isNewUser = await http.get(
-          'https://heard-project.herokuapp.com/user/exists',
-          headers: {
-            'Authorization': tokenString,
-          });
-
-      UserExists userExists = UserExists.fromJson(isNewUser.body);
-      print('Does user exists: ${userExists.exists}');
-
-      var response = await http.get(
-          'https://heard-project.herokuapp.com/user/me',
-          headers: {
-            'Authorization': tokenString,
-          });
-      print('Startup Response: ${response.statusCode}, body: ${response.body}');
-
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => Navigation()),
