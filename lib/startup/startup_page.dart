@@ -1,14 +1,62 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
+import 'package:heard/home/navigation.dart';
 import 'package:heard/startup/login_page.dart';
 import 'package:heard/startup/signup_page.dart';
 import 'package:heard/widgets/widgets.dart';
+import 'package:http/http.dart' as http;
+import 'package:firebase_auth/firebase_auth.dart';
 
-class StartupPage extends StatelessWidget {
+class StartupPage extends StatefulWidget {
+  @override
+  _StartupPageState createState() => _StartupPageState();
+}
+
+class _StartupPageState extends State<StartupPage> {
+
+  bool showEmptyScreen = false;
+
+  @override
+  void initState() {
+    super.initState();
+    isSignedIn();
+  }
+
+  void isSignedIn() async {
+    this.setState(() {
+      showEmptyScreen = true;
+    });
+
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    print('Firebase user: $user');
+
+    if (user != null) {
+      IdTokenResult token = await user.getIdToken(refresh: false);
+      String tokenString = token.token.toString();
+      print('Auth token: $tokenString');
+
+      var response = await http.get(
+          'https://heard-project.herokuapp.com/user/me',
+          headers: {
+            'Authorization': tokenString,
+          });
+      print('Startup Response: ${response.statusCode}, body: ${response.body}');
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Navigation()),
+      );
+    }
+    else {
+      this.setState(() {
+        showEmptyScreen = false;
+      });
+    }
+  }
+
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
+      child: showEmptyScreen ? Container() : Scaffold(
         backgroundColor: Colors.white,
         body: ListView(
           children: <Widget>[

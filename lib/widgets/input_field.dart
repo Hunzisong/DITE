@@ -6,7 +6,7 @@ class InputField extends StatelessWidget {
   final labelText;
   final keyboardType;
   final isShortInput;
-  final hintText;
+  final String hintText;
   final Color backgroundColour;
   final bool moreLines;
   final TextEditingController controller;

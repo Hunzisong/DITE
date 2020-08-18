@@ -25,7 +25,6 @@ class FCM {
 
       // For testing purposes print the Firebase Messaging token
       String fcmToken = await _firebaseMessaging.getToken();
-      print("FirebaseMessaging token: $fcmToken");
 
       String authToken = await AuthService.getToken();
       print(authToken);
@@ -37,7 +36,6 @@ class FCM {
           body: {
             'fcm_token': fcmToken,
           });
-      print(response.statusCode);
       _initialized = true;
     }
   }
@@ -46,13 +44,11 @@ class FCM {
     if (message.containsKey('data')) {
       // Handle data message
       final dynamic data = message['data'];
-      print("Data: $data");
     }
 
     if (message.containsKey('notification')) {
       // Handle notification message
       final dynamic notification = message['notification'];
-      print("Notif: $notification");
     }
   }
 }

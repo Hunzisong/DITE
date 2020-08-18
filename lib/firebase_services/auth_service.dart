@@ -10,7 +10,7 @@ class AuthService {
   static String authToken;
 
   //Sign out
-  signOut(BuildContext context) {
+  signOut(BuildContext context) async {
     _auth.signOut();
     Navigator.push(
       context,
@@ -44,7 +44,7 @@ class AuthService {
     });
   }
 
-  signInWithOTP({BuildContext context, TextFieldMap userDetails, String smsCode, String verId, bool isNewUser}) {
+  signInWithOTP({BuildContext context, TextFieldMap userDetails, String smsCode, String verId, bool isNewUser}) async {
     try {
       AuthCredential authCreds = PhoneAuthProvider.getCredential(
           verificationId: verId, smsCode: smsCode);

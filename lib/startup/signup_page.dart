@@ -4,7 +4,6 @@ import 'package:heard/widgets/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:heard/startup/verification_page.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-//import 'package:http/http.dart' as http;
 
 class SignUpPage extends StatefulWidget {
   final bool isSLI;
@@ -42,30 +41,30 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     bool isSLI = widget.isSLI;
     return SafeArea(
-      child: Scaffold(
+      child: ModalProgressHUD(
+        inAsyncCall: showLoadingAnimation,
+        child: Scaffold(
 //        key: globalKey,
-        appBar: AppBar(
+          appBar: AppBar(
+            backgroundColor: Colours.white,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back_ios, color: Colors.black),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            title: Text(
+              isSLI ? 'Pendaftaran JBIM' : 'Pendaftaran',
+              style: TextStyle(
+                  fontSize: FontSizes.mainTitle,
+                  fontWeight: FontWeight.bold,
+                  color: Colours.black),
+            ),
+            centerTitle: true,
+            elevation: 0.0,
+          ),
           backgroundColor: Colours.white,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios, color: Colors.black),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          title: Text(
-            isSLI ? 'Pendaftaran JBIM' : 'Pendaftaran',
-            style: TextStyle(
-                fontSize: FontSizes.mainTitle,
-                fontWeight: FontWeight.bold,
-                color: Colours.black),
-          ),
-          centerTitle: true,
-          elevation: 0.0,
-        ),
-        backgroundColor: Colours.white,
-        body: ModalProgressHUD(
-          inAsyncCall: showLoadingAnimation,
-          child: ListView(
+          body: ListView(
             children: <Widget>[
               Padding(
                 padding: Paddings.signUpPage,
@@ -173,58 +172,58 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
             ],
           ),
-        ),
-        bottomNavigationBar: UserButton(
-          text: 'Daftar Sekarang',
-          color: isSLI ? Colours.orange : Colours.blue,
-          padding: EdgeInsets.all(Dimensions.d_30),
-          onClick: () {
-            if (allFieldsFilled(isSLI) == false) {
-              popUpDialog(
-                  context: context,
-                  isSLI: isSLI,
-                  header: 'Amaran',
-                  content: Padding(
-                    padding: EdgeInsets.symmetric(vertical: Dimensions.d_45),
-                    child: Text(
-                      'Sila isi bidang yang kosong dahulu',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colours.darkGrey,
-                          fontSize: FontSizes.normal),
+          bottomNavigationBar: UserButton(
+            text: 'Daftar Sekarang',
+            color: isSLI ? Colours.orange : Colours.blue,
+            padding: EdgeInsets.all(Dimensions.d_30),
+            onClick: () {
+              if (allFieldsFilled(isSLI) == false) {
+                popUpDialog(
+                    context: context,
+                    isSLI: isSLI,
+                    header: 'Amaran',
+                    content: Padding(
+                      padding: EdgeInsets.symmetric(vertical: Dimensions.d_45),
+                      child: Text(
+                        'Sila isi bidang yang kosong dahulu',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colours.darkGrey,
+                            fontSize: FontSizes.normal),
+                      ),
                     ),
-                  ),
-                  onClick: () {
-                    Navigator.pop(context);
-                  });
-            } else if (checkBoxMap.termsAndConditions == false) {
-              popUpDialog(
-                  context: context,
-                  isSLI: isSLI,
-                  header: 'Amaran',
-                  content: Padding(
-                    padding: EdgeInsets.symmetric(vertical: Dimensions.d_45),
-                    child: Text(
-                      'Sila setuju dengan terma dan syarat dahulu',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colours.darkGrey,
-                          fontSize: FontSizes.normal),
+                    onClick: () {
+                      Navigator.pop(context);
+                    });
+              } else if (checkBoxMap.termsAndConditions == false) {
+                popUpDialog(
+                    context: context,
+                    isSLI: isSLI,
+                    header: 'Amaran',
+                    content: Padding(
+                      padding: EdgeInsets.symmetric(vertical: Dimensions.d_45),
+                      child: Text(
+                        'Sila setuju dengan terma dan syarat dahulu',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colours.darkGrey,
+                            fontSize: FontSizes.normal),
+                      ),
                     ),
-                  ),
-                  onClick: () {
-                    Navigator.pop(context);
-                  });
+                    onClick: () {
+                      Navigator.pop(context);
+                    });
 //              final termsConditionsSnackBar = SnackBar(
 //                  content: Text('Sila setuju dengan terma dan syarat dahulu'));
 //              globalKey.currentState.showSnackBar(termsConditionsSnackBar);
-            } else {
-              setState(() {
-                showLoadingAnimation = true;
-              });
-              verifyPhone(textFieldMap.phoneNumber.text);
-            }
-          },
+              } else {
+                setState(() {
+                  showLoadingAnimation = true;
+                });
+                verifyPhone(textFieldMap.phoneNumber.text);
+              }
+            },
+          ),
         ),
       ),
     );
@@ -263,6 +262,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   void pushVerificationPage() {
     Navigator.pop(context);
+    Navigator.pop(context);
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -296,7 +296,7 @@ class _SignUpPageState extends State<SignUpPage> {
             padding: EdgeInsets.symmetric(vertical: Dimensions.d_45),
             child: Text(
               'Daftar berjaya! Sila klik Teruskan untuk menyerus ke halaman pengesahan.',
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.left,
               style: TextStyle(
                   color: Colours.darkGrey,
                   fontSize: FontSizes.normal),

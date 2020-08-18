@@ -17,7 +17,7 @@ Future<void> popUpDialog(
       builder: (context) {
         return Dialog(
           child: Container(
-            height: height != null ? height : Dimensions.d_280,
+            height: height != null ? height : Dimensions.d_280 * 1.05,
             child: Padding(
               padding: EdgeInsets.symmetric(
                   vertical: Dimensions.d_15, horizontal: Dimensions.d_30),
