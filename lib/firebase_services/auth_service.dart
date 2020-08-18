@@ -95,4 +95,10 @@ class AuthService {
       debugPrint("Error on Signin");
     }
   }
+
+  static Future<String> getToken() async {
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    IdTokenResult token = await user.getIdToken(refresh: false);
+    return token.token.toString();
+  }
 }
