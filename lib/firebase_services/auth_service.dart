@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:heard/home/navigation.dart';
+import 'package:heard/http_services/sli_services.dart';
 import 'package:heard/http_services/user_services.dart';
 import 'package:heard/startup/signup_page.dart';
 import 'package:heard/startup/startup_page.dart';
@@ -72,16 +73,27 @@ class AuthService {
           await authResult.user.getIdToken(refresh: false);
 
       String authTokenString = authToken.token.toString();
-      print('Authentication Token: $authTokenString');
 
       if (authResult.user != null) {
-        bool userExists = await UserServices().doesUserExist(headerToken: authTokenString);
-        if (userExists == false) {
-          await UserServices().createUser(
-            headerToken: authTokenString,
-            name: userDetails.fullName.text,
-            phoneNumber: userDetails.phoneNumber.text,
-          );
+        if (userDetails.isSLI == false) {
+          bool userExists = await UserServices().doesUserExist(headerToken: authTokenString);
+          if (userExists == false) {
+            await UserServices().createUser(
+              headerToken: authTokenString,
+              name: userDetails.fullName.text,
+              phoneNumber: userDetails.phoneNumber.text,
+            );
+          }
+        } else {
+          bool sliExists = await SLIServices().doesSLIExist(headerToken: authTokenString);
+          print("Existence: $sliExists \n ---------------------------");
+          if (sliExists == false) {
+            print("Creating SLI \n ----------------------");
+            await SLIServices().createSLI(
+              headerToken: authTokenString,
+              sliDetails: userDetails,
+            );
+          }
         }
 
         Navigator.pop(context);
@@ -96,7 +108,7 @@ class AuthService {
         );
       }
     } catch (e) {
-      debugPrint("Error on Signin");
+      debugPrint("Error on Sign-in");
     }
   }
 

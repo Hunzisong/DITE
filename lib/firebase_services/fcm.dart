@@ -6,7 +6,7 @@ class FCM {
   final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
   bool _initialized = false;
 
-  Future<void> init() async{
+  Future<void> init(String userType) async{
     if (!_initialized) {
       // For iOS request permission first.
       _firebaseMessaging.requestNotificationPermissions();
@@ -23,20 +23,22 @@ class FCM {
         },
       );
 
-      // For testing purposes print the Firebase Messaging token
       String fcmToken = await _firebaseMessaging.getToken();
 
       String authToken = await AuthService.getToken();
-      print(authToken);
       var response = await http.post(
-          'https://heard-project.herokuapp.com/user/create',
+          'https://heard-project.herokuapp.com/fcm/upsert',
           headers: {
             'Authorization': authToken,
           },
           body: {
             'fcm_token': fcmToken,
+            'type': userType,
           });
       _initialized = true;
+
+      var code = response.statusCode;
+      print("Token Response: $code");
     }
   }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:heard/api/user.dart';
 import 'package:heard/constants.dart';
 import 'package:heard/firebase_services/auth_service.dart';
+import 'package:heard/firebase_services/fcm.dart';
 import 'package:heard/home/on_demand/on_demand_sli_page.dart';
 import 'package:heard/home/on_demand/on_demand_user_page.dart';
 import 'package:heard/home/reservation.dart';
@@ -47,9 +48,15 @@ class _NavigationState extends State<Navigation> {
 
   @override
   Widget build(BuildContext context) {
+    // Send FCM token depending on whether logged in is user or sli
+    widget.isSLI ? print("User type: SLI") : print("User type: User");
+    var fcm = FCM();
+    widget.isSLI ? fcm.init("sli") : fcm.init("user");
+
     if (_pages == null && userDetails != null && authToken != null)
       // determine whether its user or sli tab pages
       _pages  = widget.isSLI ? [OnDemandSLIPage(), Reservation(), Transaction(), Profile(userDetails: userDetails)] : [OnDemandUserPage(), Reservation(), Transaction(), Profile(userDetails: userDetails)];
+
     return Scaffold(
       appBar: AppBar(
         leading: SizedBox.shrink(),

@@ -265,7 +265,7 @@ class _SignUpPageState extends State<SignUpPage> {
         context,
         MaterialPageRoute(
             builder: (context) =>
-                VerificationPage(verificationId: this.verificationId, userDetails: userDetails)));
+                VerificationPage(verificationId: this.verificationId, userDetails: this.userDetails)));
   }
 
   Future<void> verifyPhone(phoneNo) async {
