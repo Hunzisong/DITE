@@ -1,6 +1,5 @@
 class SLI {
-  String firstName;
-  String lastName;
+  String name;
   String profilePic;
   String phoneNo;
   String gender;
@@ -9,8 +8,7 @@ class SLI {
   String experiencedBim;
 
   SLI(
-      {this.firstName,
-        this.lastName,
+      {this.name,
         this.profilePic,
         this.phoneNo,
         this.gender,
@@ -19,8 +17,7 @@ class SLI {
         this.experiencedBim});
 
   SLI.fromJson(Map<String, dynamic> json) {
-    firstName = json['first_name'];
-    lastName = json['last_name'];
+    name = json['name'];
     profilePic = json['profile_pic'];
     phoneNo = json['phone_no'];
     gender = json['gender'];
@@ -31,8 +28,7 @@ class SLI {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['first_name'] = this.firstName;
-    data['last_name'] = this.lastName;
+    data['name'] = this.name;
     data['profile_pic'] = this.profilePic;
     data['phone_no'] = this.phoneNo;
     data['gender'] = this.gender;
