@@ -5,8 +5,9 @@ import 'package:heard/widgets/user_button.dart';
 
 class Profile extends StatefulWidget {
   final bool isSLI;
+  final dynamic userDetails;
 
-  Profile({this.isSLI = false});
+  Profile({this.isSLI = false, this.userDetails});
 
   @override
   _ProfileState createState() => _ProfileState();
@@ -20,6 +21,10 @@ class _ProfileState extends State<Profile> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
+          ListTile(
+            title: Text('Name: ${widget.userDetails.name}'),
+            subtitle: Text('Phone Number: ${widget.userDetails.phoneNo}'),
+          ),
           UserButton(
             color: widget.isSLI ? Colours.orange : Colours.blue,
             text: "Log Out",
