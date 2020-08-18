@@ -17,22 +17,20 @@ class _SignUpPageState extends State<SignUpPage> {
   bool showLoadingAnimation = false;
   String verificationId;
   bool codeSent = false;
-  TextFieldMap textFieldMap;
-  CheckBoxMap checkBoxMap;
-
-  gender _gender;
+  UserDetails userDetails;
 
   @override
   void initState() {
     super.initState();
-    textFieldMap = TextFieldMap();
-    checkBoxMap = CheckBoxMap();
+    userDetails = UserDetails();
+    userDetails.setUserType(isSLI: widget.isSLI);
   }
 
   @override
   void dispose() {
     super.dispose();
-    textFieldMap.disposeTexts();
+    userDetails.disposeTexts();
+    print('Disposed text editor');
   }
 
 //  final globalKey = GlobalKey<ScaffoldState>();
@@ -73,12 +71,12 @@ class _SignUpPageState extends State<SignUpPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     InputField(
-                      controller: textFieldMap.fullName,
+                      controller: userDetails.fullName,
                       labelText: 'Nama Penuh',
                     ),
                     InputField(
                       hintText: '+60123456789',
-                      controller: textFieldMap.phoneNumber,
+                      controller: userDetails.phoneNumber,
                       labelText: 'Nombor Telefon',
                       keyboardType: TextInputType.phone,
                     ),
@@ -106,11 +104,11 @@ class _SignUpPageState extends State<SignUpPage> {
                                           style: TextStyle(
                                               fontSize: FontSizes.smallerText),
                                         ),
-                                        value: gender.male,
-                                        groupValue: _gender,
-                                        onChanged: (gender value) {
+                                        value: Gender.male,
+                                        groupValue: userDetails.gender,
+                                        onChanged: (Gender value) {
                                           setState(() {
-                                            _gender = value;
+                                            userDetails.gender = value;
                                           });
                                         }),
                                   ),
@@ -122,11 +120,11 @@ class _SignUpPageState extends State<SignUpPage> {
                                           style: TextStyle(
                                               fontSize: FontSizes.smallerText),
                                         ),
-                                        value: gender.female,
-                                        groupValue: _gender,
-                                        onChanged: (gender value) {
+                                        value: Gender.female,
+                                        groupValue: userDetails.gender,
+                                        onChanged: (Gender value) {
                                           setState(() {
-                                            _gender = value;
+                                            userDetails.gender = value;
                                           });
                                         }),
                                   ),
@@ -136,20 +134,20 @@ class _SignUpPageState extends State<SignUpPage> {
                                 height: Dimensions.d_15,
                               ),
                               CheckBoxTile(
-                                value: checkBoxMap.hasExperience,
+                                value: userDetails.hasExperience,
                                 onChanged: (bool value) {
                                   setState(() {
-                                    checkBoxMap.hasExperience = value;
+                                    userDetails.hasExperience = value;
                                   });
                                 },
                                 text:
                                     'Saya berpengalaman dalam bidang perubatan﻿',
                               ),
                               CheckBoxTile(
-                                value: checkBoxMap.isFluent,
+                                value: userDetails.isFluent,
                                 onChanged: (bool value) {
                                   setState(() {
-                                    checkBoxMap.isFluent = value;
+                                    userDetails.isFluent = value;
                                   });
                                 },
                                 text: 'Saya fasih berbahasa Isyarat Malaysia',
@@ -158,10 +156,10 @@ class _SignUpPageState extends State<SignUpPage> {
                           )
                         : SizedBox(height: 0),
                     CheckBoxTile(
-                      value: checkBoxMap.termsAndConditions,
+                      value: userDetails.termsAndConditions,
                       onChanged: (bool value) {
                         setState(() {
-                          checkBoxMap.termsAndConditions = value;
+                          userDetails.termsAndConditions = value;
                         });
                       },
                       text: 'Saya bersetuju dengan ',
@@ -195,7 +193,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     onClick: () {
                       Navigator.pop(context);
                     });
-              } else if (checkBoxMap.termsAndConditions == false) {
+              } else if (userDetails.termsAndConditions == false) {
                 popUpDialog(
                     context: context,
                     isSLI: isSLI,
@@ -220,7 +218,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 setState(() {
                   showLoadingAnimation = true;
                 });
-                verifyPhone(textFieldMap.phoneNumber.text);
+                verifyPhone(userDetails.phoneNumber.text);
               }
             },
           ),
@@ -231,11 +229,11 @@ class _SignUpPageState extends State<SignUpPage> {
 
   bool allFieldsFilled(bool isSLI) {
     return !isSLI
-        ? textFieldMap.phoneNumber.text.isNotEmpty &&
-            textFieldMap.fullName.text.isNotEmpty
-        : textFieldMap.phoneNumber.text.isNotEmpty &&
-            textFieldMap.fullName.text.isNotEmpty &&
-            _gender != null;
+        ? userDetails.phoneNumber.text.isNotEmpty &&
+            userDetails.fullName.text.isNotEmpty
+        : userDetails.phoneNumber.text.isNotEmpty &&
+            userDetails.fullName.text.isNotEmpty &&
+        userDetails.gender != null;
   }
 
 //  Future<void> createNewUser(
@@ -267,8 +265,7 @@ class _SignUpPageState extends State<SignUpPage> {
         context,
         MaterialPageRoute(
             builder: (context) =>
-                VerificationPage(verificationId: this.verificationId, userDetails: textFieldMap)));
-    print('ver id: ${this.verificationId}');
+                VerificationPage(verificationId: this.verificationId, userDetails: userDetails)));
   }
 
   Future<void> verifyPhone(phoneNo) async {
@@ -327,18 +324,21 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 }
 
-class TextFieldMap {
+class UserDetails {
   TextEditingController fullName = TextEditingController();
   TextEditingController phoneNumber = TextEditingController();
+  bool hasExperience = false;
+  bool isFluent = false;
+  bool termsAndConditions = false;
+  bool isSLI = false;
+  Gender gender;
 
   void disposeTexts() {
     fullName.dispose();
     phoneNumber.dispose();
   }
-}
 
-class CheckBoxMap {
-  bool hasExperience = false;
-  bool isFluent = false;
-  bool termsAndConditions = false;
+  void setUserType({bool isSLI}) {
+    this.isSLI = isSLI;
+  }
 }

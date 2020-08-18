@@ -128,9 +128,9 @@ class _OnDemandUserPageState extends State<OnDemandUserPage> {
                                                         fontSize: FontSizes
                                                             .smallerText),
                                                   ),
-                                                  value: gender.male,
+                                                  value: Gender.male,
                                                   groupValue: onDemandInputs.genderType,
-                                                  onChanged: (gender value) {
+                                                  onChanged: (Gender value) {
                                                     setState(() {
                                                       onDemandInputs.genderType = value;
                                                     });
@@ -145,9 +145,9 @@ class _OnDemandUserPageState extends State<OnDemandUserPage> {
                                                         fontSize: FontSizes
                                                             .smallerText),
                                                   ),
-                                                  value: gender.female,
+                                                  value: Gender.female,
                                                   groupValue: onDemandInputs.genderType,
-                                                  onChanged: (gender value) {
+                                                  onChanged: (Gender value) {
                                                     setState(() {
                                                       onDemandInputs.genderType = value;
                                                     });
@@ -203,7 +203,7 @@ class OnDemandInputs {
   TextEditingController noteToSLI = TextEditingController();
   bool isEmergency = false;
   bool isBookingForOthers = false;
-  gender genderType;
+  Gender genderType;
 
   void disposeTexts() {
     hospital.dispose();

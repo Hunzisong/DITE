@@ -54,7 +54,7 @@ class AuthService {
 
   signInWithOTP(
       {BuildContext context,
-      TextFieldMap userDetails,
+      UserDetails userDetails,
       String smsCode,
       String verId}) async {
     try {
@@ -87,7 +87,7 @@ class AuthService {
         Navigator.pop(context);
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Navigation()),
+          MaterialPageRoute(builder: (context) => Navigation(isSLI: userDetails.isSLI)),
         );
       } else {
         Navigator.push(

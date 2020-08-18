@@ -63,4 +63,4 @@ class Colours {
   static Color fail = Colors.redAccent;
 }
 
-enum gender {male, female}
+enum Gender {male, female}
