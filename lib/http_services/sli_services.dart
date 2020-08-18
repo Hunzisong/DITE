@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:heard/api/sli.dart';
-import 'package:heard/startup/signup_page.dart';
+import 'package:heard/startup/user_details.dart';
 import 'package:http/http.dart' as http;
 
 class SLIServices {
@@ -32,8 +32,8 @@ class SLIServices {
       'profile_pic': 'test1',
       'gender': sliDetails.gender.toString().split('.').last,
       'description': 'test1',
-      'experienced_medical': sliDetails.hasExperience,
-      'experienced_bim': sliDetails.isFluent,
+      'experienced_medical': sliDetails.hasExperience.toString(),
+      'experienced_bim': sliDetails.isFluent.toString(),
     });
     print('Create SLI response: ${response.statusCode}, body: ${response.body}');
   }
