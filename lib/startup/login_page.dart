@@ -44,6 +44,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       SizedBox(height: Dimensions.d_30),
                       InputField(
+                        hintText: '+60123456789',
                         controller: phoneNumberText,
                         labelText: 'Nombor Telefon',
                         keyboardType: TextInputType.phone,
