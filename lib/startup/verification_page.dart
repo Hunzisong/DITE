@@ -7,7 +7,7 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class VerificationPage extends StatefulWidget {
   final String verificationId;
-  final TextFieldMap userDetails;
+  final UserDetails userDetails;
   VerificationPage({Key key, @required this.verificationId, this.userDetails})
       : super(key: key);
 
@@ -18,6 +18,13 @@ class VerificationPage extends StatefulWidget {
 class _VerificationPageState extends State<VerificationPage> {
   TextEditingController verificationNumberController = TextEditingController();
   bool showLoadingAnimation = false;
+
+  @override
+  void dispose() {
+    super.dispose();
+    verificationNumberController.dispose();
+    print('Disposed text editor on verification page');
+  }
 
   Widget build(BuildContext context) {
     return SafeArea(
