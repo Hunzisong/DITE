@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
+import 'package:heard/startup/user_details.dart';
 import 'package:heard/startup/verification_page.dart';
 import 'package:heard/widgets/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,11 +13,23 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final formKey = new GlobalKey<FormState>();
-  TextEditingController phoneNumberText = TextEditingController();
-  TextEditingController passwordText = TextEditingController();
   bool showLoadingAnimation = false;
   String verificationId;
   bool codeSent = false;
+  UserDetails userDetails;
+
+  @override
+  void initState() {
+    super.initState();
+    userDetails = UserDetails();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    userDetails.disposeTexts();
+    print('Disposed text editor in login page');
+  }
 
   Widget build(BuildContext context) {
     return Form(
@@ -45,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
                       SizedBox(height: Dimensions.d_30),
                       InputField(
                         hintText: '+60123456789',
-                        controller: phoneNumberText,
+                        controller: userDetails.phoneNumber,
                         labelText: 'Nombor Telefon',
                         keyboardType: TextInputType.phone,
                       ),
@@ -56,8 +69,9 @@ class _LoginPageState extends State<LoginPage> {
                         onClick: () async {
                           setState(() {
                             showLoadingAnimation = true;
+                            userDetails.setUserType(isSLI: false);
                           });
-                          await verifyPhone(phoneNumberText.text);
+                          await verifyPhone(userDetails.phoneNumber.text);
                         },
                       ),
                       UserButton(
@@ -66,8 +80,9 @@ class _LoginPageState extends State<LoginPage> {
                         onClick: () async {
                           setState(() {
                             showLoadingAnimation = true;
+                            userDetails.setUserType(isSLI: true);
                           });
-                          await verifyPhone(phoneNumberText.text);
+                          await verifyPhone(userDetails.phoneNumber.text);
                         },
                       ),
                       Padding(
@@ -95,10 +110,11 @@ class _LoginPageState extends State<LoginPage> {
 
   void pushVerificationPage() {
     Navigator.pop(context);
+    print('isSLI LOGIN: ${userDetails.isSLI}');
     Navigator.push(
         context,
         MaterialPageRoute(builder: (context) =>
-            VerificationPage(verificationId: this.verificationId)
+            VerificationPage(verificationId: this.verificationId, userDetails: userDetails)
         ));
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heard/api/sli.dart';
 import 'package:heard/api/user.dart';
 import 'package:heard/constants.dart';
 import 'package:heard/firebase_services/auth_service.dart';
@@ -8,6 +9,7 @@ import 'package:heard/home/on_demand/on_demand_user_page.dart';
 import 'package:heard/home/reservation.dart';
 import 'package:heard/home/profile.dart';
 import 'package:heard/home/transaction.dart';
+import 'package:heard/http_services/sli_services.dart';
 import 'package:heard/http_services/user_services.dart';
 
 class Navigation extends StatefulWidget {
@@ -25,7 +27,7 @@ class _NavigationState extends State<Navigation> {
   final List<String> _titles = ['Permintaan', 'Tempahan', 'Transaksi', 'Profil'];
   bool showLoadingAnimation = false;
   String authToken;
-  User userDetails;
+  dynamic userDetails;
 
   @override
   void initState() {
@@ -38,10 +40,17 @@ class _NavigationState extends State<Navigation> {
       showLoadingAnimation = true;
     });
     String token = await AuthService.getToken();
-    User user = await UserServices().getUser(headerToken: token);
+    User user;
+    SLI sli;
+    if (widget.isSLI == false) {
+      user = await UserServices().getUser(headerToken: token);
+    }
+    else {
+      sli = await SLIServices().getSLI(headerToken: token);
+    }
     setState(() {
       authToken = token;
-      userDetails = user;
+      userDetails = widget.isSLI ? sli : user;
       showLoadingAnimation = false;
     });
   }

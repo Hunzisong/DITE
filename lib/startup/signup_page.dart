@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
+import 'package:heard/startup/user_details.dart';
 import 'package:heard/widgets/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:heard/startup/verification_page.dart';
@@ -321,24 +322,5 @@ class _SignUpPageState extends State<SignUpPage> {
         verificationFailed: verificationFailed,
         codeSent: smsSent,
         codeAutoRetrievalTimeout: autoTimeout);
-  }
-}
-
-class UserDetails {
-  TextEditingController fullName = TextEditingController();
-  TextEditingController phoneNumber = TextEditingController();
-  bool hasExperience = false;
-  bool isFluent = false;
-  bool termsAndConditions = false;
-  bool isSLI = false;
-  Gender gender;
-
-  void disposeTexts() {
-    fullName.dispose();
-    phoneNumber.dispose();
-  }
-
-  void setUserType({bool isSLI}) {
-    this.isSLI = isSLI;
   }
 }
