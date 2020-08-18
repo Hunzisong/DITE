@@ -98,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
     Navigator.push(
         context,
         MaterialPageRoute(builder: (context) =>
-            VerificationPage(verificationId: this.verificationId, isNewUser: false)
+            VerificationPage(verificationId: this.verificationId)
         ));
   }
 

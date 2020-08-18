@@ -15,14 +15,24 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        child: UserButton(
-          padding: EdgeInsets.symmetric(horizontal: Dimensions.d_35),
-          color: widget.isSLI ? Colours.orange : Colours.blue,
-          text: "Log Out",
-          onClick: () => AuthService().signOut(context),
-        )
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: Dimensions.d_35),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          UserButton(
+            color: widget.isSLI ? Colours.orange : Colours.blue,
+            text: "Log Out",
+            onClick: () => AuthService().signOut(context),
+          ),
+          UserButton(
+            color: widget.isSLI ? Colours.orange : Colours.blue,
+            text: "Delete Account",
+            onClick: () {
+              AuthService().deleteAndSignOut(context);
+            },
+          ),
+        ],
       ),
     );
   }

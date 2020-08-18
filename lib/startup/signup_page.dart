@@ -267,7 +267,7 @@ class _SignUpPageState extends State<SignUpPage> {
         context,
         MaterialPageRoute(
             builder: (context) =>
-                VerificationPage(verificationId: this.verificationId, userDetails: textFieldMap, isNewUser: true)));
+                VerificationPage(verificationId: this.verificationId, userDetails: textFieldMap)));
     print('ver id: ${this.verificationId}');
   }
 

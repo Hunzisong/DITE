@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:heard/api/user_exists.dart';
 import 'package:heard/constants.dart';
 import 'package:heard/home/navigation.dart';
 import 'package:heard/startup/login_page.dart';
@@ -34,6 +37,15 @@ class _StartupPageState extends State<StartupPage> {
       IdTokenResult token = await user.getIdToken(refresh: false);
       String tokenString = token.token.toString();
       print('Auth token: $tokenString');
+
+      var isNewUser = await http.get(
+          'https://heard-project.herokuapp.com/user/exists',
+          headers: {
+            'Authorization': tokenString,
+          });
+
+      UserExists userExists = UserExists.fromJson(isNewUser.body);
+      print('Does user exists: ${userExists.exists}');
 
       var response = await http.get(
           'https://heard-project.herokuapp.com/user/me',
