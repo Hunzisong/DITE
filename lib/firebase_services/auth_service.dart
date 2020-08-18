@@ -1,10 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:heard/api/user_exists.dart';
 import 'package:heard/home/navigation.dart';
+import 'package:heard/http_services/user_services.dart';
 import 'package:heard/startup/signup_page.dart';
 import 'package:heard/startup/startup_page.dart';
-import 'package:http/http.dart' as http;
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -24,14 +23,8 @@ class AuthService {
     if (currentUser != null) {
       IdTokenResult token = await currentUser.getIdToken(refresh: false);
       String authTokenString = token.token.toString();
-      print('phone: ${currentUser.phoneNumber}');
-      var response = await http
-          .post('https://heard-project.herokuapp.com/user/delete', headers: {
-        'Authorization': authTokenString,
-      }, body: {
-        'phone': currentUser.phoneNumber
-      });
-      print('Delete User response: ${response.statusCode}, body: ${response.body}');
+      // delete user from database
+      await UserServices().deleteUser(headerToken: authTokenString, phoneNumber: currentUser.phoneNumber);
     }
     signOut(context);
   }
@@ -43,7 +36,6 @@ class AuthService {
     }).then((user) {
       user.user.getIdToken(refresh: false).then((tokenResult) {
         print('IDDD: ${tokenResult.token.toString()}');
-//        authToken = tokenResult.token.toString();
       });
       if (user != null) {
         Navigator.pop(context);
@@ -82,33 +74,16 @@ class AuthService {
       String authTokenString = authToken.token.toString();
       print('Authentication Token: $authTokenString');
 
-      var isNewUser = await http
-          .get('https://heard-project.herokuapp.com/user/exists', headers: {
-        'Authorization': authTokenString,
-      });
-
-      UserExists userExists = UserExists.fromJson(isNewUser.body);
-      print('Does user exists: ${userExists.exists}');
-
-      if (userExists.exists == false) {
-        var response = await http
-            .post('https://heard-project.herokuapp.com/user/create', headers: {
-          'Authorization': authTokenString,
-        }, body: {
-          'name': userDetails.fullName.text,
-          'phone_no': userDetails.phoneNumber.text,
-          'profile_pic': 'test1'
-        });
-        print('Create User response: ${response.statusCode}, body: ${response.body}');
-      } else {
-        var response = await http
-            .get('https://heard-project.herokuapp.com/user/me', headers: {
-          'Authorization': authTokenString,
-        });
-        print('Get User response: ${response.statusCode}, body: ${response.body}');
-      }
-
       if (authResult.user != null) {
+        bool userExists = await UserServices().doesUserExist(headerToken: authTokenString);
+        if (userExists == false) {
+          await UserServices().createUser(
+            headerToken: authTokenString,
+            name: userDetails.fullName.text,
+            phoneNumber: userDetails.phoneNumber.text,
+          );
+        }
+
         Navigator.pop(context);
         Navigator.push(
           context,
