@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
 import 'package:heard/firebase_services/auth_service.dart';
-import 'package:heard/startup/signup_page.dart';
+import 'package:heard/startup/user_details.dart';
 import 'package:heard/widgets/widgets.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class VerificationPage extends StatefulWidget {
   final String verificationId;
@@ -28,29 +29,29 @@ class _VerificationPageState extends State<VerificationPage> {
 
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
-            backgroundColor: Colours.white,
-            appBar: AppBar(
+        child: ModalProgressHUD(
+          inAsyncCall: showLoadingAnimation,
+          child: Scaffold(
               backgroundColor: Colours.white,
-              leading: IconButton(
-                icon: Icon(Icons.arrow_back_ios, color: Colors.black),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
+              appBar: AppBar(
+                backgroundColor: Colours.white,
+                leading: IconButton(
+                  icon: Icon(Icons.arrow_back_ios, color: Colors.black),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                title: Text(
+                  'Pengesahan Akaun',
+                  style: TextStyle(
+                      fontSize: FontSizes.mainTitle,
+                      fontWeight: FontWeight.bold,
+                      color: Colours.black),
+                ),
+                centerTitle: true,
+                elevation: 0.0,
               ),
-              title: Text(
-                'Pengesahan Akaun',
-                style: TextStyle(
-                    fontSize: FontSizes.mainTitle,
-                    fontWeight: FontWeight.bold,
-                    color: Colours.black),
-              ),
-              centerTitle: true,
-              elevation: 0.0,
-            ),
-            body: ModalProgressHUD(
-              inAsyncCall: showLoadingAnimation,
-              child: ListView(
+              body: ListView(
                 physics: NeverScrollableScrollPhysics(),
                 children: <Widget>[
                   Padding(
@@ -72,7 +73,7 @@ class _VerificationPageState extends State<VerificationPage> {
                           UserButton(
                             text: 'Teruskan',
                             color: widget.userDetails.isSLI ? Colours.orange : Colours.blue,
-                            onClick: () {
+                            onClick: () async {
                               setState(() {
                                 showLoadingAnimation = true;
                               });
@@ -81,12 +82,16 @@ class _VerificationPageState extends State<VerificationPage> {
                                   userDetails: widget.userDetails,
                                   smsCode: verificationNumberController.text,
                                   verId: widget.verificationId);
+
+                              SharedPreferences preferences = await SharedPreferences.getInstance();
+                              preferences.setBool('isSLI', widget.userDetails.isSLI);
+                              print('preference for isSLI: ${preferences.getBool('isSLI')}');
                             },
                           ),
                         ],
                       )),
                 ],
-              ),
-            )));
+              )),
+        ));
   }
 }

@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:heard/home/navigation.dart';
 import 'package:heard/http_services/sli_services.dart';
 import 'package:heard/http_services/user_services.dart';
-import 'package:heard/startup/signup_page.dart';
 import 'package:heard/startup/startup_page.dart';
+import 'package:heard/startup/user_details.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -12,6 +13,9 @@ class AuthService {
   //Sign out
   signOut(BuildContext context) async {
     _auth.signOut();
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.clear();
+    print('preference now isSLI after logout: ${preferences.containsKey('isSLI')}');
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => StartupPage()),
@@ -19,13 +23,18 @@ class AuthService {
   }
 
   //Sign out and Delete existing account
-  deleteAndSignOut(BuildContext context) async {
+  deleteAndSignOut({BuildContext context}) async {
     FirebaseUser currentUser = await FirebaseAuth.instance.currentUser();
     if (currentUser != null) {
       IdTokenResult token = await currentUser.getIdToken(refresh: false);
       String authTokenString = token.token.toString();
+
       // delete user from database
-      await UserServices().deleteUser(headerToken: authTokenString, phoneNumber: currentUser.phoneNumber);
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      if (preferences.getBool('isSLI') == false)
+        await UserServices().deleteUser(headerToken: authTokenString, phoneNumber: currentUser.phoneNumber);
+      else
+        await SLIServices().deleteSLI(headerToken: authTokenString, phoneNumber: currentUser.phoneNumber);
     }
     signOut(context);
   }

@@ -5,6 +5,7 @@ import 'package:heard/startup/login_page.dart';
 import 'package:heard/startup/signup_page.dart';
 import 'package:heard/widgets/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StartupPage extends StatefulWidget {
   @override
@@ -26,13 +27,16 @@ class _StartupPageState extends State<StartupPage> {
       showEmptyScreen = true;
     });
 
+    SharedPreferences preferences = await SharedPreferences.getInstance();
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
     print('Firebase user: $user');
+    print('Shared Preference isSLI: ${preferences.containsKey('isSLI')}');
 
     if (user != null) {
+//      AuthService().deleteAndSignOut(context: context, isSLI: true);
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Navigation()),
+        MaterialPageRoute(builder: (context) => Navigation(isSLI: preferences.getBool('isSLI'))),
       );
     }
     else {
