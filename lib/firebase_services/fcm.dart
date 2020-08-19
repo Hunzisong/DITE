@@ -6,6 +6,10 @@ class FCM {
   final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
   bool _initialized = false;
 
+  /// Make sure to include click_action: FLUTTER_NOTIFICATION_CLICK as a
+  /// "Custom data" key-value-pair (under "Advanced options") when targeting
+  /// an Android device.
+  /// https://pub.dev/packages/firebase_messaging
   Future<void> init(String userType) async{
     if (!_initialized) {
       // For iOS request permission first.
@@ -46,11 +50,13 @@ class FCM {
     if (message.containsKey('data')) {
       // Handle data message
       final dynamic data = message['data'];
+      print('data from push notification: ${data.toString()}');
     }
 
     if (message.containsKey('notification')) {
       // Handle notification message
       final dynamic notification = message['notification'];
+      print('notification from push notification: ${notification.toString()}');
     }
   }
 }

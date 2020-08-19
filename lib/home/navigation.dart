@@ -59,12 +59,23 @@ class _NavigationState extends State<Navigation> {
   Widget build(BuildContext context) {
     // Send FCM token depending on whether logged in is user or sli
     widget.isSLI ? print("User type: SLI") : print("User type: User");
-    var fcm = FCM();
-    widget.isSLI ? fcm.init("sli") : fcm.init("user");
 
-    if (_pages == null && userDetails != null && authToken != null)
+    if (_pages == null && userDetails != null && authToken != null) {
       // determine whether its user or sli tab pages
-      _pages  = widget.isSLI ? [OnDemandSLIPage(), Reservation(), Transaction(), Profile(userDetails: userDetails)] : [OnDemandUserPage(), Reservation(), Transaction(), Profile(userDetails: userDetails)];
+      _pages = widget.isSLI ? [
+        OnDemandSLIPage(),
+        Reservation(),
+        Transaction(),
+        Profile(userDetails: userDetails)
+      ] : [
+        OnDemandUserPage(),
+        Reservation(),
+        Transaction(),
+        Profile(userDetails: userDetails)
+      ];
+      var fcm = FCM();
+      widget.isSLI ? fcm.init("sli") : fcm.init("user");
+    }
 
     return Scaffold(
       appBar: AppBar(
