@@ -4,8 +4,8 @@ class SLI {
   String phoneNo;
   String gender;
   String description;
-  String experiencedMedical;
-  String experiencedBim;
+  bool experiencedMedical;
+  bool experiencedBim;
 
   SLI(
       {this.name,

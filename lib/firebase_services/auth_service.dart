@@ -16,6 +16,7 @@ class AuthService {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.clear();
     print('preference now isSLI after logout: ${preferences.containsKey('isSLI')}');
+    Navigator.pop(context);
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => LandingPage()),
