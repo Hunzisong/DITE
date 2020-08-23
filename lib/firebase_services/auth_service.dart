@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:heard/home/navigation.dart';
 import 'package:heard/http_services/sli_services.dart';
 import 'package:heard/http_services/user_services.dart';
-import 'package:heard/startup/startup_page.dart';
-import 'package:heard/startup/user_details.dart';
+import 'package:heard/landing/landing_page.dart';
+import 'package:heard/landing/user_details.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
@@ -18,7 +18,7 @@ class AuthService {
     print('preference now isSLI after logout: ${preferences.containsKey('isSLI')}');
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => StartupPage()),
+      MaterialPageRoute(builder: (context) => LandingPage()),
     );
   }
 
@@ -56,7 +56,7 @@ class AuthService {
       } else {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => StartupPage()),
+          MaterialPageRoute(builder: (context) => LandingPage()),
         );
       }
     });
@@ -113,7 +113,7 @@ class AuthService {
       } else {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => StartupPage()),
+          MaterialPageRoute(builder: (context) => LandingPage()),
         );
       }
     } catch (e) {

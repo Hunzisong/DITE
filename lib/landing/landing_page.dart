@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
 import 'package:heard/home/navigation.dart';
-import 'package:heard/startup/login_page.dart';
-import 'package:heard/startup/signup_page.dart';
+import 'package:heard/landing/login_page.dart';
+import 'package:heard/landing/signup_page.dart';
 import 'package:heard/widgets/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class StartupPage extends StatefulWidget {
+class LandingPage extends StatefulWidget {
   @override
-  _StartupPageState createState() => _StartupPageState();
+  _LandingPageState createState() => _LandingPageState();
 }
 
-class _StartupPageState extends State<StartupPage> {
+class _LandingPageState extends State<LandingPage> {
 
   bool showEmptyScreen = false;
 
@@ -33,7 +33,7 @@ class _StartupPageState extends State<StartupPage> {
     print('Shared Preference isSLI: ${preferences.containsKey('isSLI')}');
 
     if (user != null) {
-//      AuthService().deleteAndSignOut(context: context, isSLI: true);
+//      AuthService().deleteAndSignOut(context: context);
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => Navigation(isSLI: preferences.getBool('isSLI'))),

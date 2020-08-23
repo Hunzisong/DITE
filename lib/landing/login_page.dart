@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
-import 'package:heard/startup/user_details.dart';
-import 'package:heard/startup/verification_page.dart';
+import 'package:heard/landing/user_details.dart';
+import 'package:heard/landing/verification_page.dart';
 import 'package:heard/widgets/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';

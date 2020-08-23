@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:heard/api/sli.dart';
-import 'package:heard/startup/user_details.dart';
+import 'package:heard/landing/user_details.dart';
 import 'package:http/http.dart' as http;
 
 class SLIServices {
