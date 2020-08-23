@@ -19,6 +19,7 @@ class VerificationPage extends StatefulWidget {
 class _VerificationPageState extends State<VerificationPage> {
   TextEditingController verificationNumberController = TextEditingController();
   bool showLoadingAnimation = false;
+  bool isButtonDisabled = true;
 
   @override
   void dispose() {
@@ -66,14 +67,24 @@ class _VerificationPageState extends State<VerificationPage> {
                           ),
                           InputField(
                             controller: verificationNumberController,
-                            labelText: "Kod anda",
+                            labelText: "Kod Anda",
                             keyboardType: TextInputType.phone,
                             isShortInput: true,
+                            isPassword: true,
+                            onChanged: (String text) {
+                              setState(() {
+                                if (verificationNumberController.text.length == 6)
+                                  isButtonDisabled = false;
+                                else
+                                  isButtonDisabled = true;
+                              });
+                            },
                           ),
                           UserButton(
                             text: 'Teruskan',
                             color: widget.userDetails.isSLI ? Colours.orange : Colours.blue,
-                            onClick: () async {
+                            disabledColour: widget.userDetails.isSLI ? Colours.lightOrange : Colours.lightBlue,
+                            onClick: isButtonDisabled ? null : () async {
                               setState(() {
                                 showLoadingAnimation = true;
                               });

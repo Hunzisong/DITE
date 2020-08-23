@@ -8,7 +8,8 @@ class UserButton extends StatelessWidget {
   final Function onClick;
   final double height;
   final EdgeInsetsGeometry padding;
-  UserButton({this.text, this.textColour, this.color, this.onClick, this.height, this.padding});
+  final Color disabledColour;
+  UserButton({this.text, this.textColour, this.color, this.onClick, this.height, this.padding, this.disabledColour});
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +24,7 @@ class UserButton extends StatelessWidget {
         child: RaisedButton(
           elevation: Dimensions.d_5,
           color: color,
+          disabledColor: disabledColour,
           onPressed: onClick,
           child: Text(
             text,

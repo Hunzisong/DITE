@@ -19,6 +19,8 @@ class _SignUpPageState extends State<SignUpPage> {
   String verificationId;
   bool codeSent = false;
   UserDetails userDetails;
+  bool isButtonDisabled = true;
+  bool isSLI;
 
   @override
   void initState() {
@@ -38,7 +40,10 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    bool isSLI = widget.isSLI;
+    if (isSLI == null) {
+      isSLI = widget.isSLI;
+    }
+    print('Building ...');
     return SafeArea(
       child: ModalProgressHUD(
         inAsyncCall: showLoadingAnimation,
@@ -74,12 +79,22 @@ class _SignUpPageState extends State<SignUpPage> {
                     InputField(
                       controller: userDetails.fullName,
                       labelText: 'Nama Penuh',
+                      onChanged: (String text) {
+                        setState(() {
+                          checkAllInformationFilled(checkBox: userDetails.termsAndConditions);
+                        });
+                      },
                     ),
                     InputField(
                       hintText: '+60123456789',
                       controller: userDetails.phoneNumber,
                       labelText: 'Nombor Telefon',
                       keyboardType: TextInputType.phone,
+                      onChanged: (String text) {
+                        setState(() {
+                          checkAllInformationFilled(checkBox: userDetails.termsAndConditions);
+                        });
+                      },
                     ),
                     SizedBox(height: Dimensions.d_15),
                     isSLI
@@ -110,6 +125,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                         onChanged: (Gender value) {
                                           setState(() {
                                             userDetails.gender = value;
+                                            checkAllInformationFilled(checkBox: userDetails.termsAndConditions);
                                           });
                                         }),
                                   ),
@@ -126,6 +142,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                         onChanged: (Gender value) {
                                           setState(() {
                                             userDetails.gender = value;
+                                            checkAllInformationFilled(checkBox: userDetails.termsAndConditions);
                                           });
                                         }),
                                   ),
@@ -161,6 +178,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       onChanged: (bool value) {
                         setState(() {
                           userDetails.termsAndConditions = value;
+                          checkAllInformationFilled(checkBox: value);
                         });
                       },
                       text: 'Saya bersetuju dengan ',
@@ -174,53 +192,13 @@ class _SignUpPageState extends State<SignUpPage> {
           bottomNavigationBar: UserButton(
             text: 'Daftar Sekarang',
             color: isSLI ? Colours.orange : Colours.blue,
+            disabledColour: isSLI ? Colours.lightOrange : Colours.lightBlue,
             padding: EdgeInsets.all(Dimensions.d_30),
-            onClick: () {
-              if (allFieldsFilled(isSLI) == false) {
-                popUpDialog(
-                    context: context,
-                    isSLI: isSLI,
-                    header: 'Amaran',
-                    content: Padding(
-                      padding: EdgeInsets.symmetric(vertical: Dimensions.d_45),
-                      child: Text(
-                        'Sila isi bidang yang kosong dahulu',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Colours.darkGrey,
-                            fontSize: FontSizes.normal),
-                      ),
-                    ),
-                    onClick: () {
-                      Navigator.pop(context);
-                    });
-              } else if (userDetails.termsAndConditions == false) {
-                popUpDialog(
-                    context: context,
-                    isSLI: isSLI,
-                    header: 'Amaran',
-                    content: Padding(
-                      padding: EdgeInsets.symmetric(vertical: Dimensions.d_45),
-                      child: Text(
-                        'Sila setuju dengan terma dan syarat dahulu',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Colours.darkGrey,
-                            fontSize: FontSizes.normal),
-                      ),
-                    ),
-                    onClick: () {
-                      Navigator.pop(context);
-                    });
-//              final termsConditionsSnackBar = SnackBar(
-//                  content: Text('Sila setuju dengan terma dan syarat dahulu'));
-//              globalKey.currentState.showSnackBar(termsConditionsSnackBar);
-              } else {
-                setState(() {
-                  showLoadingAnimation = true;
-                });
-                verifyPhone(userDetails.phoneNumber.text);
-              }
+            onClick: isButtonDisabled ? null : () {
+              setState(() {
+                showLoadingAnimation = true;
+              });
+              verifyPhone(userDetails.phoneNumber.text);
             },
           ),
         ),
@@ -237,27 +215,12 @@ class _SignUpPageState extends State<SignUpPage> {
         userDetails.gender != null;
   }
 
-//  Future<void> createNewUser(
-//      {bool isSLI,
-//      TextFieldMap textInput,
-//      CheckBoxMap checkInput,
-//      gender gender}) async {
-//    if (!isSLI) {
-//      print('auth token: ${AuthService.authToken}');
-//      var response = await http.post(
-//          'https://heard-project.herokuapp.com/user/create',
-//          headers: {
-//            'Authorization': AuthService.authToken,
-//          },
-//          body: {
-//            'name': textInput.fullName.text,
-//            'phone_no': textInput.phoneNumber.text,
-//            'profile_pic': 'test1'
-//          });
-//      print('response ${response.statusCode}');
-//      print('response ${response.body}');
-//    }
-//  }
+  void checkAllInformationFilled({bool checkBox}) {
+    if (checkBox == true && allFieldsFilled(isSLI) == true)
+      isButtonDisabled = false;
+    else
+      isButtonDisabled = true;
+  }
 
   void pushVerificationPage() {
     Navigator.pop(context);
