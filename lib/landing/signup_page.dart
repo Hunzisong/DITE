@@ -192,7 +192,6 @@ class _SignUpPageState extends State<SignUpPage> {
           bottomNavigationBar: UserButton(
             text: 'Daftar Sekarang',
             color: isSLI ? Colours.orange : Colours.blue,
-            disabledColour: isSLI ? Colours.lightOrange : Colours.lightBlue,
             padding: EdgeInsets.all(Dimensions.d_30),
             onClick: isButtonDisabled ? null : () {
               setState(() {

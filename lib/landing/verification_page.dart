@@ -83,7 +83,6 @@ class _VerificationPageState extends State<VerificationPage> {
                           UserButton(
                             text: 'Teruskan',
                             color: widget.userDetails.isSLI ? Colours.orange : Colours.blue,
-                            disabledColour: widget.userDetails.isSLI ? Colours.lightOrange : Colours.lightBlue,
                             onClick: isButtonDisabled ? null : () async {
                               setState(() {
                                 showLoadingAnimation = true;
