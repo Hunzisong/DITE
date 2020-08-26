@@ -42,7 +42,8 @@ dev_dependencies:
   url_launcher: ^5.4.10
   flutter_spinkit: ^4.1.2+1
   shared_preferences: ^0.5.8
-
+  pull_to_refresh: ^1.6.1
+  google_fonts: ^1.1.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
