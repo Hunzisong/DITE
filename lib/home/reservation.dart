@@ -23,7 +23,7 @@ class _ReservationState extends State<Reservation>
     return Center(
         child: FlatButton(
       child: Text('Chat Page'),
-      color: Colours.darkGrey,
+      color: Colours.grey,
       onPressed: () {
         Navigator.push(
           context,

@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
 import 'package:heard/home/navigation.dart';
 import 'package:heard/http_services/sli_services.dart';
@@ -8,11 +8,11 @@ import 'package:heard/landing/user_details.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
 
   //Sign out
   signOut(BuildContext context) async {
-    _auth.signOut();
+    await _auth.signOut();
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.clear();
     print('preference now isSLI after logout: ${preferences.containsKey('isSLI')}');
@@ -25,10 +25,9 @@ class AuthService {
 
   //Sign out and Delete existing account
   deleteAndSignOut({BuildContext context}) async {
-    FirebaseUser currentUser = await FirebaseAuth.instance.currentUser();
+    auth.User currentUser = _auth.currentUser;
     if (currentUser != null) {
-      IdTokenResult token = await currentUser.getIdToken(refresh: false);
-      String authTokenString = token.token.toString();
+      String authTokenString = await currentUser.getIdToken();
 
       // delete user from database
       SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -41,12 +40,12 @@ class AuthService {
   }
 
   //SignIn
-  signIn(BuildContext context, AuthCredential authCreds) {
+  signIn(BuildContext context, auth.AuthCredential authCreds) {
     _auth.signInWithCredential(authCreds).catchError((error) {
       print("Error caught signing in");
     }).then((user) {
-      user.user.getIdToken(refresh: false).then((tokenResult) {
-        print('IDDD: ${tokenResult.token.toString()}');
+      user.user.getIdToken().then((tokenResult) {
+        print('IDDD: $tokenResult');
       });
       if (user != null) {
         Navigator.pop(context);
@@ -69,20 +68,19 @@ class AuthService {
       String smsCode,
       String verId}) async {
     try {
-      AuthCredential authCreds = PhoneAuthProvider.getCredential(
+      auth.AuthCredential authCreds = auth.PhoneAuthProvider.credential(
           verificationId: verId, smsCode: smsCode);
 
       // getting auth result after signing in with credentials
-      AuthResult authResult =
+      auth.UserCredential authResult =
           await _auth.signInWithCredential(authCreds).catchError((error) {
         print("Error caught signing in");
       });
 
       // getting the authentication token from current firebase user state
-      IdTokenResult authToken =
-          await authResult.user.getIdToken(refresh: false);
+      String authTokenString =
+          await authResult.user.getIdToken();
 
-      String authTokenString = authToken.token.toString();
 
       if (authResult.user != null) {
         if (userDetails.isSLI == false) {
@@ -96,9 +94,7 @@ class AuthService {
           }
         } else {
           bool sliExists = await SLIServices().doesSLIExist(headerToken: authTokenString);
-          print("Existence: $sliExists \n ---------------------------");
           if (sliExists == false) {
-            print("Creating SLI \n ----------------------");
             await SLIServices().createSLI(
               headerToken: authTokenString,
               sliDetails: userDetails,
@@ -123,8 +119,8 @@ class AuthService {
   }
 
   static Future<String> getToken() async {
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    IdTokenResult token = await user.getIdToken(refresh: false);
-    return token.token.toString();
+    auth.User user = auth.FirebaseAuth.instance.currentUser;
+    String token = await user.getIdToken();
+    return token;
   }
 }

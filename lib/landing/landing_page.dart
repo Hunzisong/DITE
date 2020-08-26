@@ -4,7 +4,7 @@ import 'package:heard/home/navigation.dart';
 import 'package:heard/landing/login_page.dart';
 import 'package:heard/landing/signup_page.dart';
 import 'package:heard/widgets/widgets.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LandingPage extends StatefulWidget {
@@ -28,7 +28,7 @@ class _LandingPageState extends State<LandingPage> {
     });
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    auth.User user = auth.FirebaseAuth.instance.currentUser;
     print('Firebase user: $user');
     print('Shared Preference isSLI: ${preferences.containsKey('isSLI')}');
 

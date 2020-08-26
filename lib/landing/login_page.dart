@@ -3,7 +3,7 @@ import 'package:heard/constants.dart';
 import 'package:heard/landing/user_details.dart';
 import 'package:heard/landing/verification_page.dart';
 import 'package:heard/widgets/widgets.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class LoginPage extends StatefulWidget {
@@ -119,16 +119,16 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> verifyPhone(phoneNo) async {
-    final PhoneVerificationCompleted verified = (AuthCredential authResult) {
+    final auth.PhoneVerificationCompleted verified = (auth.AuthCredential authResult) {
 //      AuthService().signIn(context, authResult);
     };
 
-    final PhoneVerificationFailed verificationFailed =
-        (AuthException authException) {
+    final auth.PhoneVerificationFailed verificationFailed =
+        (auth.FirebaseAuthException authException) {
       debugPrint('${authException.message}');
     };
 
-    final PhoneCodeSent smsSent = (String verId, [int forceResend]) {
+    final auth.PhoneCodeSent smsSent = (String verId, [int forceResend]) {
       this.verificationId = verId;
       setState(() {
         this.codeSent = true;
@@ -136,14 +136,14 @@ class _LoginPageState extends State<LoginPage> {
       pushVerificationPage();
     };
 
-    final PhoneCodeAutoRetrievalTimeout autoTimeout = (String verId) {
+    final auth.PhoneCodeAutoRetrievalTimeout autoTimeout = (String verId) {
       this.verificationId = verId;
       setState(() {
         this.codeSent = true;
       });
     };
 
-    await FirebaseAuth.instance.verifyPhoneNumber (
+    await auth.FirebaseAuth.instance.verifyPhoneNumber (
         phoneNumber: phoneNo,
         timeout: const Duration(seconds: 5),
         verificationCompleted: verified,

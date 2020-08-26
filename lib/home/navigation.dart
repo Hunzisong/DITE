@@ -36,7 +36,7 @@ class _NavigationState extends State<Navigation> {
   }
 
   void initializeUser() async {
-    this.setState(() {
+    setState(() {
       showLoadingAnimation = true;
     });
     String token = await AuthService.getToken();
