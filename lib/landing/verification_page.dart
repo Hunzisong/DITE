@@ -5,6 +5,7 @@ import 'package:heard/landing/user_details.dart';
 import 'package:heard/widgets/widgets.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class VerificationPage extends StatefulWidget {
   final String verificationId;
@@ -44,7 +45,7 @@ class _VerificationPageState extends State<VerificationPage> {
                 ),
                 title: Text(
                   'Pengesahan Akaun',
-                  style: TextStyle(
+                  style: GoogleFonts.lato(
                       fontSize: FontSizes.mainTitle,
                       fontWeight: FontWeight.bold,
                       color: Colours.black),

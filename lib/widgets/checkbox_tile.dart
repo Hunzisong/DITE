@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CheckBoxTile extends StatefulWidget {
   final bool value;
@@ -38,13 +39,14 @@ class _CheckBoxTileState extends State<CheckBoxTile> {
             children: [
               TextSpan(
                 text: widget.text,
-                style: TextStyle(
+                style: GoogleFonts.lato(
                     color: Colours.darkGrey,
-                    fontWeight: FontWeight.w600, fontSize: FontSizes.smallerText),
+                    fontSize: FontSizes.smallerText,
+                    fontWeight: FontWeight.w600)
               ),
               TextSpan(
                 text: widget.textLink,
-                style: TextStyle(
+                style: GoogleFonts.lato(
                     color: Colours.darkBlue,
                     decoration: TextDecoration.underline,
                     fontWeight: FontWeight.bold,

@@ -5,6 +5,7 @@ import 'package:heard/landing/verification_page.dart';
 import 'package:heard/widgets/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SignUpPage extends StatefulWidget {
   final bool isSLI;
@@ -36,6 +37,13 @@ class _SignUpPageState extends State<SignUpPage> {
     print('Disposed text editor');
   }
 
+  @override
+  void setState(fn) {
+    if(mounted) {
+      super.setState(fn);
+    }
+  }
+
 //  final globalKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -58,10 +66,11 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
             title: Text(
               isSLI ? 'Pendaftaran JBIM' : 'Pendaftaran',
-              style: TextStyle(
+              style: GoogleFonts.lato(
                   fontSize: FontSizes.mainTitle,
                   fontWeight: FontWeight.bold,
-                  color: Colours.black),
+                  color: Colours.black
+              ),
             ),
             centerTitle: true,
             elevation: 0.0,
@@ -116,7 +125,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                         dense: true,
                                         title: Text(
                                           'Lelaki',
-                                          style: TextStyle(
+                                          style: GoogleFonts.lato(
                                               fontSize: FontSizes.smallerText),
                                         ),
                                         value: Gender.male,
@@ -133,7 +142,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                         dense: true,
                                         title: Text(
                                           'Perempuan',
-                                          style: TextStyle(
+                                          style: GoogleFonts.lato(
                                               fontSize: FontSizes.smallerText),
                                         ),
                                         value: Gender.female,
@@ -246,7 +255,8 @@ class _SignUpPageState extends State<SignUpPage> {
       this.verificationId = verId;
       setState(() {
         this.codeSent = true;
-        popUpDialog(
+      });
+      popUpDialog(
           context: context,
           isSLI: widget.isSLI,
           touchToDismiss: false,
@@ -265,8 +275,7 @@ class _SignUpPageState extends State<SignUpPage> {
           onClick: () {
             pushVerificationPage();
           }
-        );
-      });
+      );
     };
 
     final auth.PhoneCodeAutoRetrievalTimeout autoTimeout = (String verId) {

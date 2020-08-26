@@ -11,6 +11,7 @@ import 'package:heard/home/profile.dart';
 import 'package:heard/home/transaction.dart';
 import 'package:heard/http_services/sli_services.dart';
 import 'package:heard/http_services/user_services.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Navigation extends StatefulWidget {
   final bool isSLI;
@@ -40,6 +41,7 @@ class _NavigationState extends State<Navigation> {
       showLoadingAnimation = true;
     });
     String token = await AuthService.getToken();
+    print('Auth Token: $token');
     User user;
     SLI sli;
     if (widget.isSLI == false) {
@@ -81,10 +83,11 @@ class _NavigationState extends State<Navigation> {
       appBar: AppBar(
         leading: SizedBox.shrink(),
         title: Text(_titles[_currentPageIndex],
-        style: TextStyle(
+        style: GoogleFonts.lato(
           fontSize: FontSizes.mainTitle,
-          fontWeight: FontWeight.bold
-        ),),
+          fontWeight: FontWeight.bold,
+        ),
+        ),
         centerTitle: true,
         backgroundColor: widget.isSLI ? Colours.orange : Colours.blue,
       ),
