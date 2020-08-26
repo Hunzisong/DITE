@@ -15,7 +15,7 @@ class OnDemandSLIPage extends StatefulWidget {
   _OnDemandSLIPageState createState() => _OnDemandSLIPageState();
 }
 
-class _OnDemandSLIPageState extends State<OnDemandSLIPage> {
+class _OnDemandSLIPageState extends State<OnDemandSLIPage> with AutomaticKeepAliveClientMixin{
   RefreshController _refreshController = RefreshController(initialRefresh: false);
 
   List<OnDemandRequest> onDemandRequests;
@@ -70,7 +70,10 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage> {
   ];
 
   void _onRefresh() async{
-    onDemandRequests = await OnDemandServices().getAllRequests(headerToken: authToken);
+    List<OnDemandRequest> allRequests = await OnDemandServices().getAllRequests(headerToken: authToken);
+    setState(() {
+      onDemandRequests = allRequests;
+    });
     print('Refreshed all on-demand requests ...');
     print('Updated Request: $onDemandRequests and length of ${onDemandRequests.length}');
     if (onDemandRequests == null) {
@@ -83,13 +86,16 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage> {
 
   void getOnDemandRequests() async {
     authToken = await AuthService.getToken();
-    onDemandRequests = await OnDemandServices().getAllRequests(headerToken: authToken);
+    List<OnDemandRequest> allRequests = await OnDemandServices().getAllRequests(headerToken: authToken);
+    onDemandRequests = allRequests;
+
     print('Got all on-demand requests ...');
     print('Request: $onDemandRequests and length of ${onDemandRequests.length}');
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     if (onDemandRequests == null && authToken == null) {
       getOnDemandRequests();
     }
@@ -109,7 +115,7 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage> {
               onRefresh: _onRefresh,
               enablePullDown: true,
               header: WaterDropHeader(),
-              child: (onDemandRequests == null)? Center(child: Text('Tiada Permintaan Pada Masa Ini'),) : ListView(
+              child: (onDemandRequests == null) ? Center(child: Text('Tiada Permintaan Pada Masa Ini'),) : ListView(
                 children: <Widget>[
                   Container(
                     color: Colours.grey,
@@ -237,6 +243,9 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage> {
             ),
           );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class UserInfoTemp {

@@ -25,10 +25,16 @@ class Navigation extends StatefulWidget {
 class _NavigationState extends State<Navigation> {
   int _currentPageIndex = 0;
   List<Widget> _pages;
-  final List<String> _titles = ['Permintaan', 'Tempahan', 'Transaksi', 'Profil'];
+  final List<String> _titles = [
+    'Permintaan',
+    'Tempahan',
+    'Transaksi',
+    'Profil'
+  ];
   bool showLoadingAnimation = false;
   String authToken;
   dynamic userDetails;
+  final pageController = PageController();
 
   @override
   void initState() {
@@ -46,14 +52,19 @@ class _NavigationState extends State<Navigation> {
     SLI sli;
     if (widget.isSLI == false) {
       user = await UserServices().getUser(headerToken: token);
-    }
-    else {
+    } else {
       sli = await SLIServices().getSLI(headerToken: token);
     }
     setState(() {
       authToken = token;
       userDetails = widget.isSLI ? sli : user;
       showLoadingAnimation = false;
+    });
+  }
+
+  void onPageChanged(int index) {
+    setState(() {
+      _currentPageIndex = index;
     });
   }
 
@@ -64,17 +75,19 @@ class _NavigationState extends State<Navigation> {
 
     if (_pages == null && userDetails != null && authToken != null) {
       // determine whether its user or sli tab pages
-      _pages = widget.isSLI ? [
-        OnDemandSLIPage(),
-        Reservation(),
-        Transaction(),
-        Profile(userDetails: userDetails)
-      ] : [
-        OnDemandUserPage(),
-        Reservation(),
-        Transaction(),
-        Profile(userDetails: userDetails)
-      ];
+      _pages = widget.isSLI
+          ? [
+              OnDemandSLIPage(),
+              Reservation(),
+              Transaction(),
+              Profile(userDetails: userDetails)
+            ]
+          : [
+              OnDemandUserPage(),
+              Reservation(),
+              Transaction(),
+              Profile(userDetails: userDetails)
+            ];
       var fcm = FCM();
       widget.isSLI ? fcm.init("sli") : fcm.init("user");
     }
@@ -82,32 +95,45 @@ class _NavigationState extends State<Navigation> {
     return Scaffold(
       appBar: AppBar(
         leading: SizedBox.shrink(),
-        title: Text(_titles[_currentPageIndex],
-        style: GoogleFonts.lato(
-          fontSize: FontSizes.mainTitle,
-          fontWeight: FontWeight.bold,
-        ),
+        title: Text(
+          _titles[_currentPageIndex],
+          style: GoogleFonts.lato(
+            fontSize: FontSizes.mainTitle,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: true,
         backgroundColor: widget.isSLI ? Colours.orange : Colours.blue,
       ),
-      body: showLoadingAnimation ? Center(child: CircularProgressIndicator()) : _pages[_currentPageIndex],
+      body: showLoadingAnimation
+          ? Center(child: CircularProgressIndicator())
+          : PageView(
+              children: _pages,
+              controller: pageController,
+              onPageChanged: onPageChanged,
+            ),
       bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
-          onTap: (index) => onTabTapped(index),
+          onTap: (int index) {
+            pageController.jumpToPage(index);
+          },
           currentIndex: _currentPageIndex,
           backgroundColor: widget.isSLI ? Colours.orange : Colours.blue,
           selectedItemColor: widget.isSLI ? Colours.darkGrey : Colours.darkBlue,
           unselectedItemColor: Colors.white,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-                icon: Icon(Icons.search, size: Dimensions.d_30), title: Text('Permintaan')),
+                icon: Icon(Icons.search, size: Dimensions.d_30),
+                title: Text('Permintaan')),
             BottomNavigationBarItem(
-                icon: Icon(Icons.calendar_today, size: Dimensions.d_30), title: Text('Tempahan')),
+                icon: Icon(Icons.calendar_today, size: Dimensions.d_30),
+                title: Text('Tempahan')),
             BottomNavigationBarItem(
-                icon: Icon(Icons.history, size: Dimensions.d_30), title: Text('Transaksi')),
+                icon: Icon(Icons.history, size: Dimensions.d_30),
+                title: Text('Transaksi')),
             BottomNavigationBarItem(
-                icon: Icon(Icons.account_circle, size: Dimensions.d_30), title: Text('Profil')),
+                icon: Icon(Icons.account_circle, size: Dimensions.d_30),
+                title: Text('Profil')),
           ]),
     );
   }
