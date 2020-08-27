@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Paddings {
-  static EdgeInsetsGeometry startupMain = EdgeInsets.symmetric(vertical: 50.0, horizontal: 30.0);
+  static EdgeInsetsGeometry startupMain = EdgeInsets.symmetric(vertical: 40.0, horizontal: 30.0);
   static EdgeInsetsGeometry signUpPage = EdgeInsets.only(bottom: 35.0, left: 30.0, right: 30.0);
   static EdgeInsetsGeometry horizontal_5 = EdgeInsets.symmetric(horizontal: 5.0);
   static EdgeInsetsGeometry horizontal_20 = EdgeInsets.symmetric(horizontal: 20.0);
