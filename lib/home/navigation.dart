@@ -92,55 +92,69 @@ class _NavigationState extends State<Navigation> {
       widget.isSLI ? fcm.init("sli") : fcm.init("user");
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: SizedBox.shrink(),
-        title: Text(
-          _titles[_currentPageIndex],
-          style: GoogleFonts.lato(
-            fontSize: FontSizes.mainTitle,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: widget.isSLI ? Colours.orange : Colours.blue,
-      ),
-      body: showLoadingAnimation
-          ? Center(child: CircularProgressIndicator())
-          : PageView(
-              children: _pages,
-              controller: pageController,
-              onPageChanged: onPageChanged,
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          leading: Padding(
+            padding: EdgeInsets.only(left: Dimensions.d_10),
+            child: IconButton(
+              icon: Icon(Icons.assignment),
+              iconSize: Dimensions.d_30,
+              onPressed: () {},
+              tooltip: 'Soal Selidik Covid-19',
             ),
-      bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          onTap: (int index) {
-            pageController.jumpToPage(index);
-          },
-          currentIndex: _currentPageIndex,
+          ),
+          title: Text(
+            _titles[_currentPageIndex],
+            style: GoogleFonts.lato(
+              fontSize: FontSizes.mainTitle,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          centerTitle: true,
           backgroundColor: widget.isSLI ? Colours.orange : Colours.blue,
-          selectedItemColor: widget.isSLI ? Colours.darkGrey : Colours.darkBlue,
-          unselectedItemColor: Colors.white,
-          items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-                icon: Icon(Icons.search, size: Dimensions.d_30),
-                title: Text('Permintaan')),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.calendar_today, size: Dimensions.d_30),
-                title: Text('Tempahan')),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.history, size: Dimensions.d_30),
-                title: Text('Transaksi')),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.account_circle, size: Dimensions.d_30),
-                title: Text('Profil')),
-          ]),
+          actions: <Widget>[
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: Dimensions.d_10),
+              child: IconButton(
+                icon: Icon(Icons.question_answer),
+                iconSize: Dimensions.d_30,
+                onPressed: () {},
+              ),
+            )
+          ],
+        ),
+        body: showLoadingAnimation
+            ? Center(child: CircularProgressIndicator())
+            : PageView(
+                children: _pages,
+                controller: pageController,
+                onPageChanged: onPageChanged,
+              ),
+        bottomNavigationBar: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            onTap: (int index) {
+              pageController.jumpToPage(index);
+            },
+            currentIndex: _currentPageIndex,
+            backgroundColor: widget.isSLI ? Colours.orange : Colours.blue,
+            selectedItemColor: widget.isSLI ? Colours.darkGrey : Colours.darkBlue,
+            unselectedItemColor: Colors.white,
+            items: <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.search, size: Dimensions.d_30),
+                  title: Text('Permintaan')),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.calendar_today, size: Dimensions.d_30),
+                  title: Text('Tempahan')),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.history, size: Dimensions.d_30),
+                  title: Text('Transaksi')),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.account_circle, size: Dimensions.d_30),
+                  title: Text('Profil')),
+            ]),
+      ),
     );
-  }
-
-  void onTabTapped(int index) {
-    setState(() {
-      _currentPageIndex = index;
-    });
   }
 }
