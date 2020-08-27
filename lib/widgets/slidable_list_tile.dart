@@ -5,46 +5,36 @@ import 'package:heard/constants.dart';
 import 'package:heard/home/on_demand/on_demand_sli_page.dart';
 
 class SlidableListTile extends StatelessWidget {
-  final Function onAccept;
+  final List<Widget> slideActionFunctions;
   final UserInfoTemp userInfo;
-  final bool isThreeLine;
   final Widget onTrailingButtonPress;
+  final Color tileColour;
+  final Widget title;
+  final Widget subtitle;
 
-  SlidableListTile({this.onAccept, this.userInfo, this.isThreeLine = false, this.onTrailingButtonPress});
+  SlidableListTile({this.slideActionFunctions, this.userInfo, this.onTrailingButtonPress, this.tileColour, this.title, this.subtitle});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
         Material(
-          color: userInfo.isEmergency ? Colours.lightOrange : Colours.white,
+          color: tileColour != null ? tileColour : Colours.white,
           child: Slidable(
             actionPane: SlidableDrawerActionPane(),
             actionExtentRatio: 0.25,
             child: ListTile(
               contentPadding: EdgeInsets.all(Dimensions.d_20),
-              isThreeLine: isThreeLine,
+              isThreeLine: true,
               leading: Icon(
                 Icons.account_circle,
                 size: Dimensions.d_55,
               ),
-              title: Text('${userInfo.userName}', style: TextStyle(fontWeight: FontWeight.bold),),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text('${userInfo.hospital}', style: TextStyle(color: Colours.darkGrey),),
-                  userInfo.isEmergency ? Text('KECEMASAN', style: TextStyle(color: Colours.fail, fontSize: FontSizes.biggerText),) : SizedBox.shrink(),
-                ],
-              ),
+              title: title,
+              subtitle: subtitle,
               trailing: onTrailingButtonPress != null ? onTrailingButtonPress : SizedBox.shrink(),
             ),
-            secondaryActions: <Widget>[
-              IconSlideAction(
-                  caption: 'Terima',
-                  color: Colours.accept,
-                  icon: Icons.done,
-                  onTap: onAccept),
-            ],
+            secondaryActions: slideActionFunctions,
           ),
         ),
         Divider(

@@ -12,7 +12,6 @@ class Paddings {
 }
 
 class Dimensions {
-  static double checkBoxSize = 24.0;
   static double buttonRadius = 30.0;
   static double buttonHeight = 55.0;
   static double dialogHeight = 400.0;
@@ -44,6 +43,7 @@ class FontSizes {
   static double biggerText = 18.0;
   static double normal = 16.0;
   static double smallerText = 15.0;
+  static double tinyText = 10.0;
 }
 
 class Colours {
@@ -54,7 +54,7 @@ class Colours {
   static Color lightOrange = Color(0xFFFFE2D8);
   static Color orange = Color(0xFFFFA382);
   static Color accept = Colors.green[300];
-  static Color cancel = Colors.red[300];
+  static Color cancel = Colors.red[400];
   static Color lightGrey = Colors.grey[200];
   static Color grey = Colors.grey[350];
   static Color darkGrey = Colors.grey[800];

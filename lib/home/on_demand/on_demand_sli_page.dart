@@ -9,6 +9,7 @@ import 'package:heard/http_services/on_demand_services.dart';
 import 'package:heard/widgets/slidable_list_tile.dart';
 import 'package:heard/widgets/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class OnDemandSLIPage extends StatefulWidget {
   @override
@@ -27,7 +28,7 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage> with AutomaticKeepAli
         name: 'James Cooper',
         hospital: 'Hospital Sg Buloh',
         department: 'Jabatan Jantung',
-        messageToSLI: 'Jangan pakai baju warna merah jambu',
+        messageToSLI: 'Jangan pakai baju warna merah jambu asdasdasdasdada asdasdsad sdadasdasdasdasdasdas asdasdsaasas asdasdasdsadasdasd asdsadasdas',
         isEmergency: true),
     UserInfoTemp().addInfo(
         name: 'Kyle Jenner',
@@ -93,6 +94,94 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage> with AutomaticKeepAli
     print('Request: $onDemandRequests and length of ${onDemandRequests.length}');
   }
 
+  void confirmRequest() {
+    popUpDialog(
+        context: context,
+        isSLI: true,
+        header: 'Pengesahan',
+        content: Text(
+          'Adakah anda pasti?',
+          textAlign: TextAlign.left,
+          style: TextStyle(
+              color: Colours.darkGrey,
+              fontSize: FontSizes.normal),
+        ),
+        buttonText: 'Teruskan',
+        onClick: () {
+          Navigator.pop(context);
+          setState(() {
+            pairingComplete = true;
+          });
+        });
+  }
+
+  void showUserInformation({int index}) {
+    popUpDialog(
+      context: context,
+      isSLI: true,
+      height: Dimensions.d_130 * 3.5,
+      contentFlexValue: 3,
+      onClick: () {
+        Navigator.pop(context);
+      },
+      header: 'Maklumat',
+      content: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Flexible(
+            child: ListTile(
+              isThreeLine: true,
+              leading: Icon(
+                Icons.account_circle,
+                size: Dimensions.d_55,
+              ),
+              title: Text(
+                '${mockInfoList[index].userName}',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    '${mockInfoList[index].hospital}',
+                    style: TextStyle(color: Colours.darkGrey),
+                  ),
+                  Text(
+                    '(${mockInfoList[index].department})',
+                    style: TextStyle(color: Colours.darkGrey),
+                  ),
+                  mockInfoList[index].isEmergency
+                      ? Text(
+                    '*Kecemasan',
+                    style: TextStyle(color: Colours.fail),
+                  )
+                      : SizedBox.shrink(),
+                ],
+              ),
+            ),
+          ),
+          Flexible(
+            flex: 3,
+            child: Padding(
+              padding:
+              EdgeInsets.only(top: Dimensions.d_35),
+              child: Container(
+                  height: Dimensions.d_280,
+                  decoration: BoxDecoration(
+                      color: Colours.lightGrey,
+                      borderRadius: BorderRadius.all(
+                          Radius.circular(Dimensions.d_10))),
+                  child: ListTile(
+                    title: Text(mockInfoList[index].messageToSLI, style: TextStyle(fontSize: FontSizes.smallerText),),
+                  )
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -117,25 +206,13 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage> with AutomaticKeepAli
               header: WaterDropHeader(),
               child: (onDemandRequests == null) ? Center(child: Text('Tiada Permintaan Pada Masa Ini'),) : ListView(
                 children: <Widget>[
-                  Container(
-                    color: Colours.grey,
-                    padding: EdgeInsets.symmetric(
-                        horizontal: Dimensions.d_20, vertical: Dimensions.d_10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                        Text(
-                          'Permintaan Aktif',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          '*Leret ke kiri untuk pengesahan',
-                          style: TextStyle(
-                              fontSize: Dimensions.d_10,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ],
+                  GreyTitleBar(
+                    title: 'Permintaan Aktif',
+                    trailing: Text(
+                      '*Leret ke kiri untuk pengesahan',
+                      style: TextStyle(
+                          fontSize: FontSizes.tinyText,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                   ListView.builder(
@@ -145,94 +222,30 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage> with AutomaticKeepAli
                     itemCount: mockInfoList.length,
                     itemBuilder: (context, index) {
                       return SlidableListTile(
-                        isThreeLine: true,
                         userInfo: mockInfoList[index],
-                        onAccept: () {
-                          popUpDialog(
-                              context: context,
-                              isSLI: true,
-                              header: 'Pengesahan',
-                              content: Padding(
-                                padding: EdgeInsets.symmetric(vertical: Dimensions.d_45),
-                                child: Text(
-                                  'Adakah anda pasti?',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: Colours.darkGrey,
-                                  fontSize: FontSizes.normal),
-                                ),
-                              ),
-                              buttonText: 'Teruskan',
-                              onClick: () {
-                                Navigator.pop(context);
-                                setState(() {
-                                  pairingComplete = true;
-                                });
-                              });
-                        },
+                        title: Text('${mockInfoList[index].userName}', style: TextStyle(fontWeight: FontWeight.bold),),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text('${mockInfoList[index].hospital}', style: TextStyle(color: Colours.darkGrey),),
+                            mockInfoList[index].isEmergency ? Text('KECEMASAN', style: TextStyle(color: Colours.fail, fontSize: FontSizes.biggerText),) : SizedBox.shrink(),
+                          ],
+                        ),
+                        slideActionFunctions: [
+                          IconSlideAction(
+                          caption: 'Terima',
+                          color: Colours.accept,
+                          icon: Icons.done,
+                          onTap: () {
+                            confirmRequest();
+                          })
+                        ],
                         onTrailingButtonPress: IconButton(
                           icon: Icon(Icons.info_outline),
                           color: Colours.orange,
                           iconSize: Dimensions.d_30,
                           onPressed: () {
-                            popUpDialog(
-                              context: context,
-                              isSLI: true,
-                              height: Dimensions.d_130 * 3.5,
-                              onClick: () {
-                                Navigator.pop(context);
-                              },
-                              header: 'Maklumat',
-                              content: Column(
-                                children: <Widget>[
-                                  ListTile(
-                                    contentPadding: EdgeInsets.all(Dimensions.d_20),
-                                    isThreeLine: true,
-                                    leading: Icon(
-                                      Icons.account_circle,
-                                      size: Dimensions.d_55,
-                                    ),
-                                    title: Text(
-                                      '${mockInfoList[index].userName}',
-                                      style: TextStyle(fontWeight: FontWeight.bold),
-                                    ),
-                                    subtitle: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Text(
-                                          '${mockInfoList[index].hospital}',
-                                          style: TextStyle(color: Colours.darkGrey),
-                                        ),
-                                        Text(
-                                          '(${mockInfoList[index].department})',
-                                          style: TextStyle(color: Colours.darkGrey),
-                                        ),
-                                        mockInfoList[index].isEmergency
-                                            ? Text(
-                                                '*Kecemasan',
-                                                style: TextStyle(color: Colours.fail),
-                                              )
-                                            : SizedBox.shrink(),
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding:
-                                    EdgeInsets.symmetric(vertical: Dimensions.d_15),
-                                    child: Container(
-                                      height: Dimensions.d_130,
-                                      decoration: BoxDecoration(
-                                          color: Colours.lightGrey,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(Dimensions.d_10))),
-                                      child: ListTile(
-                                        title: Text(mockInfoList[index].messageToSLI, style: TextStyle(fontSize: FontSizes.smallerText),),
-                                      )
-                                    ),
-                                  )
-                                ],
-                              ),
-                            );
+                            showUserInformation(index: index);
                           },
                         ),
                       );

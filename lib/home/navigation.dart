@@ -95,7 +95,7 @@ class _NavigationState extends State<Navigation> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          leading: Padding(
+          leading: widget.isSLI ? SizedBox.shrink() : Padding(
             padding: EdgeInsets.only(left: Dimensions.d_10),
             child: IconButton(
               icon: Icon(Icons.assignment),
