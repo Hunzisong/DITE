@@ -58,7 +58,7 @@ class _NavigationState extends State<Navigation> {
       user = await UserServices().getUser(headerToken: token);
     } else {
       sli = await SLIServices().getSLI(headerToken: token);
-      allRequests = await OnDemandServices().getAllRequests(headerToken: authToken);
+      allRequests = await OnDemandServices().getAllRequests(headerToken: token);
       print('Got all on-demand requests ...');
 //      print('Request: $onDemandRequests and length of ${onDemandRequests.length}');
     }

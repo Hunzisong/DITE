@@ -2,17 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:heard/constants.dart';
-import 'package:heard/home/on_demand/on_demand_sli_page.dart';
 
 class SlidableListTile extends StatelessWidget {
   final List<Widget> slideActionFunctions;
-  final UserInfoTemp userInfo;
   final Widget onTrailingButtonPress;
   final Color tileColour;
   final Widget title;
   final Widget subtitle;
 
-  SlidableListTile({this.slideActionFunctions, this.userInfo, this.onTrailingButtonPress, this.tileColour, this.title, this.subtitle});
+  SlidableListTile({this.slideActionFunctions, this.onTrailingButtonPress, this.tileColour, this.title, this.subtitle});
 
   @override
   Widget build(BuildContext context) {

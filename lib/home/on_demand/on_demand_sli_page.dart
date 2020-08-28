@@ -148,21 +148,21 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
                 size: Dimensions.d_55,
               ),
               title: Text(
-                '${mockInfoList[index].patientName}',
+                '${onDemandRequests[index].patientName}',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    '${mockInfoList[index].hospital}',
+                    '${onDemandRequests[index].hospital}',
                     style: TextStyle(color: Colours.darkGrey),
                   ),
                   Text(
-                    '(${mockInfoList[index].hospitalDepartment})',
+                    '(${onDemandRequests[index].hospitalDepartment})',
                     style: TextStyle(color: Colours.darkGrey),
                   ),
-                  mockInfoList[index].emergency
+                  onDemandRequests[index].emergency
                       ? Text(
                           '*Kecemasan',
                           style: TextStyle(color: Colours.fail),
@@ -184,7 +184,7 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
                           BorderRadius.all(Radius.circular(Dimensions.d_10))),
                   child: ListTile(
                     title: Text(
-                      mockInfoList[index].note,
+                      onDemandRequests[index].note,
                       style: TextStyle(fontSize: FontSizes.smallerText),
                     ),
                   )),
@@ -216,7 +216,7 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
               header: WaterDropHeader(),
               child: (onDemandRequests == null)
                   ? Container()
-                  : (mockInfoList.length == 0)
+                  : (onDemandRequests.length == 0)
                       ? Center(
                           child: Text('Tiada Permintaan Pada Masa Ini'),
                         )
@@ -235,12 +235,12 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
                               scrollDirection: Axis.vertical,
                               controller: ScrollController(),
                               shrinkWrap: true,
-                              itemCount: mockInfoList.length,
+                              itemCount: onDemandRequests.length,
                               itemBuilder: (context, index) {
                                 return SlidableListTile(
-                                  userInfo: mockInfoList[index],
+                                  // userInfo: onDemandRequests[index],
                                   title: Text(
-                                    '${mockInfoList[index].patientName}',
+                                    '${onDemandRequests[index].patientName}',
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold),
                                   ),
@@ -249,11 +249,11 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
                                         CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Text(
-                                        '${mockInfoList[index].hospital}',
+                                        '${onDemandRequests[index].hospital}',
                                         style:
                                             TextStyle(color: Colours.darkGrey),
                                       ),
-                                      mockInfoList[index].emergency
+                                      onDemandRequests[index].emergency
                                           ? Text(
                                               'KECEMASAN',
                                               style: TextStyle(
