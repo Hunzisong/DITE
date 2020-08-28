@@ -16,7 +16,7 @@ class InputField extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return Padding(
-      padding: isShortInput ? EdgeInsets.symmetric(vertical: Dimensions.d_30, horizontal: Dimensions.d_130) : Paddings.vertical_18,
+      padding: isShortInput ? EdgeInsets.symmetric(vertical: Dimensions.d_30, horizontal: Dimensions.d_100) : Paddings.vertical_18,
       child: Material(
         color: backgroundColour == null ? Colours.white : backgroundColour,
         child: TextField(

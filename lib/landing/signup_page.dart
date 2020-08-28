@@ -120,7 +120,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               ),
                               Row(
                                 children: <Widget>[
-                                  Expanded(
+                                  Flexible(
                                     child: RadioListTile(
                                         dense: true,
                                         title: Text(
@@ -137,7 +137,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                           });
                                         }),
                                   ),
-                                  Expanded(
+                                  Flexible(
                                     child: RadioListTile(
                                         dense: true,
                                         title: Text(
