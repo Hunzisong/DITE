@@ -51,7 +51,7 @@ dev_dependencies:
   firebase_storage: ^4.0.0
 
   # cloud fire store had some issues
-  #cloud_firestore: ^0.14.0
+  cloud_firestore: ^0.14.0
 
 
 
