@@ -36,12 +36,21 @@ class _ChatScreenState extends State<ChatScreen> {
   var messageText ;
   var fileURL ;
   var file ;   /* This is an attachment file */
+  bool isSLI;
 
 
   @override
   void initState() {
     super.initState();
     getCurrentUser();
+    setSLI();
+  }
+
+  void setSLI() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      isSLI = preferences.getBool('isSLI');
+    });
   }
 
   void getCurrentUser() async{
@@ -118,6 +127,7 @@ class _ChatScreenState extends State<ChatScreen> {
         'text' : content,
         'sender' : loggedInUser.phoneNumber,
         'type': type.toString(),
+        'isSLI': isSLI.toString(),
       });
     }
   }
@@ -253,6 +263,7 @@ class MessageStream extends StatelessWidget {
           final messageType   = message.data()['type'];
 
           final currentUser = loggedInUser.phoneNumber;
+          final isSLI       = message.data()['isSLI'];
 
 //          if (currentUser == messageSender){
 //            isMe = true ;
@@ -263,7 +274,9 @@ class MessageStream extends StatelessWidget {
               messageSender,
               messageText  ,
               messageType,
-              currentUser == messageSender);
+              currentUser == messageSender,
+              isSLI,
+          );
           Text('$messageText from $messageSender',
             style: TextStyle(
               fontSize: 50.0,
@@ -294,12 +307,13 @@ class MessageStream extends StatelessWidget {
 // Modify the message bubble to encapsulate different media
 // e.g text, image, video, documents
 class MessageBubble extends StatelessWidget {
-  MessageBubble(this.sender, this.text , this.type , this.isMe);
+  MessageBubble(this.sender, this.text , this.type , this.isMe, this.isSLI);
 
   final String sender;
   final String text  ;
   final String type  ;
   final bool isMe    ;
+  final bool isSLI   ;
 
   /* Method to activate video player */
   void showVideoPlayer(parentContext,String videoUrl) async {
@@ -321,7 +335,7 @@ class MessageBubble extends StatelessWidget {
             // this part of the widget is the sender's name/email
             Text(sender,style: TextStyle(
               fontSize: 12.0,
-              color: Colors.white70,
+              color: Colors.black,
             ),
 
             )
@@ -342,7 +356,7 @@ class MessageBubble extends StatelessWidget {
                   topRight: Radius.circular(30.0) ,
                 )
                 ,
-                color: isMe ? Colors.lightBlueAccent : Colors.lightGreen,
+                color: isSLI ? Colors.orange : Colors.blue,
                 child:
 
                 type == 'FileType.text' ?
