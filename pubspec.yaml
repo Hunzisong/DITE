@@ -78,6 +78,7 @@ flutter:
     - images/onDemand.png
     - images/avatar.png
     - images/successTick.png
+    - images/booking_calendar.png
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
