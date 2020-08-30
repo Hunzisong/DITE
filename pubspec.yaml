@@ -48,6 +48,12 @@ dev_dependencies:
   # chat app dependencies
   file_picker: ^1.13.3
 
+  firebase_storage: ^4.0.0
+
+  # cloud fire store had some issues
+  #cloud_firestore: ^0.14.0
+
+
 
   video_player: ^0.10.12+2
   flutter_downloader: ^1.5.0
