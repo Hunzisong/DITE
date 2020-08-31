@@ -14,6 +14,7 @@ import 'package:heard/http_services/on_demand_services.dart';
 import 'package:heard/http_services/sli_services.dart';
 import 'package:heard/http_services/user_services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:heard/chat_service/chatPage.dart';
 
 class Navigation extends StatefulWidget {
   final bool isSLI;
@@ -128,7 +129,13 @@ class _NavigationState extends State<Navigation> {
               child: IconButton(
                 icon: Icon(Icons.question_answer),
                 iconSize: Dimensions.d_30,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    /// push the chat screen over here
+                    MaterialPageRoute(builder: (context) => ChatScreen()),
+                  );
+                },
               ),
             )
           ],
