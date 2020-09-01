@@ -11,7 +11,7 @@ class OnDemandUserPage extends StatefulWidget {
   _OnDemandUserPageState createState() => _OnDemandUserPageState();
 }
 
-class _OnDemandUserPageState extends State<OnDemandUserPage> {
+class _OnDemandUserPageState extends State<OnDemandUserPage> with AutomaticKeepAliveClientMixin {
   bool loadingScreen = false;
   bool pairingComplete = false;
   OnDemandInputs onDemandInputs;
@@ -30,6 +30,7 @@ class _OnDemandUserPageState extends State<OnDemandUserPage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return loadingScreen
         ? OnDemandUserLoadingPage(
             onDemandInputs: onDemandInputs,
@@ -214,4 +215,7 @@ class _OnDemandUserPageState extends State<OnDemandUserPage> {
                 ),
               );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
