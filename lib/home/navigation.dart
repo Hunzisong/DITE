@@ -143,6 +143,7 @@ class _NavigationState extends State<Navigation> {
         body: showLoadingAnimation
             ? Center(child: CircularProgressIndicator())
             : PageView(
+                physics: NeverScrollableScrollPhysics(),
                 children: _pages,
                 controller: pageController,
                 onPageChanged: onPageChanged,
