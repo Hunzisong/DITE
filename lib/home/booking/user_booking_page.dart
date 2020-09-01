@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
+import 'package:heard/widgets/field_label.dart';
 import 'package:heard/widgets/widgets.dart';
 
 class UserBookingPage extends StatefulWidget {
@@ -64,16 +65,9 @@ class _UserBookingPageState extends State<UserBookingPage> {
                 SizedBox(
                   height: Dimensions.d_15,
                 ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(Dimensions.d_0,Dimensions.d_0,Dimensions.d_140,Dimensions.d_0),
-                  child: Text(
-                    "Tarikh Temu Janji",
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: FontSizes.normal,
-                        color: Colours.darkGrey),
-                  ),
+                FieldLabel(
+                  text:"Tarikh Temu Janji",
+                  dimensionToRight: Dimensions.d_140,
                 ),
                 SizedBox(
                   height: Dimensions.d_5,
@@ -82,31 +76,17 @@ class _UserBookingPageState extends State<UserBookingPage> {
                 SizedBox(
                   height: Dimensions.d_5,
                 ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(Dimensions.d_0,Dimensions.d_0,Dimensions.d_140,Dimensions.d_0),
-                  child: Text(
-                    "Masa Temu Janji",
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: FontSizes.normal,
-                        color: Colours.darkGrey),
-                  ),
+                FieldLabel(
+                  text:"Masa Temu Janji",
+                  dimensionToRight: Dimensions.d_140,
                 ),
                 SizedBox(
                   height: Dimensions.d_5,
                 ),
                 _timePickerField(),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(Dimensions.d_0,Dimensions.d_0,Dimensions.d_160,Dimensions.d_0),
-                  child: Text(
-                    "Pilihan Bahasa",
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: FontSizes.normal,
-                        color: Colours.darkGrey),
-                  ),
+                FieldLabel(
+                  text:"Pilihan Bahasa",
+                  dimensionToRight: Dimensions.d_160,
                 ),
                 SizedBox(
                   height: Dimensions.d_5,
@@ -130,16 +110,9 @@ class _UserBookingPageState extends State<UserBookingPage> {
                 SizedBox(
                   height: Dimensions.d_5,
                 ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(Dimensions.d_0,Dimensions.d_0,Dimensions.d_100,Dimensions.d_0),
-                  child: Text(
-                    "Nama Hospital/ Klinik",
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: FontSizes.normal,
-                        color: Colours.darkGrey),
-                  ),
+                FieldLabel(
+                  text:"Nama Hospital / Klinik",
+                  dimensionToRight: Dimensions.d_100,
                 ),
                 SizedBox(
                   height: Dimensions.d_5,
@@ -178,6 +151,27 @@ class _UserBookingPageState extends State<UserBookingPage> {
     );
   }
 }
+
+
+Widget _fieldLabel(){
+  return StatefulBuilder(builder: (context, setState){
+    return Padding(
+      padding: EdgeInsets.fromLTRB(Dimensions.d_0,Dimensions.d_0,Dimensions.d_160,Dimensions.d_0),
+      child: Text(
+        "Pilihan Bahasa",
+        textAlign: TextAlign.left,
+        style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: FontSizes.normal,
+            color: Colours.darkGrey),
+      ),
+    );
+  });
+}
+
+
+
+
 
 
 Widget _datePickerField() {
