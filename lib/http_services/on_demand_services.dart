@@ -24,7 +24,7 @@ class OnDemandServices {
     return onDemandRequests;
   }
 
-  Future<String> acceptOnDemandRequest({String headerToken, String onDemandID}) async {
+  Future<bool> acceptOnDemandRequest({String headerToken, String onDemandID}) async {
     var response = await http
         .post('https://heard-project.herokuapp.com/ondemand/accept', headers: {
       'Authorization': headerToken,
@@ -35,10 +35,10 @@ class OnDemandServices {
     print('Accept On-Demand Request: ${response.statusCode}, body: ${response.body}');
 
     if (response.statusCode == 200) {
-      return 'Successfully Accepted Request';
+      return true;
     }
     else {
-      return 'Failed to Accept Request';
+      return false;
     }
   }
 
