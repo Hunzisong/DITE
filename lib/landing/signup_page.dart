@@ -120,7 +120,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               ),
                               Row(
                                 children: <Widget>[
-                                  Expanded(
+                                  Flexible(
                                     child: RadioListTile(
                                         dense: true,
                                         title: Text(
@@ -137,7 +137,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                           });
                                         }),
                                   ),
-                                  Expanded(
+                                  Flexible(
                                     child: RadioListTile(
                                         dense: true,
                                         title: Text(
@@ -261,15 +261,12 @@ class _SignUpPageState extends State<SignUpPage> {
           isSLI: widget.isSLI,
           touchToDismiss: false,
           header: 'Pengesahan',
-          content: Padding(
-            padding: EdgeInsets.symmetric(vertical: Dimensions.d_45),
-            child: Text(
-              'Daftar berjaya! Sila klik Teruskan untuk menyerus ke halaman pengesahan.',
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                  color: Colours.darkGrey,
-                  fontSize: FontSizes.normal),
-            ),
+          content: Text(
+            'Daftar berjaya! Sila klik Teruskan untuk menyerus ke halaman pengesahan.',
+            textAlign: TextAlign.left,
+            style: TextStyle(
+                color: Colours.darkGrey,
+                fontSize: FontSizes.normal),
           ),
           buttonText: 'Teruskan',
           onClick: () {

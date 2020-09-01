@@ -7,3 +7,4 @@ export 'package:heard/widgets/user_button.dart';
 export 'package:heard/widgets/checkbox_tile.dart';
 export 'package:heard/widgets/pop_up_dialog.dart';
 export 'package:heard/widgets/slidable_list_tile.dart';
+export 'package:heard/widgets/grey_title_bar.dart';

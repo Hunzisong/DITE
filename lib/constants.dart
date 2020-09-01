@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Paddings {
-  static EdgeInsetsGeometry startupMain = EdgeInsets.symmetric(vertical: 50.0, horizontal: 30.0);
+  static EdgeInsetsGeometry startupMain = EdgeInsets.symmetric(vertical: 40.0, horizontal: 30.0);
   static EdgeInsetsGeometry signUpPage = EdgeInsets.only(bottom: 35.0, left: 30.0, right: 30.0);
   static EdgeInsetsGeometry horizontal_5 = EdgeInsets.symmetric(horizontal: 5.0);
   static EdgeInsetsGeometry horizontal_20 = EdgeInsets.symmetric(horizontal: 20.0);
@@ -12,7 +12,6 @@ class Paddings {
 }
 
 class Dimensions {
-  static double checkBoxSize = 24.0;
   static double buttonRadius = 30.0;
   static double buttonHeight = 55.0;
   static double dialogHeight = 400.0;
@@ -31,9 +30,11 @@ class Dimensions {
   static double d_55 = 55.0;
   static double d_65 = 65.0;
   static double d_85 = 85.0;
+  static double d_95 = 95.0;
   static double d_100 = 100.0;
   static double d_130 = 130.0;
   static double d_140 = 140.0;
+  static double d_160 = 160.0 ;
   static double d_280 = 280.0;
 }
 
@@ -44,6 +45,7 @@ class FontSizes {
   static double biggerText = 18.0;
   static double normal = 16.0;
   static double smallerText = 15.0;
+  static double tinyText = 10.0;
 }
 
 class Colours {
@@ -54,7 +56,7 @@ class Colours {
   static Color lightOrange = Color(0xFFFFE2D8);
   static Color orange = Color(0xFFFFA382);
   static Color accept = Colors.green[300];
-  static Color cancel = Colors.red[300];
+  static Color cancel = Colors.red[400];
   static Color lightGrey = Colors.grey[200];
   static Color grey = Colors.grey[350];
   static Color darkGrey = Colors.grey[800];

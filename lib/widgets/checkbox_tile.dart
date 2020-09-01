@@ -24,16 +24,11 @@ class CheckBoxTile extends StatefulWidget {
 class _CheckBoxTileState extends State<CheckBoxTile> {
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      contentPadding: EdgeInsets.all(Dimensions.d_0),
-      leading: SizedBox(
-        height: Dimensions.checkBoxSize,
-        width: Dimensions.checkBoxSize,
-        child: Checkbox(
-          value: widget.value,
-          onChanged: widget.onChanged,
-        ),
-      ),
+    return CheckboxListTile(
+      contentPadding: EdgeInsets.all(0),
+      value: widget.value,
+      onChanged: widget.onChanged,
+      controlAffinity: ListTileControlAffinity.leading,
       title: RichText(
         text: TextSpan(
             children: [

@@ -6,239 +6,317 @@ import 'package:heard/constants.dart';
 import 'package:heard/firebase_services/auth_service.dart';
 import 'package:heard/home/on_demand/on_demand_success.dart';
 import 'package:heard/http_services/on_demand_services.dart';
-import 'package:heard/widgets/slidable_list_tile.dart';
 import 'package:heard/widgets/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class OnDemandSLIPage extends StatefulWidget {
+  final List<OnDemandRequest> onDemandRequests;
+
+  OnDemandSLIPage({this.onDemandRequests});
+
   @override
   _OnDemandSLIPageState createState() => _OnDemandSLIPageState();
 }
 
-class _OnDemandSLIPageState extends State<OnDemandSLIPage> with AutomaticKeepAliveClientMixin{
-  RefreshController _refreshController = RefreshController(initialRefresh: false);
+class _OnDemandSLIPageState extends State<OnDemandSLIPage>
+    with AutomaticKeepAliveClientMixin {
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
 
+  bool showLoadingAnimation = false;
   List<OnDemandRequest> onDemandRequests;
   String authToken;
-  bool pairingComplete = false;
+  bool showPairingComplete = false;
 
   List<UserInfoTemp> mockInfoList = [
     UserInfoTemp().addInfo(
         name: 'James Cooper',
         hospital: 'Hospital Sg Buloh',
-        department: 'Jabatan Jantung',
-        messageToSLI: 'Jangan pakai baju warna merah jambu',
-        isEmergency: true),
+        hospitalDepartment: 'Jabatan Jantung',
+        note: 'Jangan pakai baju warna merah jambu',
+        emergency: true),
     UserInfoTemp().addInfo(
         name: 'Kyle Jenner',
         hospital: 'Hospital Sg Long',
-        department: 'Jabatan Tangan',
-        isEmergency: true),
+        hospitalDepartment: 'Jabatan Tangan',
+        emergency: true),
     UserInfoTemp().addInfo(
         name: 'Kim Possible',
         hospital: 'Hospital Sarawak',
-        department: 'Jabatan Rambut',
-        messageToSLI: 'Jangan pakai baju warna merah'),
+        hospitalDepartment: 'Jabatan Rambut',
+        note: 'Jangan pakai baju warna merah'),
     UserInfoTemp().addInfo(
         name: 'Arthur Knight',
         hospital: 'Hospital Kuala Lumpur',
-        department: 'Jabatan Telinga'),
+        hospitalDepartment: 'Jabatan Telinga'),
     UserInfoTemp().addInfo(
         name: 'John Monash',
         hospital: 'Hospital Selangor',
-        department: 'Jabatan Muka'),
+        hospitalDepartment: 'Jabatan Muka'),
     UserInfoTemp().addInfo(
         name: 'Michael Lee',
         hospital: 'Hospital Pahang',
-        department: 'Jabatan Mata'),
+        hospitalDepartment: 'Jabatan Mata'),
     UserInfoTemp().addInfo(
         name: 'Takashi Hiro',
         hospital: 'Hospital Sabah',
-        department: 'Jabatan Kaki'),
+        hospitalDepartment: 'Jabatan Kaki'),
     UserInfoTemp().addInfo(
         name: 'James Cooper',
         hospital: 'Hospital Pulau Pinang',
-        department: 'Jabatan Mulut'),
+        hospitalDepartment: 'Jabatan Mulut'),
     UserInfoTemp().addInfo(
         name: 'James Cooper',
         hospital: 'Hospital Seremban',
-        department: 'Jabatan Arteri'),
+        hospitalDepartment: 'Jabatan Arteri'),
     UserInfoTemp().addInfo(
         name: 'James Cooper',
         hospital: 'Hospital Shah Alam',
-        department: 'Jabatan Badan'),
+        hospitalDepartment: 'Jabatan Badan'),
   ];
 
-  void _onRefresh() async{
-    List<OnDemandRequest> allRequests = await OnDemandServices().getAllRequests(headerToken: authToken);
+  @override
+  void initState() {
+    super.initState();
+    getOnDemandRequests();
+  }
+
+  void _onRefresh() async {
+    List<OnDemandRequest> allRequests =
+        await OnDemandServices().getAllRequests(headerToken: authToken);
     setState(() {
       onDemandRequests = allRequests;
     });
     print('Refreshed all on-demand requests ...');
-    print('Updated Request: $onDemandRequests and length of ${onDemandRequests.length}');
+    print(
+        'Updated Request: $onDemandRequests and length of ${onDemandRequests.length}');
     if (onDemandRequests == null) {
       _refreshController.refreshFailed();
-    }
-    else {
+    } else {
       _refreshController.refreshCompleted();
     }
   }
 
   void getOnDemandRequests() async {
-    authToken = await AuthService.getToken();
-    List<OnDemandRequest> allRequests = await OnDemandServices().getAllRequests(headerToken: authToken);
-    onDemandRequests = allRequests;
+    String authTokenString = await AuthService.getToken();
+    setState(() {
+      authToken = authTokenString;
+      onDemandRequests = widget.onDemandRequests;
+    });
+    print('Set state complete! on-demand: $onDemandRequests}');
+  }
 
-    print('Got all on-demand requests ...');
-    print('Request: $onDemandRequests and length of ${onDemandRequests.length}');
+  void confirmRequest({int index}) {
+    popUpDialog(
+        context: context,
+        isSLI: true,
+        header: 'Pengesahan',
+        content: Text(
+          'Adakah anda pasti?',
+          textAlign: TextAlign.left,
+          style: TextStyle(color: Colours.darkGrey, fontSize: FontSizes.normal),
+        ),
+        buttonText: 'Teruskan',
+        onClick: () async {
+          Navigator.pop(context);
+          setState(() {
+            showLoadingAnimation = true;
+          });
+          print('on demand id: ${onDemandRequests[index].onDemandId}');
+          bool acceptanceResult = await OnDemandServices().acceptOnDemandRequest(headerToken: authToken, onDemandID: onDemandRequests[index].onDemandId);
+          setState(() {
+            showLoadingAnimation = false;
+          });
+          if (acceptanceResult) {
+            setState(() {
+              showPairingComplete = true;
+            });
+          } else {
+            confirmRequestError();
+          }
+        });
+  }
+
+  void confirmRequestError() {
+    popUpDialog(
+        context: context,
+        isSLI: true,
+        header: 'Amaran',
+        touchToDismiss: false,
+        content: Text(
+          'Gagal Menerima Permintaan',
+          textAlign: TextAlign.left,
+          style: TextStyle(color: Colours.darkGrey, fontSize: FontSizes.normal),
+        ),
+        onClick: () {
+          Navigator.pop(context);
+        });
+  }
+
+  void showUserInformation({int index}) {
+    popUpDialog(
+      context: context,
+      isSLI: true,
+      height: Dimensions.d_130 * 3.5,
+      contentFlexValue: 3,
+      onClick: () {
+        Navigator.pop(context);
+      },
+      header: 'Maklumat',
+      content: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Flexible(
+            child: ListTile(
+              isThreeLine: true,
+              leading: Icon(
+                Icons.account_circle,
+                size: Dimensions.d_55,
+              ),
+              title: Text(
+                '${onDemandRequests[index].patientName}',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    '${onDemandRequests[index].hospital}',
+                    style: TextStyle(color: Colours.darkGrey),
+                  ),
+                  Text(
+                    '(${onDemandRequests[index].hospitalDepartment})',
+                    style: TextStyle(color: Colours.darkGrey),
+                  ),
+                  onDemandRequests[index].emergency
+                      ? Text(
+                          '*Kecemasan',
+                          style: TextStyle(color: Colours.fail),
+                        )
+                      : SizedBox.shrink(),
+                ],
+              ),
+            ),
+          ),
+          Flexible(
+            flex: 3,
+            child: Padding(
+              padding: EdgeInsets.only(top: Dimensions.d_35),
+              child: Container(
+                  height: Dimensions.d_280,
+                  decoration: BoxDecoration(
+                      color: Colours.lightGrey,
+                      borderRadius:
+                          BorderRadius.all(Radius.circular(Dimensions.d_10))),
+                  child: ListTile(
+                    title: Text(
+                      onDemandRequests[index].note,
+                      style: TextStyle(fontSize: FontSizes.smallerText),
+                    ),
+                  )),
+            ),
+          )
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    if (onDemandRequests == null && authToken == null) {
-      getOnDemandRequests();
-    }
-    return pairingComplete
+    return showPairingComplete
         ? OnDemandSuccessPage(
             isSLI: true,
             onCancelClick: () {
+              Navigator.pop(context);
               setState(() {
-                pairingComplete = false;
+                showPairingComplete = false;
               });
             },
           )
-        : Scaffold(
-            backgroundColor: Colours.white,
-            body: SmartRefresher(
-              controller: _refreshController,
-              onRefresh: _onRefresh,
-              enablePullDown: true,
-              header: WaterDropHeader(),
-              child: (onDemandRequests == null) ? Center(child: Text('Tiada Permintaan Pada Masa Ini'),) : ListView(
-                children: <Widget>[
-                  Container(
-                    color: Colours.grey,
-                    padding: EdgeInsets.symmetric(
-                        horizontal: Dimensions.d_20, vertical: Dimensions.d_10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                        Text(
-                          'Permintaan Aktif',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          '*Leret ke kiri untuk pengesahan',
-                          style: TextStyle(
-                              fontSize: Dimensions.d_10,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ),
-                  ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    controller: ScrollController(),
-                    shrinkWrap: true,
-                    itemCount: mockInfoList.length,
-                    itemBuilder: (context, index) {
-                      return SlidableListTile(
-                        isThreeLine: true,
-                        userInfo: mockInfoList[index],
-                        onAccept: () {
-                          popUpDialog(
-                              context: context,
-                              isSLI: true,
-                              header: 'Pengesahan',
-                              content: Padding(
-                                padding: EdgeInsets.symmetric(vertical: Dimensions.d_45),
-                                child: Text(
-                                  'Adakah anda pasti?',
-                                  textAlign: TextAlign.center,
+        : ModalProgressHUD(
+            inAsyncCall: showLoadingAnimation,
+            child: Scaffold(
+              backgroundColor: Colours.white,
+              body: SmartRefresher(
+                controller: _refreshController,
+                onRefresh: _onRefresh,
+                enablePullDown: true,
+                header: WaterDropHeader(),
+                child: (onDemandRequests == null)
+                    ? Container()
+                    : (onDemandRequests.length == 0)
+                        ? Center(
+                            child: Text('Tiada Permintaan Pada Masa Ini'),
+                          )
+                        : ListView(
+                            children: <Widget>[
+                              GreyTitleBar(
+                                title: 'Permintaan Aktif',
+                                trailing: Text(
+                                  '*Leret ke kiri untuk pengesahan',
                                   style: TextStyle(
-                                      color: Colours.darkGrey,
-                                  fontSize: FontSizes.normal),
+                                      fontSize: FontSizes.tinyText,
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ),
-                              buttonText: 'Teruskan',
-                              onClick: () {
-                                Navigator.pop(context);
-                                setState(() {
-                                  pairingComplete = true;
-                                });
-                              });
-                        },
-                        onTrailingButtonPress: IconButton(
-                          icon: Icon(Icons.info_outline),
-                          color: Colours.orange,
-                          iconSize: Dimensions.d_30,
-                          onPressed: () {
-                            popUpDialog(
-                              context: context,
-                              isSLI: true,
-                              height: Dimensions.d_130 * 3.5,
-                              onClick: () {
-                                Navigator.pop(context);
-                              },
-                              header: 'Maklumat',
-                              content: Column(
-                                children: <Widget>[
-                                  ListTile(
-                                    contentPadding: EdgeInsets.all(Dimensions.d_20),
-                                    isThreeLine: true,
-                                    leading: Icon(
-                                      Icons.account_circle,
-                                      size: Dimensions.d_55,
-                                    ),
+                              ListView.builder(
+                                scrollDirection: Axis.vertical,
+                                controller: ScrollController(),
+                                shrinkWrap: true,
+                                itemCount: onDemandRequests.length,
+                                itemBuilder: (context, index) {
+                                  return SlidableListTile(
+                                    // userInfo: onDemandRequests[index],
                                     title: Text(
-                                      '${mockInfoList[index].userName}',
-                                      style: TextStyle(fontWeight: FontWeight.bold),
+                                      '${onDemandRequests[index].patientName}',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
                                     ),
                                     subtitle: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: <Widget>[
                                         Text(
-                                          '${mockInfoList[index].hospital}',
-                                          style: TextStyle(color: Colours.darkGrey),
+                                          '${onDemandRequests[index].hospital}',
+                                          style: TextStyle(
+                                              color: Colours.darkGrey),
                                         ),
-                                        Text(
-                                          '(${mockInfoList[index].department})',
-                                          style: TextStyle(color: Colours.darkGrey),
-                                        ),
-                                        mockInfoList[index].isEmergency
+                                        onDemandRequests[index].emergency
                                             ? Text(
-                                                '*Kecemasan',
-                                                style: TextStyle(color: Colours.fail),
+                                                'KECEMASAN',
+                                                style: TextStyle(
+                                                    color: Colours.fail,
+                                                    fontSize:
+                                                        FontSizes.biggerText),
                                               )
                                             : SizedBox.shrink(),
                                       ],
                                     ),
-                                  ),
-                                  Padding(
-                                    padding:
-                                    EdgeInsets.symmetric(vertical: Dimensions.d_15),
-                                    child: Container(
-                                      height: Dimensions.d_130,
-                                      decoration: BoxDecoration(
-                                          color: Colours.lightGrey,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(Dimensions.d_10))),
-                                      child: ListTile(
-                                        title: Text(mockInfoList[index].messageToSLI, style: TextStyle(fontSize: FontSizes.smallerText),),
-                                      )
+                                    slideActionFunctions: [
+                                      IconSlideAction(
+                                          caption: 'Terima',
+                                          color: Colours.accept,
+                                          icon: Icons.done,
+                                          onTap: () {
+                                            confirmRequest(index: index);
+                                          })
+                                    ],
+                                    onTrailingButtonPress: IconButton(
+                                      icon: Icon(Icons.info_outline),
+                                      color: Colours.orange,
+                                      iconSize: Dimensions.d_30,
+                                      onPressed: () {
+                                        showUserInformation(index: index);
+                                      },
                                     ),
-                                  )
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      );
-                    },
-                  )
-                ],
+                                  );
+                                },
+                              )
+                            ],
+                          ),
               ),
             ),
           );
@@ -249,24 +327,24 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage> with AutomaticKeepAli
 }
 
 class UserInfoTemp {
-  String userName;
+  String patientName;
   String hospital;
-  String department;
-  String messageToSLI;
-  bool isEmergency;
+  String hospitalDepartment;
+  String note;
+  bool emergency;
 
   UserInfoTemp addInfo(
       {@required String name,
       @required String hospital,
-      @required String department,
-      String messageToSLI = '',
-      bool isEmergency = false}) {
+      @required String hospitalDepartment,
+      String note = '',
+      bool emergency = false}) {
     UserInfoTemp newPerson = UserInfoTemp();
-    newPerson.userName = name;
+    newPerson.patientName = name;
     newPerson.hospital = hospital;
-    newPerson.department = department;
-    newPerson.messageToSLI = messageToSLI;
-    newPerson.isEmergency = isEmergency;
+    newPerson.hospitalDepartment = hospitalDepartment;
+    newPerson.note = note;
+    newPerson.emergency = emergency;
 
     return newPerson;
   }

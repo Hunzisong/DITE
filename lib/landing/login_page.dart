@@ -34,77 +34,80 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Form(
       key: formKey,
-      child: Scaffold(
-          backgroundColor: Colours.white,
-          body: ModalProgressHUD(
-            inAsyncCall: showLoadingAnimation,
-            child: ListView(
-              children: <Widget>[
-                Padding(
-                  padding: Paddings.startupMain,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(
-                        height: Dimensions.d_140,
-                        child: Hero(
-                          tag: 'appLogo',
-                          child: Image(
-                            image: AssetImage('images/diteLogo.png'),
+      child: SafeArea(
+        child: Scaffold(
+            backgroundColor: Colours.white,
+            body: ModalProgressHUD(
+              inAsyncCall: showLoadingAnimation,
+              child: ListView(
+                physics: NeverScrollableScrollPhysics(),
+                children: <Widget>[
+                  Padding(
+                    padding: Paddings.startupMain,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        SizedBox(
+                          height: Dimensions.d_140,
+                          child: Hero(
+                            tag: 'appLogo',
+                            child: Image(
+                              image: AssetImage('images/diteLogo.png'),
+                            ),
                           ),
                         ),
-                      ),
-                      SizedBox(height: Dimensions.d_30),
-                      InputField(
-                        hintText: '+60123456789',
-                        controller: userDetails.phoneNumber,
-                        labelText: 'Nombor Telefon',
-                        keyboardType: TextInputType.phone,
-                      ),
-                      SizedBox(height: Dimensions.d_15),
-                      UserButton(
-                        text: 'Log Masuk Sebagai Pengguna',
-                        color: Colours.blue,
-                        onClick: () async {
-                          setState(() {
-                            showLoadingAnimation = true;
-                            userDetails.setUserType(isSLI: false);
-                          });
-                          await verifyPhone(userDetails.phoneNumber.text);
-                        },
-                      ),
-                      UserButton(
-                        text: 'Log Masuk Sebagai JBIM',
-                        color: Colours.orange,
-                        onClick: () async {
-                          setState(() {
-                            showLoadingAnimation = true;
-                            userDetails.setUserType(isSLI: true);
-                          });
-                          await verifyPhone(userDetails.phoneNumber.text);
-                        },
-                      ),
-                      Padding(
-                        padding: Paddings.vertical_15,
-                        child: GestureDetector(
-                          onTap: () {},
-                          child: Text(
-                            'Saya terlupa kata laluan',
-                            style: TextStyle(
-                                color: Colours.darkBlue,
-                                decoration: TextDecoration.underline,
-                                fontWeight: FontWeight.bold,
-                                fontSize: FontSizes.smallerText),
+                        SizedBox(height: Dimensions.d_30),
+                        InputField(
+                          hintText: '+60123456789',
+                          controller: userDetails.phoneNumber,
+                          labelText: 'Nombor Telefon',
+                          keyboardType: TextInputType.phone,
+                        ),
+                        SizedBox(height: Dimensions.d_15),
+                        UserButton(
+                          text: 'Log Masuk Sebagai Pengguna',
+                          color: Colours.blue,
+                          onClick: () async {
+                            setState(() {
+                              showLoadingAnimation = true;
+                              userDetails.setUserType(isSLI: false);
+                            });
+                            await verifyPhone(userDetails.phoneNumber.text);
+                          },
+                        ),
+                        UserButton(
+                          text: 'Log Masuk Sebagai JBIM',
+                          color: Colours.orange,
+                          onClick: () async {
+                            setState(() {
+                              showLoadingAnimation = true;
+                              userDetails.setUserType(isSLI: true);
+                            });
+                            await verifyPhone(userDetails.phoneNumber.text);
+                          },
+                        ),
+                        Padding(
+                          padding: Paddings.vertical_15,
+                          child: GestureDetector(
+                            onTap: () {},
+                            child: Text(
+                              'Saya terlupa kata laluan',
+                              style: TextStyle(
+                                  color: Colours.darkBlue,
+                                  decoration: TextDecoration.underline,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: FontSizes.smallerText),
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          )),
+                ],
+              ),
+            )),
+      ),
     );
   }
 

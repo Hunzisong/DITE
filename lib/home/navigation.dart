@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heard/api/on_demand_request.dart';
 import 'package:heard/api/sli.dart';
 import 'package:heard/api/user.dart';
 import 'package:heard/constants.dart';
@@ -9,9 +10,11 @@ import 'package:heard/home/on_demand/on_demand_user_page.dart';
 import 'package:heard/home/reservation.dart';
 import 'package:heard/home/profile.dart';
 import 'package:heard/home/transaction.dart';
+import 'package:heard/http_services/on_demand_services.dart';
 import 'package:heard/http_services/sli_services.dart';
 import 'package:heard/http_services/user_services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:heard/chat_service/chatPage.dart';
 
 class Navigation extends StatefulWidget {
   final bool isSLI;
@@ -34,6 +37,7 @@ class _NavigationState extends State<Navigation> {
   bool showLoadingAnimation = false;
   String authToken;
   dynamic userDetails;
+  List<OnDemandRequest> onDemandRequests;
   final pageController = PageController();
 
   @override
@@ -50,14 +54,19 @@ class _NavigationState extends State<Navigation> {
     print('Auth Token: $token');
     User user;
     SLI sli;
+    List<OnDemandRequest> allRequests;
     if (widget.isSLI == false) {
       user = await UserServices().getUser(headerToken: token);
     } else {
       sli = await SLIServices().getSLI(headerToken: token);
+      allRequests = await OnDemandServices().getAllRequests(headerToken: token);
+      print('Got all on-demand requests ...');
+//      print('Request: $onDemandRequests and length of ${onDemandRequests.length}');
     }
     setState(() {
       authToken = token;
       userDetails = widget.isSLI ? sli : user;
+      onDemandRequests = allRequests;
       showLoadingAnimation = false;
     });
   }
@@ -77,7 +86,7 @@ class _NavigationState extends State<Navigation> {
       // determine whether its user or sli tab pages
       _pages = widget.isSLI
           ? [
-              OnDemandSLIPage(),
+              OnDemandSLIPage(onDemandRequests: onDemandRequests,),
               Reservation(),
               Transaction(),
               Profile(userDetails: userDetails)
@@ -94,8 +103,9 @@ class _NavigationState extends State<Navigation> {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colours.white,
         appBar: AppBar(
-          leading: Padding(
+          leading: widget.isSLI ? SizedBox.shrink() : Padding(
             padding: EdgeInsets.only(left: Dimensions.d_10),
             child: IconButton(
               icon: Icon(Icons.assignment),
@@ -119,7 +129,13 @@ class _NavigationState extends State<Navigation> {
               child: IconButton(
                 icon: Icon(Icons.question_answer),
                 iconSize: Dimensions.d_30,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    /// push the chat screen over here
+                    MaterialPageRoute(builder: (context) => ChatScreen()),
+                  );
+                },
               ),
             )
           ],
@@ -127,6 +143,7 @@ class _NavigationState extends State<Navigation> {
         body: showLoadingAnimation
             ? Center(child: CircularProgressIndicator())
             : PageView(
+                physics: NeverScrollableScrollPhysics(),
                 children: _pages,
                 controller: pageController,
                 onPageChanged: onPageChanged,
