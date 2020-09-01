@@ -118,27 +118,4 @@ class OnDemandServices {
       return 'Failed to End Request';
     }
   }
-
-//  Future<bool> doesUserExist({String headerToken}) async {
-//    var response = await http
-//        .get('https://heard-project.herokuapp.com/user/exists', headers: {
-//      'Authorization': headerToken,
-//    });
-//
-//    print('Does User Exists response: ${response.statusCode}, body: ${response.body}');
-//
-//    Map<String, dynamic> userBody = jsonDecode(response.body);
-//    return userBody['exists'];
-//  }
-//
-//  Future<void> deleteUser({String headerToken, String phoneNumber}) async {
-//    var response = await http
-//        .post('https://heard-project.herokuapp.com/user/delete', headers: {
-//      'Authorization': headerToken,
-//    }, body: {
-//      'phone': phoneNumber
-//    });
-//
-//    print('Delete User response: ${response.statusCode}, body: ${response.body}');
-//  }
 }

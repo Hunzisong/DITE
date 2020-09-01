@@ -68,7 +68,7 @@ class _OnDemandUserPageState extends State<OnDemandUserPage> {
                             title: Text('Servis permintaan segera:',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    fontSize: FontSizes.normal)),
+                                    fontSize: FontSizes.biggerText)),
                             subtitle: Text(
                               'Cari JBIM dan mulakan video call sekarang.',
                               style: TextStyle(
@@ -84,53 +84,61 @@ class _OnDemandUserPageState extends State<OnDemandUserPage> {
                             controller: onDemandInputs.department,
                             labelText: 'Jabatan Hospital',
                           ),
-                          Row(
-                            children: [
-                              Text(
-                                'Jantina Pilihan JBIM',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w500,
+                          Padding(
+                            padding: EdgeInsets.only(top: Dimensions.d_15),
+                            child: Row(
+                              children: [
+                                Text(
+                                  'Jantina Pilihan JBIM',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
-                              ),
-                            ]
+                              ]
+                            ),
                           ),
-                          Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: RadioListTile(
-                                    dense: true,
-                                    title: Text(
-                                      'Lelaki',
-                                      style: TextStyle(
-                                          fontSize: FontSizes.smallerText
+                          Padding(
+                            padding: EdgeInsets.only(bottom: Dimensions.d_5),
+                            child: Row(
+                              children: <Widget>[
+                                Expanded(
+                                  flex: 20,
+                                  child: RadioListTile(
+                                      dense: true,
+                                      title: Text(
+                                        'Lelaki',
+                                        style: TextStyle(
+                                            fontSize: FontSizes.smallerText
+                                        ),
                                       ),
-                                    ),
-                                    value: Gender.male,
-                                    groupValue: onDemandInputs.genderType,
-                                    onChanged: (Gender value) {
-                                      setState(() {
-                                        onDemandInputs.genderType = value;
-                                      });
-                                    }),
-                              ),
-                              Expanded(
-                                child: RadioListTile(
-                                    dense: true,
-                                    title: Text(
-                                      'Perempuan',
-                                      style: TextStyle(
-                                          fontSize: FontSizes.smallerText
+                                      value: Gender.male,
+                                      groupValue: onDemandInputs.genderType,
+                                      onChanged: (Gender value) {
+                                        setState(() {
+                                          onDemandInputs.genderType = value;
+                                        });
+                                      }),
+                                ),
+                                Expanded(
+                                  flex: 26,
+                                  child: RadioListTile(
+                                      dense: true,
+                                      title: Text(
+                                        'Perempuan',
+                                        style: TextStyle(
+                                            fontSize: FontSizes.smallerText
+                                        ),
                                       ),
-                                    ),
-                                    value: Gender.female,
-                                    groupValue: onDemandInputs.genderType,
-                                    onChanged: (Gender value) {
-                                      setState(() {
-                                        onDemandInputs.genderType = value;
-                                      });
-                                    }),
-                              ),
-                            ],
+                                      value: Gender.female,
+                                      groupValue: onDemandInputs.genderType,
+                                      onChanged: (Gender value) {
+                                        setState(() {
+                                          onDemandInputs.genderType = value;
+                                        });
+                                      }),
+                                ),
+                              ],
+                            ),
                           ),
                           CheckBoxTile(
                             value: onDemandInputs.isEmergency,
