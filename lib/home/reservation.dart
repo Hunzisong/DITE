@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
-import 'package:heard/home/booking/user_booking.dart';
+import 'package:heard/home/booking/user_booking_page.dart';
 import 'package:heard/schedule/schedule_page.dart';
 import 'package:heard/chat_service/chatPage.dart';
 
@@ -30,7 +30,7 @@ class _ReservationState extends State<Reservation>
         Navigator.push(
           context,
           /// todo: push chat page here!
-          MaterialPageRoute(builder: (context) => BookingUserPage()),
+          MaterialPageRoute(builder: (context) => UserBookingPage()),
         );
       },
     ));

@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
 import 'package:heard/widgets/widgets.dart';
 
-class BookingUserPage extends StatefulWidget {
+class UserBookingPage extends StatefulWidget {
   @override
-  _BookingUserPageState createState() => _BookingUserPageState();
+  _UserBookingPageState createState() => _UserBookingPageState();
 }
 
-class _BookingUserPageState extends State<BookingUserPage> {
+class _UserBookingPageState extends State<UserBookingPage> {
 
   List <DropdownMenuItem <String>> languageList = [];
   String selectedLanguage;
