@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:heard/api/on_demand_request.dart';
+import 'package:heard/api/on_demand_status.dart';
 import 'package:heard/constants.dart';
 import 'package:heard/firebase_services/auth_service.dart';
 import 'package:heard/home/on_demand/on_demand_success.dart';
@@ -29,6 +30,7 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
   List<OnDemandRequest> onDemandRequests;
   String authToken;
   bool showPairingComplete = false;
+  OnDemandStatus onDemandStatus;
 
   List<UserInfoTemp> mockInfoList = [
     UserInfoTemp().addInfo(
@@ -126,16 +128,19 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
           });
           print('on demand id: ${onDemandRequests[index].onDemandId}');
           bool acceptanceResult = await OnDemandServices().acceptOnDemandRequest(headerToken: authToken, onDemandID: onDemandRequests[index].onDemandId);
-          setState(() {
-            showLoadingAnimation = false;
-          });
+
           if (acceptanceResult) {
+            OnDemandStatus status = await OnDemandServices().onDemandStatus(headerToken: authToken, isSLI: true);
             setState(() {
               showPairingComplete = true;
+              onDemandStatus = status;
             });
           } else {
             confirmRequestError();
           }
+          setState(() {
+            showLoadingAnimation = false;
+          });
         });
   }
 
@@ -229,6 +234,7 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
     return showPairingComplete
         ? OnDemandSuccessPage(
             isSLI: true,
+            onDemandStatus: onDemandStatus,
             onCancelClick: () {
               Navigator.pop(context);
               setState(() {
