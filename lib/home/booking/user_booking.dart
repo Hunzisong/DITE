@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
 import 'package:heard/widgets/widgets.dart';
 
-import '../../constants.dart';
-import '../../constants.dart';
-
-
 class BookingUserPage extends StatefulWidget {
   @override
   _BookingUserPageState createState() => _BookingUserPageState();
@@ -13,21 +9,21 @@ class BookingUserPage extends StatefulWidget {
 
 class _BookingUserPageState extends State<BookingUserPage> {
 
-  List <DropdownMenuItem <String>> languagelist = [];
-  String selectedLanguage = null;
+  List <DropdownMenuItem <String>> languageList = [];
+  String selectedLanguage;
 
-  List <DropdownMenuItem <String>> cliniclist = [];
-  String selectedClinic = null;
+  List <DropdownMenuItem <String>> clinicList = [];
+  String selectedClinic;
 
   void loadLanguageList(){
 
-    languagelist=[];
-    languagelist.add(new DropdownMenuItem(
+    languageList=[];
+    languageList.add(new DropdownMenuItem(
       child: new Text ('Bahasa Malaysia'),
       value: 'bm',
     ));
 
-    languagelist.add(new DropdownMenuItem(
+    languageList.add(new DropdownMenuItem(
       child: new Text ('English'),
       value: "eng",
     ));
@@ -35,13 +31,13 @@ class _BookingUserPageState extends State<BookingUserPage> {
 
   void loadClinicList(){
 
-    cliniclist=[];
-    cliniclist.add(new DropdownMenuItem(
+    clinicList=[];
+    clinicList.add(new DropdownMenuItem(
       child: new Text ('Klinik Ria'),
       value: 'clinic1',
     ));
 
-    cliniclist.add(new DropdownMenuItem(
+    clinicList.add(new DropdownMenuItem(
       child: new Text ('Hospital Sunway'),
       value: "hospital1",
     ));
@@ -124,7 +120,7 @@ class _BookingUserPageState extends State<BookingUserPage> {
                   child: new DropdownButtonHideUnderline(
                     child: new DropdownButton(
                         value: selectedLanguage,
-                        items: languagelist,
+                        items: languageList,
                         hint: new Text('Bahasa Malaysia'),
                         iconSize: Dimensions.d_45,
                         onChanged: (value){
@@ -158,7 +154,7 @@ class _BookingUserPageState extends State<BookingUserPage> {
                   child: new DropdownButtonHideUnderline(
                     child: new DropdownButton(
                         value: selectedClinic,
-                        items: cliniclist,
+                        items: clinicList,
                         hint: new Text('Klinik A'),
                         iconSize: Dimensions.d_45,
                         onChanged: (value){
@@ -204,6 +200,7 @@ Widget _datePickerField() {
                 fontWeight: FontWeight.w300),
           ),
           trailing: IconButton(
+            onPressed: () {},
             icon: Icon(Icons.keyboard_arrow_down),
           ),
         ),
@@ -229,6 +226,7 @@ Widget _timePickerField() {
                 fontWeight: FontWeight.w300),
           ),
           trailing: IconButton(
+            onPressed: () {},
             icon: Icon(Icons.keyboard_arrow_down),
           ),
         ),
