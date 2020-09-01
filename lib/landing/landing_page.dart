@@ -51,7 +51,6 @@ class _LandingPageState extends State<LandingPage> {
       child: showEmptyScreen ? Container() : Scaffold(
         backgroundColor: Colors.white,
         body: ListView(
-          physics: NeverScrollableScrollPhysics(),
           children: <Widget>[
             Padding(
               padding: Paddings.startupMain,

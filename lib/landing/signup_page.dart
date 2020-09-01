@@ -121,12 +121,10 @@ class _SignUpPageState extends State<SignUpPage> {
                               Row(
                                 children: <Widget>[
                                   Flexible(
+                                    flex: 20,
                                     child: RadioListTile(
-                                        dense: true,
                                         title: Text(
                                           'Lelaki',
-                                          style: GoogleFonts.lato(
-                                              fontSize: FontSizes.smallerText),
                                         ),
                                         value: Gender.male,
                                         groupValue: userDetails.gender,
@@ -138,12 +136,12 @@ class _SignUpPageState extends State<SignUpPage> {
                                         }),
                                   ),
                                   Flexible(
+                                    flex: 26,
                                     child: RadioListTile(
-                                        dense: true,
+                                        // dense: true,
                                         title: Text(
                                           'Perempuan',
-                                          style: GoogleFonts.lato(
-                                              fontSize: FontSizes.smallerText),
+
                                         ),
                                         value: Gender.female,
                                         groupValue: userDetails.gender,
