@@ -57,11 +57,8 @@ class _BookingUserPageState extends State<BookingUserPage> {
               children: <Widget>[
                 SizedBox(
                   height: Dimensions.d_160,
-                  child: Hero(
-                    tag: 'bookingLogo',
-                    child: Image(
-                        image: AssetImage('images/booking_calendar.png')
-                    ),
+                  child: Image(
+                      image: AssetImage('images/booking_calendar.png')
                   ),
                 ),
                 SizedBox(
