@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:heard/api/on_demand_request.dart';
 import 'package:heard/api/on_demand_status.dart';
+import 'package:heard/home/on_demand/data_structure/OnDemandInputs.dart';
 import 'package:http/http.dart' as http;
 
 class OnDemandServices {
@@ -60,6 +61,62 @@ class OnDemandServices {
     }
 
     return onDemandStatus;
+  }
+
+  Future<String> onDemandRequest({String headerToken, OnDemandInputs onDemandInputs}) async {
+    var response = await http.post('https://heard-project.herokuapp.com/ondemand/request',
+        headers: {
+          'Authorization': headerToken,
+        },
+        body: {
+          'hospital': onDemandInputs.hospital.text,
+          'hospital_department': onDemandInputs.department.text,
+          'emergency': onDemandInputs.isEmergency.toString(),
+          'on_behalf': onDemandInputs.isBookingForOthers.toString(),
+          'gender': onDemandInputs.genderType.toString(),
+          'patient_name': onDemandInputs.patientName.text,
+          'note': onDemandInputs.noteToSLI.text,
+        }
+    );
+
+    if (response.statusCode == 200) {
+      print("Success");
+      return "Successful request";
+    }
+    else {
+      print("Failed");
+      return "Failed request";
+    }
+  }
+
+  Future<String> onDemandCancel({String headerToken}) async {
+    var response = await http.post('https://heard-project.herokuapp.com/ondemand/cancel',
+        headers: {
+          'Authorization': headerToken,
+        }
+    );
+
+    if (response.statusCode == 200) {
+      return 'Successfully Cancelled Request';
+    }
+    else {
+      return 'Failed to Cancel Request';
+    }
+  }
+
+  Future<String> onDemandEnd({String headerToken}) async {
+    var response = await http.post('https://heard-project.herokuapp.com/ondemand/end',
+        headers: {
+          'Authorization': headerToken,
+        }
+    );
+
+    if (response.statusCode == 200) {
+      return 'Successfully Ended Request';
+    }
+    else {
+      return 'Failed to End Request';
+    }
   }
 
 //  Future<bool> doesUserExist({String headerToken}) async {

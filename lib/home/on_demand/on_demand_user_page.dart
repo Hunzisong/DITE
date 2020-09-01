@@ -4,6 +4,7 @@ import 'package:heard/constants.dart';
 import 'package:heard/home/on_demand/on_demand_user_loading_page.dart';
 import 'package:heard/home/on_demand/on_demand_success.dart';
 import 'package:heard/widgets/widgets.dart';
+import 'package:heard/home/on_demand/data_structure/OnDemandInputs.dart';
 
 class OnDemandUserPage extends StatefulWidget {
   @override
@@ -31,6 +32,7 @@ class _OnDemandUserPageState extends State<OnDemandUserPage> {
   Widget build(BuildContext context) {
     return loadingScreen
         ? OnDemandUserLoadingPage(
+            onDemandInputs: onDemandInputs,
             onCancelClick: () {
               setState(() {
                 loadingScreen = false;
@@ -82,6 +84,54 @@ class _OnDemandUserPageState extends State<OnDemandUserPage> {
                             controller: onDemandInputs.department,
                             labelText: 'Jabatan Hospital',
                           ),
+                          Row(
+                            children: [
+                              Text(
+                                'Jantina Pilihan JBIM',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ]
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: RadioListTile(
+                                    dense: true,
+                                    title: Text(
+                                      'Lelaki',
+                                      style: TextStyle(
+                                          fontSize: FontSizes.smallerText
+                                      ),
+                                    ),
+                                    value: Gender.male,
+                                    groupValue: onDemandInputs.genderType,
+                                    onChanged: (Gender value) {
+                                      setState(() {
+                                        onDemandInputs.genderType = value;
+                                      });
+                                    }),
+                              ),
+                              Expanded(
+                                child: RadioListTile(
+                                    dense: true,
+                                    title: Text(
+                                      'Perempuan',
+                                      style: TextStyle(
+                                          fontSize: FontSizes.smallerText
+                                      ),
+                                    ),
+                                    value: Gender.female,
+                                    groupValue: onDemandInputs.genderType,
+                                    onChanged: (Gender value) {
+                                      setState(() {
+                                        onDemandInputs.genderType = value;
+                                      });
+                                    }),
+                              ),
+                            ],
+                          ),
                           CheckBoxTile(
                             value: onDemandInputs.isEmergency,
                             onChanged: (bool value) {
@@ -116,44 +166,6 @@ class _OnDemandUserPageState extends State<OnDemandUserPage> {
                                       children: <Widget>[
                                         SizedBox(
                                           height: Dimensions.d_10,
-                                        ),
-                                        Row(
-                                          children: <Widget>[
-                                            Expanded(
-                                              child: RadioListTile(
-                                                  dense: true,
-                                                  title: Text(
-                                                    'Lelaki',
-                                                    style: TextStyle(
-                                                        fontSize: FontSizes
-                                                            .smallerText),
-                                                  ),
-                                                  value: Gender.male,
-                                                  groupValue: onDemandInputs.genderType,
-                                                  onChanged: (Gender value) {
-                                                    setState(() {
-                                                      onDemandInputs.genderType = value;
-                                                    });
-                                                  }),
-                                            ),
-                                            Expanded(
-                                              child: RadioListTile(
-                                                  dense: true,
-                                                  title: Text(
-                                                    'Perempuan',
-                                                    style: TextStyle(
-                                                        fontSize: FontSizes
-                                                            .smallerText),
-                                                  ),
-                                                  value: Gender.female,
-                                                  groupValue: onDemandInputs.genderType,
-                                                  onChanged: (Gender value) {
-                                                    setState(() {
-                                                      onDemandInputs.genderType = value;
-                                                    });
-                                                  }),
-                                            ),
-                                          ],
                                         ),
                                         Padding(
                                           padding: EdgeInsets.symmetric(horizontal: Dimensions.d_25),
@@ -193,32 +205,5 @@ class _OnDemandUserPageState extends State<OnDemandUserPage> {
                   },
                 ),
               );
-  }
-}
-
-class OnDemandInputs {
-  TextEditingController hospital = TextEditingController();
-  TextEditingController department = TextEditingController();
-  TextEditingController patientName = TextEditingController();
-  TextEditingController noteToSLI = TextEditingController();
-  bool isEmergency = false;
-  bool isBookingForOthers = false;
-  Gender genderType;
-
-  void disposeTexts() {
-    hospital.dispose();
-    department.dispose();
-    patientName.dispose();
-    noteToSLI.dispose();
-  }
-
-  void reset() {
-    hospital.clear();
-    department.clear();
-    patientName.clear();
-    noteToSLI.clear();
-    isEmergency = false;
-    isBookingForOthers = false;
-    genderType = null;
   }
 }
