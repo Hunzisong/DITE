@@ -45,7 +45,7 @@ class OnDemandServices {
     }
   }
 
-  Future<OnDemandStatus> onDemandStatus({String headerToken, @required bool isSLI}) async {
+  Future<OnDemandStatus> getOnDemandStatus({String headerToken, @required bool isSLI}) async {
     var response = await http
         .get('https://heard-project.herokuapp.com/ondemand/status', headers: {
       'Authorization': headerToken,
@@ -63,7 +63,7 @@ class OnDemandServices {
     return onDemandStatus;
   }
 
-  Future<String> onDemandRequest({String headerToken, OnDemandInputs onDemandInputs}) async {
+  Future<String> makeOnDemandRequest({String headerToken, OnDemandInputs onDemandInputs}) async {
     var response = await http.post('https://heard-project.herokuapp.com/ondemand/request',
         headers: {
           'Authorization': headerToken,
@@ -89,7 +89,7 @@ class OnDemandServices {
     }
   }
 
-  Future<String> onDemandCancel({String headerToken}) async {
+  Future<String> cancelOnDemandRequest({String headerToken}) async {
     var response = await http.post('https://heard-project.herokuapp.com/ondemand/cancel',
         headers: {
           'Authorization': headerToken,

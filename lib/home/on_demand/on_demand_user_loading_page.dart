@@ -41,7 +41,7 @@ class OnDemandUserLoadingPageState extends State<OnDemandUserLoadingPage> {
       String _username = _user.name;
       widget.onDemandInputs.patientName = TextEditingController.fromValue(TextEditingValue(text: _username));
     }
-    _onDemandRequest = await OnDemandServices().onDemandRequest(headerToken: _authToken, onDemandInputs: widget.onDemandInputs);
+    _onDemandRequest = await OnDemandServices().makeOnDemandRequest(headerToken: _authToken, onDemandInputs: widget.onDemandInputs);
 
     // Check if accepted
     // widget.onSearchComplete();
@@ -75,7 +75,7 @@ class OnDemandUserLoadingPageState extends State<OnDemandUserLoadingPage> {
           padding: EdgeInsets.all(Dimensions.d_30),
           color: Colours.cancel,
           onClick: () {
-            OnDemandServices().onDemandCancel(headerToken: _authToken);
+            OnDemandServices().cancelOnDemandRequest(headerToken: _authToken);
             widget.onCancelClick();
           }),
     );

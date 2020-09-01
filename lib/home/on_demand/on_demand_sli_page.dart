@@ -130,7 +130,7 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
           bool acceptanceResult = await OnDemandServices().acceptOnDemandRequest(headerToken: authToken, onDemandID: onDemandRequests[index].onDemandId);
 
           if (acceptanceResult) {
-            OnDemandStatus status = await OnDemandServices().onDemandStatus(headerToken: authToken, isSLI: true);
+            OnDemandStatus status = await OnDemandServices().getOnDemandStatus(headerToken: authToken, isSLI: true);
             setState(() {
               showPairingComplete = true;
               onDemandStatus = status;
