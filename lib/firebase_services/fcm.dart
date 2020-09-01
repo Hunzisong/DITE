@@ -42,7 +42,6 @@ class FCM {
       _initialized = true;
 
       var code = response.statusCode;
-      print("Token Response: $code");
     }
   }
 
