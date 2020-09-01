@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:heard/api/on_demand_request.dart';
+import 'package:heard/api/on_demand_status.dart';
 import 'package:http/http.dart' as http;
 
 class OnDemandServices {
@@ -40,6 +42,24 @@ class OnDemandServices {
     else {
       return false;
     }
+  }
+
+  Future<OnDemandStatus> onDemandStatus({String headerToken, @required bool isSLI}) async {
+    var response = await http
+        .get('https://heard-project.herokuapp.com/ondemand/status', headers: {
+      'Authorization': headerToken,
+      'type': isSLI ? 'sli' : 'user',
+    });
+
+    print('Get On-Demand Status: ${response.statusCode}, body: ${response.body}');
+
+    OnDemandStatus onDemandStatus;
+    if (response.statusCode == 200) {
+      Map<String, dynamic> statusBody = jsonDecode(response.body);
+      onDemandStatus = OnDemandStatus.fromJson(statusBody);
+    }
+
+    return onDemandStatus;
   }
 
 //  Future<bool> doesUserExist({String headerToken}) async {
