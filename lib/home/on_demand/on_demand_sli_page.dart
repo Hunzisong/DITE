@@ -6,10 +6,10 @@ import 'package:heard/constants.dart';
 import 'package:heard/firebase_services/auth_service.dart';
 import 'package:heard/home/on_demand/on_demand_success.dart';
 import 'package:heard/http_services/on_demand_services.dart';
-import 'package:heard/widgets/slidable_list_tile.dart';
 import 'package:heard/widgets/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class OnDemandSLIPage extends StatefulWidget {
   final List<OnDemandRequest> onDemandRequests;
@@ -25,17 +25,17 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 
+  bool showLoadingAnimation = false;
   List<OnDemandRequest> onDemandRequests;
   String authToken;
-  bool pairingComplete = false;
+  bool showPairingComplete = false;
 
   List<UserInfoTemp> mockInfoList = [
     UserInfoTemp().addInfo(
         name: 'James Cooper',
         hospital: 'Hospital Sg Buloh',
         hospitalDepartment: 'Jabatan Jantung',
-        note:
-            'Jangan pakai baju warna merah jambu',
+        note: 'Jangan pakai baju warna merah jambu',
         emergency: true),
     UserInfoTemp().addInfo(
         name: 'Kyle Jenner',
@@ -108,7 +108,7 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
     print('Set state complete! on-demand: $onDemandRequests}');
   }
 
-  void confirmRequest() {
+  void confirmRequest({int index}) {
     popUpDialog(
         context: context,
         isSLI: true,
@@ -119,11 +119,39 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
           style: TextStyle(color: Colours.darkGrey, fontSize: FontSizes.normal),
         ),
         buttonText: 'Teruskan',
-        onClick: () {
+        onClick: () async {
           Navigator.pop(context);
           setState(() {
-            pairingComplete = true;
+            showLoadingAnimation = true;
           });
+          print('on demand id: ${onDemandRequests[index].onDemandId}');
+          bool acceptanceResult = await OnDemandServices().acceptOnDemandRequest(headerToken: authToken, onDemandID: onDemandRequests[index].onDemandId);
+          setState(() {
+            showLoadingAnimation = false;
+          });
+          if (acceptanceResult) {
+            setState(() {
+              showPairingComplete = true;
+            });
+          } else {
+            confirmRequestError();
+          }
+        });
+  }
+
+  void confirmRequestError() {
+    popUpDialog(
+        context: context,
+        isSLI: true,
+        header: 'Amaran',
+        touchToDismiss: false,
+        content: Text(
+          'Gagal Menerima Permintaan',
+          textAlign: TextAlign.left,
+          style: TextStyle(color: Colours.darkGrey, fontSize: FontSizes.normal),
+        ),
+        onClick: () {
+          Navigator.pop(context);
         });
   }
 
@@ -198,94 +226,98 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return pairingComplete
+    return showPairingComplete
         ? OnDemandSuccessPage(
             isSLI: true,
             onCancelClick: () {
+              Navigator.pop(context);
               setState(() {
-                pairingComplete = false;
+                showPairingComplete = false;
               });
             },
           )
-        : Scaffold(
-            backgroundColor: Colours.white,
-            body: SmartRefresher(
-              controller: _refreshController,
-              onRefresh: _onRefresh,
-              enablePullDown: true,
-              header: WaterDropHeader(),
-              child: (onDemandRequests == null)
-                  ? Container()
-                  : (onDemandRequests.length == 0)
-                      ? Center(
-                          child: Text('Tiada Permintaan Pada Masa Ini'),
-                        )
-                      : ListView(
-                          children: <Widget>[
-                            GreyTitleBar(
-                              title: 'Permintaan Aktif',
-                              trailing: Text(
-                                '*Leret ke kiri untuk pengesahan',
-                                style: TextStyle(
-                                    fontSize: FontSizes.tinyText,
-                                    fontWeight: FontWeight.bold),
+        : ModalProgressHUD(
+            inAsyncCall: showLoadingAnimation,
+            child: Scaffold(
+              backgroundColor: Colours.white,
+              body: SmartRefresher(
+                controller: _refreshController,
+                onRefresh: _onRefresh,
+                enablePullDown: true,
+                header: WaterDropHeader(),
+                child: (onDemandRequests == null)
+                    ? Container()
+                    : (onDemandRequests.length == 0)
+                        ? Center(
+                            child: Text('Tiada Permintaan Pada Masa Ini'),
+                          )
+                        : ListView(
+                            children: <Widget>[
+                              GreyTitleBar(
+                                title: 'Permintaan Aktif',
+                                trailing: Text(
+                                  '*Leret ke kiri untuk pengesahan',
+                                  style: TextStyle(
+                                      fontSize: FontSizes.tinyText,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
-                            ),
-                            ListView.builder(
-                              scrollDirection: Axis.vertical,
-                              controller: ScrollController(),
-                              shrinkWrap: true,
-                              itemCount: onDemandRequests.length,
-                              itemBuilder: (context, index) {
-                                return SlidableListTile(
-                                  // userInfo: onDemandRequests[index],
-                                  title: Text(
-                                    '${onDemandRequests[index].patientName}',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  subtitle: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Text(
-                                        '${onDemandRequests[index].hospital}',
-                                        style:
-                                            TextStyle(color: Colours.darkGrey),
-                                      ),
-                                      onDemandRequests[index].emergency
-                                          ? Text(
-                                              'KECEMASAN',
-                                              style: TextStyle(
-                                                  color: Colours.fail,
-                                                  fontSize:
-                                                      FontSizes.biggerText),
-                                            )
-                                          : SizedBox.shrink(),
+                              ListView.builder(
+                                scrollDirection: Axis.vertical,
+                                controller: ScrollController(),
+                                shrinkWrap: true,
+                                itemCount: onDemandRequests.length,
+                                itemBuilder: (context, index) {
+                                  return SlidableListTile(
+                                    // userInfo: onDemandRequests[index],
+                                    title: Text(
+                                      '${onDemandRequests[index].patientName}',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    subtitle: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text(
+                                          '${onDemandRequests[index].hospital}',
+                                          style: TextStyle(
+                                              color: Colours.darkGrey),
+                                        ),
+                                        onDemandRequests[index].emergency
+                                            ? Text(
+                                                'KECEMASAN',
+                                                style: TextStyle(
+                                                    color: Colours.fail,
+                                                    fontSize:
+                                                        FontSizes.biggerText),
+                                              )
+                                            : SizedBox.shrink(),
+                                      ],
+                                    ),
+                                    slideActionFunctions: [
+                                      IconSlideAction(
+                                          caption: 'Terima',
+                                          color: Colours.accept,
+                                          icon: Icons.done,
+                                          onTap: () {
+                                            confirmRequest(index: index);
+                                          })
                                     ],
-                                  ),
-                                  slideActionFunctions: [
-                                    IconSlideAction(
-                                        caption: 'Terima',
-                                        color: Colours.accept,
-                                        icon: Icons.done,
-                                        onTap: () {
-                                          confirmRequest();
-                                        })
-                                  ],
-                                  onTrailingButtonPress: IconButton(
-                                    icon: Icon(Icons.info_outline),
-                                    color: Colours.orange,
-                                    iconSize: Dimensions.d_30,
-                                    onPressed: () {
-                                      showUserInformation(index: index);
-                                    },
-                                  ),
-                                );
-                              },
-                            )
-                          ],
-                        ),
+                                    onTrailingButtonPress: IconButton(
+                                      icon: Icon(Icons.info_outline),
+                                      color: Colours.orange,
+                                      iconSize: Dimensions.d_30,
+                                      onPressed: () {
+                                        showUserInformation(index: index);
+                                      },
+                                    ),
+                                  );
+                                },
+                              )
+                            ],
+                          ),
+              ),
             ),
           );
   }
