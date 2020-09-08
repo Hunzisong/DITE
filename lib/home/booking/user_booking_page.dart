@@ -10,12 +10,24 @@ class UserBookingPage extends StatefulWidget {
 
 class _UserBookingPageState extends State<UserBookingPage> {
 
+  TimeOfDay startTime;
+
   List <DropdownMenuItem <String>> languageList = [];
   String selectedLanguage;
 
   List <DropdownMenuItem <String>> clinicList = [];
   String selectedClinic;
 
+  String _getFormattedTime(TimeOfDay currentTime) {
+    return currentTime.toString().substring(
+        currentTime.toString().length - 6, currentTime.toString().length - 1);
+  }
+
+  Future<TimeOfDay> _pickTime({bool isStart = true}) async {
+    TimeOfDay selectedTime =
+    await showTimePicker(context: context, initialTime: TimeOfDay.now());
+    return selectedTime;
+  }
   void loadLanguageList(){
 
     languageList=[];
@@ -43,6 +55,43 @@ class _UserBookingPageState extends State<UserBookingPage> {
       value: "hospital1",
     ));
   }
+
+
+  Widget _timePickerField(String initialTitle, TimeOfDay currentTime) {
+    return StatefulBuilder(builder: (context, setState) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(Dimensions.d_10),
+        child: Container(
+          color: Colours.lightBlue,
+          padding: EdgeInsets.all(Dimensions.d_0),
+          margin: EdgeInsets.fromLTRB(Dimensions.d_30,Dimensions.d_0,Dimensions.d_30,Dimensions.d_0),
+          child: ListTile(
+            title: Text(
+              currentTime == null
+                  ? initialTitle
+                  : _getFormattedTime(currentTime),
+              style: TextStyle(
+                  color: Colours.darkGrey,
+                  fontSize: FontSizes.normal,
+                  fontWeight: FontWeight.w300),
+            ),
+            trailing: IconButton(
+              icon: Icon(Icons.keyboard_arrow_down),
+              onPressed: () async {
+                TimeOfDay selectedTime = await _pickTime();
+                if (selectedTime != null) {
+                  setState(() {
+                    currentTime = selectedTime;
+                  });
+                }
+              },
+            ),
+          ),
+        ),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     loadLanguageList();
@@ -83,7 +132,9 @@ class _UserBookingPageState extends State<UserBookingPage> {
                 SizedBox(
                   height: Dimensions.d_5,
                 ),
-                _timePickerField(),
+                _timePickerField(
+                    "Pilih Masa Mula",
+                    startTime),
                 FieldLabel(
                   text:"Pilihan Bahasa",
                   dimensionToRight: Dimensions.d_160,
@@ -200,28 +251,6 @@ Widget _datePickerField() {
   });
 }
 
-Widget _timePickerField() {
-  return StatefulBuilder(builder: (context, setState) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(Dimensions.d_10),
-      child: Container(
-        color: Colours.lightBlue,
-        padding: EdgeInsets.all(Dimensions.d_0),
-        margin: EdgeInsets.fromLTRB(Dimensions.d_30,Dimensions.d_0,Dimensions.d_30,Dimensions.d_0),
-        child: ListTile(
-          title: Text(
-            "Pilih Masa ...",
-            style: TextStyle(
-                color: Colours.darkGrey,
-                fontSize: FontSizes.normal,
-                fontWeight: FontWeight.w300),
-          ),
-          trailing: IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.keyboard_arrow_down),
-          ),
-        ),
-      ),
-    );
-  });
-}
+
+
+
