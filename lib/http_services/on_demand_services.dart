@@ -64,6 +64,7 @@ class OnDemandServices {
   }
 
   Future<String> makeOnDemandRequest({String headerToken, OnDemandInputs onDemandInputs}) async {
+    print("Test: ${onDemandInputs.genderType.toString().split('.').last}\n--------------------------");
     var response = await http.post('https://heard-project.herokuapp.com/ondemand/request',
         headers: {
           'Authorization': headerToken,
@@ -73,7 +74,7 @@ class OnDemandServices {
           'hospital_department': onDemandInputs.department.text,
           'emergency': onDemandInputs.isEmergency.toString(),
           'on_behalf': onDemandInputs.isBookingForOthers.toString(),
-          'gender': onDemandInputs.genderType.toString(),
+          'gender': onDemandInputs.genderType.toString().split('.').last,
           'patient_name': onDemandInputs.patientName.text,
           'note': onDemandInputs.noteToSLI.text,
         }
