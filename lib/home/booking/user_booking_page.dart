@@ -112,7 +112,7 @@ class _UserBookingPageState extends State<UserBookingPage> {
             title: Text(
               currentDate == null
                   ? initialTitle
-                  : formattedDate,
+                  : currentDate,
               style: TextStyle(
                   color: Colours.darkGrey,
                   fontSize: FontSizes.normal,
@@ -126,7 +126,7 @@ class _UserBookingPageState extends State<UserBookingPage> {
                     initialDate: startDate == null ? DateTime.now()
                         : startDate,
                     firstDate: DateTime(2020),
-                    lastDate: DateTime(2022)
+                    lastDate: DateTime(2021)
                 ).then((date){
                   setState((){
                     startDate= date;
@@ -230,3 +230,6 @@ class _UserBookingPageState extends State<UserBookingPage> {
     );
   }
 }
+
+
+

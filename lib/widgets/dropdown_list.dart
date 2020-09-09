@@ -22,6 +22,7 @@ class DropdownList extends StatelessWidget {
             iconSize: Dimensions.d_45,
             onChanged: (value){
               selectedItem= value;
+              (context as Element).markNeedsBuild();
             }),
     ),
     );
