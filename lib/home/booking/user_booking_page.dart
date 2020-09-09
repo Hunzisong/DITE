@@ -1,7 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
 import 'package:heard/widgets/field_label.dart';
 import 'package:heard/widgets/widgets.dart';
+import 'package:intl/intl.dart';
+
 
 class UserBookingPage extends StatefulWidget {
   @override
@@ -11,6 +14,9 @@ class UserBookingPage extends StatefulWidget {
 class _UserBookingPageState extends State<UserBookingPage> {
 
   TimeOfDay startTime;
+  DateTime startDate;
+  String formattedDate;
+
 
   List <DropdownMenuItem <String>> languageList = [];
   String selectedLanguage;
@@ -28,6 +34,8 @@ class _UserBookingPageState extends State<UserBookingPage> {
     await showTimePicker(context: context, initialTime: TimeOfDay.now());
     return selectedTime;
   }
+
+
   void loadLanguageList(){
 
     languageList=[];
@@ -92,6 +100,47 @@ class _UserBookingPageState extends State<UserBookingPage> {
     });
   }
 
+  Widget _datePickerField(String initialTitle, DateTime currentDate) {
+    return StatefulBuilder(builder: (context, setState) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(Dimensions.d_10),
+        child: Container(
+          color: Colours.lightBlue,
+          padding: EdgeInsets.all(Dimensions.d_0),
+          margin: EdgeInsets.fromLTRB(Dimensions.d_30,Dimensions.d_0,Dimensions.d_30,Dimensions.d_0),
+          child: ListTile(
+            title: Text(
+              currentDate == null
+                  ? initialTitle
+                  : formattedDate,
+              style: TextStyle(
+                  color: Colours.darkGrey,
+                  fontSize: FontSizes.normal,
+                  fontWeight: FontWeight.w300),
+            ),
+            trailing: IconButton(
+              icon: Icon(Icons.keyboard_arrow_down),
+              onPressed: () {
+                showDatePicker(
+                    context: context,
+                    initialDate: startDate == null ? DateTime.now()
+                        : startDate,
+                    firstDate: DateTime(2020),
+                    lastDate: DateTime(2022)
+                ).then((date){
+                  setState((){
+                    startDate= date;
+                    formattedDate = DateFormat('yyyy-MM-dd').format(startDate);
+                  });
+                });
+              },
+            ),
+          ),
+        ),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     loadLanguageList();
@@ -121,7 +170,9 @@ class _UserBookingPageState extends State<UserBookingPage> {
                 SizedBox(
                   height: Dimensions.d_5,
                 ),
-                _datePickerField(),
+                _datePickerField(
+                    "Pilih Tarikh..",
+                    startDate),
                 SizedBox(
                   height: Dimensions.d_5,
                 ),
@@ -133,7 +184,7 @@ class _UserBookingPageState extends State<UserBookingPage> {
                   height: Dimensions.d_5,
                 ),
                 _timePickerField(
-                    "Pilih Masa Mula",
+                    "Pilih Masa..",
                     startTime),
                 FieldLabel(
                   text:"Pilihan Bahasa",
@@ -179,34 +230,3 @@ class _UserBookingPageState extends State<UserBookingPage> {
     );
   }
 }
-
-
-Widget _datePickerField() {
-  return StatefulBuilder(builder: (context, setState) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(Dimensions.d_10),
-      child: Container(
-        color: Colours.lightBlue,
-        padding: EdgeInsets.all(Dimensions.d_0),
-        margin: EdgeInsets.fromLTRB(Dimensions.d_30,Dimensions.d_0,Dimensions.d_30,Dimensions.d_0),
-        child: ListTile(
-          title: Text(
-            "Pilih Tarikh ...",
-            style: TextStyle(
-                color: Colours.darkGrey,
-                fontSize: FontSizes.normal,
-                fontWeight: FontWeight.w300),
-          ),
-          trailing: IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.keyboard_arrow_down),
-          ),
-        ),
-      ),
-    );
-  });
-}
-
-
-
-
