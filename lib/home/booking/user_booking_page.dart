@@ -35,6 +35,16 @@ class _UserBookingPageState extends State<UserBookingPage> {
     return selectedTime;
   }
 
+  Future<DateTime> _pickDate({bool isStart = true}) async {
+    DateTime selectedDate =
+    await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+        firstDate: DateTime(2020),
+        lastDate: DateTime(2021)
+    );
+    return selectedDate;
+  }
 
   void loadLanguageList(){
 
@@ -63,7 +73,6 @@ class _UserBookingPageState extends State<UserBookingPage> {
       value: "hospital1",
     ));
   }
-
 
   Widget _timePickerField(String initialTitle, TimeOfDay currentTime) {
     return StatefulBuilder(builder: (context, setState) {
@@ -112,7 +121,7 @@ class _UserBookingPageState extends State<UserBookingPage> {
             title: Text(
               currentDate == null
                   ? initialTitle
-                  : currentDate,
+                  : formattedDate,
               style: TextStyle(
                   color: Colours.darkGrey,
                   fontSize: FontSizes.normal,
@@ -120,19 +129,13 @@ class _UserBookingPageState extends State<UserBookingPage> {
             ),
             trailing: IconButton(
               icon: Icon(Icons.keyboard_arrow_down),
-              onPressed: () {
-                showDatePicker(
-                    context: context,
-                    initialDate: startDate == null ? DateTime.now()
-                        : startDate,
-                    firstDate: DateTime(2020),
-                    lastDate: DateTime(2021)
-                ).then((date){
-                  setState((){
-                    startDate= date;
-                    formattedDate = DateFormat('yyyy-MM-dd').format(startDate);
+              onPressed: () async {
+                DateTime selectedDate= await _pickDate();
+                if (selectedDate != null) {
+                  setState(() {
+                    currentDate = selectedDate;
                   });
-                });
+                }
               },
             ),
           ),
@@ -230,6 +233,3 @@ class _UserBookingPageState extends State<UserBookingPage> {
     );
   }
 }
-
-
-
