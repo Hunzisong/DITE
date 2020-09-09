@@ -21,7 +21,7 @@ class App extends StatelessWidget {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      home: UserBookingPage(),
+      home: LandingPage(),
 //      home: Navigation(isSLI: true,),
     );
   }
