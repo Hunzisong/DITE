@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
 
-
-
-
-
 class FieldLabel extends StatelessWidget {
   final String text;
   final double dimensionToRight;

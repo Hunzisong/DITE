@@ -142,21 +142,10 @@ class _UserBookingPageState extends State<UserBookingPage> {
                 SizedBox(
                   height: Dimensions.d_5,
                 ),
-                Container(
-                  color: Colours.lightBlue,
-                  padding: EdgeInsets.symmetric(horizontal: Dimensions.d_95, vertical: Dimensions.d_5),
-                  child: new DropdownButtonHideUnderline(
-                    child: new DropdownButton(
-                        value: selectedLanguage,
-                        items: languageList,
-                        hint: new Text('Bahasa Malaysia'),
-                        iconSize: Dimensions.d_45,
-                        onChanged: (value){
-                          selectedLanguage= value;
-                          setState(() {
-                          });
-                        }),
-                  ),
+                DropdownList(
+                  hintText: "Bahasa Malaysia",
+                  selectedItem: selectedLanguage,
+                  itemList: languageList,
                 ),
                 SizedBox(
                   height: Dimensions.d_5,
@@ -168,22 +157,10 @@ class _UserBookingPageState extends State<UserBookingPage> {
                 SizedBox(
                   height: Dimensions.d_5,
                 ),
-                Container(
-                  color: Colours.lightBlue,
-                  padding: EdgeInsets.symmetric(horizontal: Dimensions.d_95, vertical: Dimensions.d_5),
-                  //margin: EdgeInsets.fromLTRB(Dimensions.d_0,Dimensions.d_0,Dimensions.d_100,Dimensions.d_0),
-                  child: new DropdownButtonHideUnderline(
-                    child: new DropdownButton(
-                        value: selectedClinic,
-                        items: clinicList,
-                        hint: new Text('Klinik A'),
-                        iconSize: Dimensions.d_45,
-                        onChanged: (value){
-                          selectedClinic= value;
-                          setState(() {
-                          });
-                        }),
-                  ),
+                DropdownList(
+                  hintText: "Klinik A",
+                  selectedItem: selectedClinic,
+                  itemList: clinicList,
                 ),
                 SizedBox(
                   height: Dimensions.d_45,
@@ -202,27 +179,6 @@ class _UserBookingPageState extends State<UserBookingPage> {
     );
   }
 }
-
-
-Widget _fieldLabel(){
-  return StatefulBuilder(builder: (context, setState){
-    return Padding(
-      padding: EdgeInsets.fromLTRB(Dimensions.d_0,Dimensions.d_0,Dimensions.d_160,Dimensions.d_0),
-      child: Text(
-        "Pilihan Bahasa",
-        textAlign: TextAlign.left,
-        style: TextStyle(
-            fontWeight: FontWeight.w500,
-            fontSize: FontSizes.normal,
-            color: Colours.darkGrey),
-      ),
-    );
-  });
-}
-
-
-
-
 
 
 Widget _datePickerField() {
