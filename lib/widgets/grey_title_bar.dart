@@ -21,7 +21,7 @@ class GreyTitleBar extends StatelessWidget {
             title,
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          trailing
+          trailing ?? SizedBox.shrink()
         ],
       ),
     );
