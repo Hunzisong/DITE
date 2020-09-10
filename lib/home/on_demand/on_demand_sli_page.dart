@@ -276,6 +276,7 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
                                 itemBuilder: (context, index) {
                                   return SlidableListTile(
                                     // userInfo: onDemandRequests[index],
+                                    tileColour: onDemandRequests[index].emergency ? Colours.lightOrange : Colours.white,
                                     title: Text(
                                       '${onDemandRequests[index].patientName}',
                                       style: TextStyle(
