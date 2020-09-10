@@ -190,7 +190,6 @@ class _UserBookingPageState extends State<UserBookingPage> {
                   ),
                   FieldLabel(
                     text:"Tarikh Temu Janji",
-                    dimensionToRight: Dimensions.d_140,
                   ),
                   SizedBox(
                     height: Dimensions.d_5,
@@ -203,7 +202,6 @@ class _UserBookingPageState extends State<UserBookingPage> {
                   ),
                   FieldLabel(
                     text:"Masa Temu Janji",
-                    dimensionToRight: Dimensions.d_140,
                   ),
                   SizedBox(
                     height: Dimensions.d_5,
@@ -213,7 +211,6 @@ class _UserBookingPageState extends State<UserBookingPage> {
                       startTime),
                   FieldLabel(
                     text:"Pilihan Bahasa",
-                    dimensionToRight: Dimensions.d_160,
                   ),
                   SizedBox(
                     height: Dimensions.d_5,
@@ -222,13 +219,17 @@ class _UserBookingPageState extends State<UserBookingPage> {
                     hintText: "Bahasa Malaysia",
                     selectedItem: selectedLanguage,
                     itemList: languageList,
+                    onChanged: (value){
+                      setState(() {
+                        selectedLanguage= value;
+                      });
+                    },
                   ),
                   SizedBox(
                     height: Dimensions.d_5,
                   ),
                   FieldLabel(
                     text:"Nama Hospital / Klinik",
-                    dimensionToRight: Dimensions.d_100,
                   ),
                   SizedBox(
                     height: Dimensions.d_5,
@@ -237,8 +238,10 @@ class _UserBookingPageState extends State<UserBookingPage> {
                     hintText: "Klinik A",
                     selectedItem: selectedClinic,
                     itemList: clinicList,
-                    onChanged: () {
-
+                    onChanged: (value){
+                      setState(() {
+                        selectedClinic= value;
+                      });
                     },
                   ),
                   SizedBox(

@@ -3,8 +3,7 @@ import 'package:heard/constants.dart';
 
 class FieldLabel extends StatelessWidget {
   final String text;
-  final double dimensionToRight;
-  FieldLabel({this.text, this.dimensionToRight});
+  FieldLabel({this.text});
 
   @override
   Widget build(BuildContext context) {
