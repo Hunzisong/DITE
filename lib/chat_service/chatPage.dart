@@ -8,6 +8,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:heard/chat_service/VideoPlayerWidget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:heard/constants.dart';
 
 
 final _firestore = FirebaseFirestore.instance;
@@ -148,7 +149,7 @@ class _ChatScreenState extends State<ChatScreen> {
               }),
         ],
         title: Icon(Icons.question_answer),
-        backgroundColor: Colors.lightBlueAccent,
+        backgroundColor: isSLI ? Colours.blue : Colours.orange,
       ),
       body: SafeArea(
         child: Column(
@@ -356,7 +357,7 @@ class MessageBubble extends StatelessWidget {
                   topRight: Radius.circular(30.0) ,
                 )
                 ,
-                color: isSLI ? Colors.orange : Colors.blue,
+                color: isSLI ? Colours.orange : Colours.blue,
                 child:
 
                 type == 'FileType.text' ?
