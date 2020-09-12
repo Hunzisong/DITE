@@ -149,7 +149,7 @@ class _ChatScreenState extends State<ChatScreen> {
               }),
         ],
         title: Icon(Icons.question_answer),
-        backgroundColor: isSLI ? Colours.blue : Colours.orange,
+        backgroundColor: isSLI ? Colours.orange : Colours.blue,
       ),
       body: SafeArea(
         child: Column(
