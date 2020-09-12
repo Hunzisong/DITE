@@ -4,13 +4,15 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:heard/constants.dart';
 
 class SlidableListTile extends StatelessWidget {
-  final List<Widget> slideActionFunctions;
+  final SlideActionBuilderDelegate slideLeftActionFunctions;
+  final SlideActionBuilderDelegate slideRightActionFunctions;
   final Widget onTrailingButtonPress;
   final Color tileColour;
   final Widget title;
   final Widget subtitle;
+  final Function onDismissed;
 
-  SlidableListTile({this.slideActionFunctions, this.onTrailingButtonPress, this.tileColour, this.title, this.subtitle});
+  SlidableListTile({this.slideLeftActionFunctions, this.slideRightActionFunctions, this.onTrailingButtonPress, this.tileColour, this.title, this.subtitle, this.onDismissed});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +20,13 @@ class SlidableListTile extends StatelessWidget {
       children: <Widget>[
         Material(
           color: tileColour != null ? tileColour : Colours.white,
-          child: Slidable(
+          child: Slidable.builder(
+            key: UniqueKey(),
+            dismissal: SlidableDismissal(
+              dragDismissible: false,
+              onDismissed: onDismissed,
+              child: SlidableDrawerDismissal(),
+            ),
             actionPane: SlidableDrawerActionPane(),
             actionExtentRatio: 0.25,
             child: ListTile(
@@ -32,7 +40,8 @@ class SlidableListTile extends StatelessWidget {
               subtitle: subtitle,
               trailing: onTrailingButtonPress != null ? onTrailingButtonPress : SizedBox.shrink(),
             ),
-            secondaryActions: slideActionFunctions,
+            actionDelegate: slideRightActionFunctions,
+            secondaryActionDelegate: slideLeftActionFunctions,
           ),
         ),
         Divider(

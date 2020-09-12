@@ -1,7 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
-import 'package:heard/widgets/field_label.dart';
 import 'package:heard/widgets/widgets.dart';
+import 'package:intl/intl.dart';
 
 class UserBookingPage extends StatefulWidget {
   @override
@@ -11,6 +12,8 @@ class UserBookingPage extends StatefulWidget {
 class _UserBookingPageState extends State<UserBookingPage> {
 
   TimeOfDay startTime;
+  DateTime startDate;
+  String formattedDate;
 
   List <DropdownMenuItem <String>> languageList = [];
   String selectedLanguage;
@@ -28,6 +31,18 @@ class _UserBookingPageState extends State<UserBookingPage> {
     await showTimePicker(context: context, initialTime: TimeOfDay.now());
     return selectedTime;
   }
+
+  Future<DateTime> _pickDate({bool isStart = true}) async {
+    DateTime selectedDate =
+    await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+        firstDate: DateTime(2020),
+        lastDate: DateTime(2021)
+    );
+    return selectedDate;
+  }
+
   void loadLanguageList(){
 
     languageList=[];
@@ -56,7 +71,6 @@ class _UserBookingPageState extends State<UserBookingPage> {
     ));
   }
 
-
   Widget _timePickerField(String initialTitle, TimeOfDay currentTime) {
     return StatefulBuilder(builder: (context, setState) {
       return ClipRRect(
@@ -64,7 +78,7 @@ class _UserBookingPageState extends State<UserBookingPage> {
         child: Container(
           color: Colours.lightBlue,
           padding: EdgeInsets.all(Dimensions.d_0),
-          margin: EdgeInsets.fromLTRB(Dimensions.d_30,Dimensions.d_0,Dimensions.d_30,Dimensions.d_0),
+//          margin: EdgeInsets.fromLTRB(Dimensions.d_30,Dimensions.d_0,Dimensions.d_30,Dimensions.d_0),
           child: ListTile(
             title: Text(
               currentTime == null
@@ -92,6 +106,41 @@ class _UserBookingPageState extends State<UserBookingPage> {
     });
   }
 
+  Widget _datePickerField(String initialTitle, DateTime currentDate) {
+    return StatefulBuilder(builder: (context, setState) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(Dimensions.d_10),
+        child: Container(
+          color: Colours.lightBlue,
+          padding: EdgeInsets.all(Dimensions.d_0),
+//          margin: EdgeInsets.fromLTRB(Dimensions.d_30,Dimensions.d_0,Dimensions.d_30,Dimensions.d_0),
+          child: ListTile(
+            title: Text(
+              currentDate == null
+                  ? initialTitle
+                  : DateFormat('yyyy-MM-dd').format(currentDate),
+              style: TextStyle(
+                  color: Colours.darkGrey,
+                  fontSize: FontSizes.normal,
+                  fontWeight: FontWeight.w300),
+            ),
+            trailing: IconButton(
+              icon: Icon(Icons.keyboard_arrow_down),
+              onPressed: () async {
+                DateTime selectedDate= await _pickDate();
+                if (selectedDate != null) {
+                  setState(() {
+                    currentDate = selectedDate;
+                  });
+                }
+              },
+            ),
+          ),
+        ),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     loadLanguageList();
@@ -101,100 +150,111 @@ class _UserBookingPageState extends State<UserBookingPage> {
         backgroundColor: Colours.white,
         body: ListView(
           children: <Widget>[
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(
-                  height: Dimensions.d_160,
-                  child: Image(
-                      image: AssetImage('images/booking_calendar.png')
+            Padding(
+              padding: EdgeInsets.all(Dimensions.d_30),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Center(
+                    child: SizedBox(
+                      height: Dimensions.d_160,
+                      child: Image(
+                          image: AssetImage('images/booking_calendar.png')
+                      ),
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: Dimensions.d_15,
-                ),
-                FieldLabel(
-                  text:"Tarikh Temu Janji",
-                  dimensionToRight: Dimensions.d_140,
-                ),
-                SizedBox(
-                  height: Dimensions.d_5,
-                ),
-                _datePickerField(),
-                SizedBox(
-                  height: Dimensions.d_5,
-                ),
-                FieldLabel(
-                  text:"Masa Temu Janji",
-                  dimensionToRight: Dimensions.d_140,
-                ),
-                SizedBox(
-                  height: Dimensions.d_5,
-                ),
-                _timePickerField(
-                    "Pilih Masa Mula",
-                    startTime),
-                FieldLabel(
-                  text:"Pilihan Bahasa",
-                  dimensionToRight: Dimensions.d_160,
-                ),
-                SizedBox(
-                  height: Dimensions.d_5,
-                ),
-                Container(
-                  color: Colours.lightBlue,
-                  padding: EdgeInsets.symmetric(horizontal: Dimensions.d_95, vertical: Dimensions.d_5),
-                  child: new DropdownButtonHideUnderline(
-                    child: new DropdownButton(
-                        value: selectedLanguage,
-                        items: languageList,
-                        hint: new Text('Bahasa Malaysia'),
-                        iconSize: Dimensions.d_45,
-                        onChanged: (value){
-                          selectedLanguage= value;
+                  Ink(
+                    decoration: BoxDecoration(
+                        color: Colours.lightOrange,
+                        borderRadius:
+                        BorderRadius.all(Radius.circular(Dimensions.d_10))
+                    ),
+                    child: ListTile(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(Dimensions.d_10)),
+                      title: Text(startDate == null ? 'Pilih Tarikh ...' : DateFormat('yyyy-MM-dd').format(startDate)),
+                      trailing: Icon(Icons.keyboard_arrow_down),
+                      onTap: () async {
+                        DateTime selectedDate= await _pickDate();
+                        if (selectedDate != null) {
                           setState(() {
+                            startDate = selectedDate;
                           });
-                        }),
+                        }
+                      },
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: Dimensions.d_5,
-                ),
-                FieldLabel(
-                  text:"Nama Hospital / Klinik",
-                  dimensionToRight: Dimensions.d_100,
-                ),
-                SizedBox(
-                  height: Dimensions.d_5,
-                ),
-                Container(
-                  color: Colours.lightBlue,
-                  padding: EdgeInsets.symmetric(horizontal: Dimensions.d_95, vertical: Dimensions.d_5),
-                  //margin: EdgeInsets.fromLTRB(Dimensions.d_0,Dimensions.d_0,Dimensions.d_100,Dimensions.d_0),
-                  child: new DropdownButtonHideUnderline(
-                    child: new DropdownButton(
-                        value: selectedClinic,
-                        items: clinicList,
-                        hint: new Text('Klinik A'),
-                        iconSize: Dimensions.d_45,
-                        onChanged: (value){
-                          selectedClinic= value;
-                          setState(() {
-                          });
-                        }),
+                  SizedBox(
+                    height: Dimensions.d_15,
                   ),
-                ),
-                SizedBox(
-                  height: Dimensions.d_45,
-                ),
-                UserButton(
-                  text: 'Carian',
-                  padding: EdgeInsets.all(Dimensions.d_30),
-                  color: Colours.blue,
-                  onClick: (){},
-                )
-              ],
+                  FieldLabel(
+                    text:"Tarikh Temu Janji",
+                  ),
+                  SizedBox(
+                    height: Dimensions.d_5,
+                  ),
+                  _datePickerField(
+                      "Pilih Tarikh..",
+                      startDate),
+                  SizedBox(
+                    height: Dimensions.d_5,
+                  ),
+                  FieldLabel(
+                    text:"Masa Temu Janji",
+                  ),
+                  SizedBox(
+                    height: Dimensions.d_5,
+                  ),
+                  _timePickerField(
+                      "Pilih Masa..",
+                      startTime),
+                  FieldLabel(
+                    text:"Pilihan Bahasa",
+                  ),
+                  SizedBox(
+                    height: Dimensions.d_5,
+                  ),
+                  DropdownList(
+                    hintText: "Bahasa Malaysia",
+                    selectedItem: selectedLanguage,
+                    itemList: languageList,
+                    onChanged: (value){
+                      setState(() {
+                        selectedLanguage= value;
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    height: Dimensions.d_5,
+                  ),
+                  FieldLabel(
+                    text:"Nama Hospital / Klinik",
+                  ),
+                  SizedBox(
+                    height: Dimensions.d_5,
+                  ),
+                  DropdownList(
+                    hintText: "Klinik A",
+                    selectedItem: selectedClinic,
+                    itemList: clinicList,
+                    onChanged: (value){
+                      setState(() {
+                        selectedClinic= value;
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    height: Dimensions.d_45,
+                  ),
+                  UserButton(
+                    text: 'Carian',
+//                    padding: EdgeInsets.all(Dimensions.d_30),
+                    color: Colours.blue,
+                    onClick: (){},
+                  )
+                ],
+              ),
             ),
           ],
         ),
@@ -202,55 +262,3 @@ class _UserBookingPageState extends State<UserBookingPage> {
     );
   }
 }
-
-
-Widget _fieldLabel(){
-  return StatefulBuilder(builder: (context, setState){
-    return Padding(
-      padding: EdgeInsets.fromLTRB(Dimensions.d_0,Dimensions.d_0,Dimensions.d_160,Dimensions.d_0),
-      child: Text(
-        "Pilihan Bahasa",
-        textAlign: TextAlign.left,
-        style: TextStyle(
-            fontWeight: FontWeight.w500,
-            fontSize: FontSizes.normal,
-            color: Colours.darkGrey),
-      ),
-    );
-  });
-}
-
-
-
-
-
-
-Widget _datePickerField() {
-  return StatefulBuilder(builder: (context, setState) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(Dimensions.d_10),
-      child: Container(
-        color: Colours.lightBlue,
-        padding: EdgeInsets.all(Dimensions.d_0),
-        margin: EdgeInsets.fromLTRB(Dimensions.d_30,Dimensions.d_0,Dimensions.d_30,Dimensions.d_0),
-        child: ListTile(
-          title: Text(
-            "Pilih Tarikh ...",
-            style: TextStyle(
-                color: Colours.darkGrey,
-                fontSize: FontSizes.normal,
-                fontWeight: FontWeight.w300),
-          ),
-          trailing: IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.keyboard_arrow_down),
-          ),
-        ),
-      ),
-    );
-  });
-}
-
-
-
-

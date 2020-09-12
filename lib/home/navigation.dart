@@ -5,6 +5,7 @@ import 'package:heard/api/user.dart';
 import 'package:heard/constants.dart';
 import 'package:heard/firebase_services/auth_service.dart';
 import 'package:heard/firebase_services/fcm.dart';
+import 'package:heard/home/booking/sli_booking_page.dart';
 import 'package:heard/home/on_demand/on_demand_sli_page.dart';
 import 'package:heard/home/on_demand/on_demand_user_page.dart';
 import 'package:heard/home/reservation.dart';
@@ -87,7 +88,7 @@ class _NavigationState extends State<Navigation> {
       _pages = widget.isSLI
           ? [
               OnDemandSLIPage(onDemandRequests: onDemandRequests,),
-              Reservation(),
+              SLIBookingPage(),
               Transaction(),
               Profile(userDetails: userDetails)
             ]

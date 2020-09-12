@@ -127,10 +127,14 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
             showLoadingAnimation = true;
           });
           print('on demand id: ${onDemandRequests[index].onDemandId}');
-          bool acceptanceResult = await OnDemandServices().acceptOnDemandRequest(headerToken: authToken, onDemandID: onDemandRequests[index].onDemandId);
+          bool acceptanceResult = await OnDemandServices()
+              .acceptOnDemandRequest(
+                  headerToken: authToken,
+                  onDemandID: onDemandRequests[index].onDemandId);
 
           if (acceptanceResult) {
-            OnDemandStatus status = await OnDemandServices().getOnDemandStatus(headerToken: authToken, isSLI: true);
+            OnDemandStatus status = await OnDemandServices()
+                .getOnDemandStatus(headerToken: authToken, isSLI: true);
             setState(() {
               showPairingComplete = true;
               onDemandStatus = status;
@@ -276,6 +280,10 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
                                 itemBuilder: (context, index) {
                                   return SlidableListTile(
                                     // userInfo: onDemandRequests[index],
+                                    tileColour:
+                                        onDemandRequests[index].emergency
+                                            ? Colours.lightOrange
+                                            : Colours.white,
                                     title: Text(
                                       '${onDemandRequests[index].patientName}',
                                       style: TextStyle(
@@ -301,15 +309,20 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
                                             : SizedBox.shrink(),
                                       ],
                                     ),
-                                    slideActionFunctions: [
-                                      IconSlideAction(
-                                          caption: 'Terima',
-                                          color: Colours.accept,
-                                          icon: Icons.done,
-                                          onTap: () {
-                                            confirmRequest(index: index);
-                                          })
-                                    ],
+                                    slideLeftActionFunctions:
+                                        SlideActionBuilderDelegate(
+                                            actionCount: 1,
+                                            builder: (context, index, animation,
+                                                renderingMode) {
+                                              return IconSlideAction(
+                                                  caption: 'Terima',
+                                                  color: Colours.accept,
+                                                  icon: Icons.done,
+                                                  onTap: () {
+                                                    confirmRequest(
+                                                        index: index);
+                                                  });
+                                            }),
                                     onTrailingButtonPress: IconButton(
                                       icon: Icon(Icons.info_outline),
                                       color: Colours.orange,
