@@ -32,6 +32,12 @@ class Details {
   String patientName;
   String note;
   String requestedAt;
+  String sliID;
+  String sliName;
+  String sliGender;
+  String sliPhone;
+  String sliDesc;
+
 
   Details(
       {this.uid,
@@ -44,7 +50,13 @@ class Details {
         this.onBehalf,
         this.patientName,
         this.note,
-        this.requestedAt});
+        this.requestedAt,
+        this.sliID,
+        this.sliName,
+        this.sliGender,
+        this.sliPhone,
+        this.sliDesc,
+      });
 
   Details.fromJson(Map<String, dynamic> json) {
     uid = json['uid'];
@@ -58,6 +70,14 @@ class Details {
     patientName = json['patient_name'];
     note = json['note'];
     requestedAt = json['requested_at'];
+
+    // sli details
+    sliID = json['sli_id'];
+    sliName = json['sli_name'];
+    sliGender = json['sli_gender'];
+    sliPhone = json['sli_phone'];
+    sliDesc = json['sli_desc'];
+
   }
 
   Map<String, dynamic> toJson() {
@@ -73,6 +93,11 @@ class Details {
     data['patient_name'] = this.patientName;
     data['note'] = this.note;
     data['requested_at'] = this.requestedAt;
+    data['sli_id'] = this.sliID;
+    data['sli_name'] = this.sliName;
+    data['sli_gender'] = this.sliGender;
+    data['sli_phone'] = this.sliPhone;
+    data['sli_desc'] = this.sliDesc;
     return data;
   }
 }

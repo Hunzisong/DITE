@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:heard/api/on_demand_status.dart';
 import 'package:heard/constants.dart';
 import 'package:heard/firebase_services/auth_service.dart';
+import 'package:heard/http_services/on_demand_services.dart';
 import 'package:heard/widgets/widgets.dart';
 
 class OnDemandSuccessPage extends StatefulWidget {
@@ -37,7 +38,6 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
       authToken = authTokenString;
       onDemandStatus = widget.onDemandStatus;
     });
-    print('Set state complete! On-demand status: ${onDemandStatus.toJson()}}');
   }
 
   @override
@@ -75,7 +75,7 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
                                   AssetImage('images/avatar.png')),
                         ),
                         SizedBox(height: Dimensions.d_15),
-                        Text("${onDemandStatus.details.patientName ?? "None"}",
+                        Text("${widget.isSLI ? onDemandStatus.details.patientName : onDemandStatus.details.sliName}",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: Dimensions.d_25)),
@@ -83,21 +83,62 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
                           padding: EdgeInsets.symmetric(
                               horizontal: Dimensions.d_45,
                               vertical: Dimensions.d_15),
-                          child: Column(
+                          child: (widget.isSLI) ?
+                            Column(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: Dimensions.d_10),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Flexible(
+                                        child: Text('Nombor Telefon'),
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                          ': ${onDemandStatus.details.userPhone}',
+                                          textAlign: TextAlign.left,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: Dimensions.d_10),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Flexible(
+                                        child: Text('Nota'),
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                            ': ${onDemandStatus.details.note}'),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ) :
+                          Column(
                             children: [
                               Padding(
                                 padding: EdgeInsets.symmetric(
                                     vertical: Dimensions.d_10),
                                 child: Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  MainAxisAlignment.spaceBetween,
                                   children: [
                                     Flexible(
-                                      child: Text('Nombor Telefon'),
+                                      child: Text('Jantina'),
                                     ),
                                     Expanded(
                                       child: Text(
-                                        ': ${onDemandStatus.details.userPhone}',
+                                        ': ${onDemandStatus.details.sliGender}',
                                         textAlign: TextAlign.left,
                                       ),
                                     ),
@@ -109,20 +150,20 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
                                     vertical: Dimensions.d_10),
                                 child: Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  MainAxisAlignment.spaceBetween,
                                   children: [
                                     Flexible(
-                                      child: Text('Nota'),
+                                      child: Text('Description'),
                                     ),
                                     Expanded(
                                       child: Text(
-                                          ': ${onDemandStatus.details.note}'),
+                                          ': ${this.onDemandStatus.details.sliDesc}'),
                                     ),
                                   ],
                                 ),
                               ),
                             ],
-                          ),
+                          )
                         ),
                         Container(
                             decoration: BoxDecoration(
@@ -190,6 +231,7 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
                     padding: EdgeInsets.all(Dimensions.d_30),
                     color: Colours.cancel,
                     onClick: () {
+                      OnDemandServices().endOnDemandRequest(headerToken: authToken);
                       widget.onCancelClick();
                     }),
           );

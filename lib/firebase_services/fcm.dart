@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'package:heard/firebase_services/auth_service.dart';
@@ -5,6 +7,8 @@ import 'package:heard/firebase_services/auth_service.dart';
 class FCM {
   final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
   bool _initialized = false;
+  static StreamController<Map<String, dynamic>> fcmStreamController = StreamController.broadcast();
+  static final Stream<Map<String, dynamic>> onFcmMessage = fcmStreamController.stream;
 
   /// Make sure to include click_action: FLUTTER_NOTIFICATION_CLICK as a
   /// "Custom data" key-value-pair (under "Advanced options") when targeting
@@ -16,14 +20,17 @@ class FCM {
       _firebaseMessaging.requestNotificationPermissions();
       _firebaseMessaging.configure(
         onMessage: (Map<String, dynamic> message) async {
-          print("onMessage: $message");
+          print("onMessageFCM: $message");
+          fcmStreamController.add(message);
         },
         onBackgroundMessage: myBackgroundMessageHandler,
         onLaunch: (Map<String, dynamic> message) async {
-          print("onLaunch: $message");
+          print("onLaunchFCM: $message");
+          fcmStreamController.add(message);
         },
         onResume: (Map<String, dynamic> message) async {
-          print("onResume: $message");
+          print("onResumeFCM: $message");
+          fcmStreamController.add(message);
         },
       );
 

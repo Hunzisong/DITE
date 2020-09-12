@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:heard/constants.dart';
 import 'package:heard/firebase_services/auth_service.dart';
+import 'package:heard/firebase_services/fcm.dart';
 import 'package:heard/widgets/widgets.dart';
 import 'package:heard/http_services/on_demand_services.dart';
 import 'package:heard/home/on_demand/data_structure/OnDemandInputs.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:heard/http_services/user_services.dart';
 import 'package:heard/api/user.dart';
+import 'package:heard/api/on_demand_status.dart';
 
 class OnDemandUserLoadingPage extends StatefulWidget {
   OnDemandUserLoadingPage({Key key, @required this.onCancelClick, @required this.onSearchComplete, @required this.onDemandInputs}) : super(key: key);
@@ -24,10 +26,6 @@ class OnDemandUserLoadingPageState extends State<OnDemandUserLoadingPage> {
   String _authToken;
   String _onDemandRequest;
 
-//  final Duration _duration = Duration(seconds: 3);
-//  startTimeout() {
-//    return Timer(_duration, onSearchComplete);
-//  }
   @override
   void initState() {
     super.initState();
@@ -43,9 +41,13 @@ class OnDemandUserLoadingPageState extends State<OnDemandUserLoadingPage> {
     }
     _onDemandRequest = await OnDemandServices().makeOnDemandRequest(headerToken: _authToken, onDemandInputs: widget.onDemandInputs);
 
-    // Check if accepted
-    // widget.onSearchComplete();
-
+    StreamSubscription<Map<String, dynamic>> fcmListener;
+    fcmListener = FCM.onFcmMessage.listen((event) async {
+      if (event['data']['type'] == 'ondemand-accepted') {
+        widget.onSearchComplete();
+        fcmListener.cancel();
+      }
+    });
   }
 
   @override

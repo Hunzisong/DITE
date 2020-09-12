@@ -46,11 +46,11 @@ class OnDemandServices {
   }
 
   Future<OnDemandStatus> getOnDemandStatus({String headerToken, @required bool isSLI}) async {
-    var response = await http
-        .get('https://heard-project.herokuapp.com/ondemand/status', headers: {
-      'Authorization': headerToken,
-      'type': isSLI ? 'sli' : 'user',
-    });
+    var response = await http.get('https://heard-project.herokuapp.com/ondemand/status?type=${isSLI ? 'sli' : 'user'}',
+      headers: {
+        'Authorization': headerToken,
+      },
+    );
 
     print('Get On-Demand Status: ${response.statusCode}, body: ${response.body}');
 
@@ -64,7 +64,6 @@ class OnDemandServices {
   }
 
   Future<String> makeOnDemandRequest({String headerToken, OnDemandInputs onDemandInputs}) async {
-    print("Test: ${onDemandInputs.genderType.toString().split('.').last}\n--------------------------");
     var response = await http.post('https://heard-project.herokuapp.com/ondemand/request',
         headers: {
           'Authorization': headerToken,
@@ -81,11 +80,11 @@ class OnDemandServices {
     );
 
     if (response.statusCode == 200) {
-      print("Success");
+      print("On-Demand Request Success");
       return "Successful request";
     }
     else {
-      print("Failed");
+      print("On-Demand Request Failed");
       return "Failed request";
     }
   }
@@ -98,14 +97,16 @@ class OnDemandServices {
     );
 
     if (response.statusCode == 200) {
+      print("On-Demand Cancel Success");
       return 'Successfully Cancelled Request';
     }
     else {
+      print("On-Demand Cancel Failed");
       return 'Failed to Cancel Request';
     }
   }
 
-  Future<String> onDemandEnd({String headerToken}) async {
+  Future<String> endOnDemandRequest({String headerToken}) async {
     var response = await http.post('https://heard-project.herokuapp.com/ondemand/end',
         headers: {
           'Authorization': headerToken,
