@@ -149,7 +149,7 @@ class _NavigationState extends State<Navigation> {
                 controller: pageController,
                 onPageChanged: onPageChanged,
               ),
-        bottomNavigationBar: BottomNavigationBar(
+        bottomNavigationBar: showLoadingAnimation ? SizedBox.shrink() : BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             onTap: (int index) {
               pageController.jumpToPage(index);
