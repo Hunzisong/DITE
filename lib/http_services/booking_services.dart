@@ -1,19 +1,46 @@
+import 'dart:convert';
+import 'package:heard/api/booking_request.dart';
 import 'package:http/http.dart' as http;
 
 class BookingServices {
 
-  Future<String> postSLIResponse({String headerToken, String bookingId, bool isAcceptBooking}) async {
+  Future<List<BookingRequest>> getAllCurrentRequests({String headerToken}) async {
+    var response = await http
+        .get('https://heard-project.herokuapp.com/booking/all_request', headers: {
+      'Authorization': headerToken,
+    });
+
+    print('Get all user booking request: ${response.statusCode}, body: ${response.body}');
+
+    List<BookingRequest> bookingRequests = [];
+    if (response.statusCode == 200) {
+      List<dynamic> requestsBody = jsonDecode(response.body);
+      for (int i = 0; i < requestsBody.length; i++) {
+        BookingRequest request = BookingRequest.fromJson(requestsBody[i]);
+        bookingRequests.add(request);
+      }
+    }
+
+    return bookingRequests;
+  }
+
+  Future<bool> postSLIResponse({String headerToken, String bookingID, bool isAcceptBooking}) async {
     var response = await http
         .post('https://heard-project.herokuapp.com/booking/SLI_response', headers: {
       'Authorization': headerToken,
     }, body: {
-      'Booking_ID': bookingId,
+      'Booking_ID': bookingID,
       'Response': isAcceptBooking ? 'accept' : 'decline'
     });
 
     print('Posted SLI Response: ${response.statusCode}, body: ${response.body}');
 
-    return response.body;
+    if (response.statusCode == 200) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 
 //  Future<bool> acceptOnDemandRequest({String headerToken, String onDemandID}) async {

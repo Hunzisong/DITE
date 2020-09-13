@@ -1,15 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:heard/api/booking_request.dart';
 import 'package:heard/api/on_demand_request.dart';
-import 'package:heard/api/on_demand_status.dart';
 import 'package:heard/constants.dart';
-import 'package:heard/home/on_demand/on_demand_success.dart';
-import 'package:heard/http_services/on_demand_services.dart';
+import 'package:heard/firebase_services/auth_service.dart';
+import 'package:heard/http_services/booking_services.dart';
 import 'package:heard/widgets/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class SLIBookingPage extends StatefulWidget {
   final List<OnDemandRequest> onDemandRequests;
@@ -26,57 +25,54 @@ class _SLIBookingPageState extends State<SLIBookingPage>
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 
-  bool showLoadingAnimation = false;
-  List<OnDemandRequest> bookingRequests;
+  List<BookingRequest> bookingRequests;
   String authToken;
-  bool showPairingComplete = false;
-  OnDemandStatus onDemandStatus;
 
   List<UserInfoTemp> mockInfoList = [
     UserInfoTemp().addInfo(
         name: 'James Cooper',
         hospital: 'Hospital Sg Buloh',
-        requestedDate: '20-03-2020',
+        requestedDateTime: '20-03-2020',
         requestedTime: '3.00pm'),
     UserInfoTemp().addInfo(
         name: 'Kyle Jenner',
         hospital: 'Hospital Sg Long',
-        requestedDate: '28-06-2020',
+        requestedDateTime: '28-06-2020',
         requestedTime: '7.00pm'),
     UserInfoTemp().addInfo(
         name: 'Kim Possible',
         hospital: 'Hospital Sarawak',
-        requestedDate: '02-04-2020',
+        requestedDateTime: '02-04-2020',
         requestedTime: '9.00pm'),
     UserInfoTemp().addInfo(
         name: 'Arthur Knight',
         hospital: 'Hospital Kuala Lumpur',
-        requestedDate: '20-03-2020',
+        requestedDateTime: '20-03-2020',
         requestedTime: '11.00pm'),
     UserInfoTemp().addInfo(
         name: 'John Monash',
         hospital: 'Hospital Selangor',
-        requestedDate: '20-03-2020',
+        requestedDateTime: '20-03-2020',
         requestedTime: '10.00pm'),
     UserInfoTemp().addInfo(
         name: 'Michael Lee',
         hospital: 'Hospital Pahang',
-        requestedDate: '20-03-2020',
+        requestedDateTime: '20-03-2020',
         requestedTime: '9.00pm'),
     UserInfoTemp().addInfo(
         name: 'Takashi Hiro',
         hospital: 'Hospital Sabah',
-        requestedDate: '20-03-2020',
+        requestedDateTime: '20-03-2020',
         requestedTime: '8.00pm'),
     UserInfoTemp().addInfo(
         name: 'James Cooper',
         hospital: 'Hospital Pulau Pinang',
-        requestedDate: '20-03-2020',
+        requestedDateTime: '20-03-2020',
         requestedTime: '12.00pm'),
     UserInfoTemp().addInfo(
         name: 'James Cooper',
         hospital: 'Hospital Seremban',
-        requestedDate: '20-03-2020',
+        requestedDateTime: '20-03-2020',
         requestedTime: '1.00pm'),
   ];
 
@@ -84,17 +80,18 @@ class _SLIBookingPageState extends State<SLIBookingPage>
   void initState() {
     super.initState();
     slidableController = SlidableController();
-//    getOnDemandRequests();
+    initializeBooking();
   }
 
   void _onRefresh() async {
-//    List<OnDemandRequest> allRequests =
-//    await OnDemandServices().getAllRequests(headerToken: authToken);
-//    setState(() {
-//      bookingRequests = allRequests;
-//    });
+    List<BookingRequest> allRequests =
+        await BookingServices().getAllCurrentRequests(headerToken: authToken);
+    setState(() {
+      bookingRequests = allRequests;
+    });
     print('Refreshing all booking requests ...');
-//    print('Updated Request: $bookingRequests and length of ${bookingRequests.length}');
+    print(
+        'Updated Request: $bookingRequests and length of ${bookingRequests.length}');
     if (bookingRequests == null) {
       _refreshController.refreshFailed();
     } else {
