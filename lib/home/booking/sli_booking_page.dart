@@ -102,58 +102,83 @@ class _SLIBookingPageState extends State<SLIBookingPage>
     }
   }
 
-//  void getOnDemandRequests() async {
-//    String authTokenString = await AuthService.getToken();
-//    setState(() {
-//      authToken = authTokenString;
-//      bookingRequests = widget.onDemandRequests;
-//    });
-//    print('Set state complete! on-demand: $bookingRequests}');
-//  }
+  void initializeBooking() async {
+    String authTokenString = await AuthService.getToken();
+    List<BookingRequest> allRequests =
+        await BookingServices().getAllCurrentRequests(headerToken: authToken);
+    setState(() {
+      authToken = authTokenString;
+      bookingRequests = allRequests;
+    });
+    print('Set state complete! booking: $bookingRequests}');
+  }
 
-  void confirmationModal({BuildContext context, int index}) async {
+  Future<bool> confirmationModal(
+      {BuildContext context, int index, bool isAcceptBooking}) async {
+    bool response;
     await popUpDialog(
         context: context,
         isSLI: true,
         header: 'Pengesahan',
         content: Text(
-          'Adakah Anda Pasti Terima?',
+          'Adakah Anda Pasti ${isAcceptBooking ? 'Terima' : 'Tolak'}?',
           textAlign: TextAlign.left,
           style: TextStyle(color: Colours.darkGrey, fontSize: FontSizes.normal),
         ),
         buttonText: 'Teruskan',
-        onClick: () async {
-          Navigator.of(context).pop();
-          setState(() {
-            showLoadingAnimation = true;
-          });
-//          print('on demand id: ${mockInfoList[index].onDemandId}');
-//          bool acceptanceResult = await OnDemandServices().acceptOnDemandRequest(headerToken: authToken, onDemandID: mockInfoList[index].onDemandId);
-          bool acceptanceResult = false;
-          if (acceptanceResult) {
-            OnDemandStatus status = await OnDemandServices()
-                .getOnDemandStatus(headerToken: authToken, isSLI: true);
-            setState(() {
-              showPairingComplete = true;
-              onDemandStatus = status;
-            });
-          } else {
-            confirmRequestError();
-          }
-          setState(() {
-            showLoadingAnimation = false;
-          });
+        onClick: () {
+          Navigator.pop(context);
         });
+    response = await postBookingResponse(
+        index: index, isAcceptBooking: isAcceptBooking);
+    return response;
   }
 
-  void confirmRequestError() {
-    popUpDialog(
+  Future<bool> postBookingResponse({int index, bool isAcceptBooking}) async {
+    bool toRemoveBooking = false;
+
+    /// showing loading screen when post response to backend
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return Center(child: CircularProgressIndicator());
+      },
+    );
+    bool responseResult = await BookingServices().postSLIResponse(
+        headerToken: authToken,
+        bookingID: mockInfoList[index].bookingId,
+        isAcceptBooking: isAcceptBooking);
+    Navigator.pop(context);
+
+    /// todo: remove the hard-coded true variable when api is implemented
+    responseResult = true;
+
+    if (responseResult) {
+      toRemoveBooking = true;
+      if (isAcceptBooking) {
+        await confirmRequestModal(
+            isAcceptBooking: isAcceptBooking, isSuccessAccept: true);
+      }
+    } else {
+      await confirmRequestModal(
+          isAcceptBooking: isAcceptBooking, isSuccessAccept: false);
+    }
+
+    return toRemoveBooking;
+  }
+
+  Future<void> confirmRequestModal(
+      {bool isAcceptBooking, bool isSuccessAccept}) async {
+    await popUpDialog(
         context: context,
         isSLI: true,
-        header: 'Amaran',
+        header: isSuccessAccept ? 'Pengesahan' : 'Amaran',
         touchToDismiss: false,
         content: Text(
-          'Gagal Menerima Permintaan',
+          isSuccessAccept
+              ? 'Berjaya Menerima Permintaan!'
+              : 'Gagal ${isAcceptBooking ? 'Menerima' : 'Menolak'} Permintaan',
           textAlign: TextAlign.left,
           style: TextStyle(color: Colours.darkGrey, fontSize: FontSizes.normal),
         ),
@@ -177,39 +202,29 @@ class _SLIBookingPageState extends State<SLIBookingPage>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            '${mockInfoList[index].hospital}',
+            '${mockInfoList[index].uid}',
           ),
           Text(
-            'Tarikh: ${mockInfoList[index].requestedDate}',
+            'Tarikh: ${mockInfoList[index].datetime}',
             style: TextStyle(color: Colours.darkGrey),
           ),
           Text(
-            'Masa: ${mockInfoList[index].requestedTime}',
+            'Masa: ${mockInfoList[index].datetime}',
             style: TextStyle(color: Colours.darkGrey),
           ),
         ],
       ),
       slideRightActionFunctions: SlideActionBuilderDelegate(
           actionCount: 1,
-          builder: (context, index, animation, renderingMode) {
+          builder: (slideContext, index, animation, renderingMode) {
             return IconSlideAction(
               caption: 'Tolak',
               color: Colours.cancel,
               icon: Icons.cancel,
               onTap: () async {
-                var state = Slidable.of(context);
-                var dismiss = await cancelBookingModal(
-                  context: context,
-                  isSLI: true,
-                  header: 'Pengesahan',
-                  content: Text(
-                    'Adakah Anda Pasti Tolak?',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        color: Colours.darkGrey, fontSize: FontSizes.normal),
-                  ),
-                  buttonText: 'Teruskan',
-                );
+                SlidableState state = Slidable.of(slideContext);
+                bool dismiss = await confirmationModal(
+                    context: context, index: index, isAcceptBooking: false);
                 if (dismiss) {
                   state.dismiss();
                 }
@@ -223,7 +238,14 @@ class _SLIBookingPageState extends State<SLIBookingPage>
                 caption: 'Terima',
                 color: Colours.accept,
                 icon: Icons.done,
-                onTap: () => confirmationModal(context: context, index: index));
+                onTap: () async {
+                  var state = Slidable.of(context);
+                  bool dismiss = await confirmationModal(
+                      context: context, index: index, isAcceptBooking: true);
+                  if (dismiss) {
+                    state.dismiss();
+                  }
+                });
           }),
     );
   }
@@ -231,57 +253,43 @@ class _SLIBookingPageState extends State<SLIBookingPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return showPairingComplete
-        ? OnDemandSuccessPage(
-            isSLI: true,
-            onDemandStatus: onDemandStatus,
-            onCancelClick: () {
-              Navigator.pop(context);
-              setState(() {
-                showPairingComplete = false;
-              });
-            },
-          )
-        : ModalProgressHUD(
-            inAsyncCall: showLoadingAnimation,
-            child: Scaffold(
-              backgroundColor: Colours.white,
-              body: SmartRefresher(
-                controller: _refreshController,
-                onRefresh: _onRefresh,
-                enablePullDown: true,
-                header: WaterDropHeader(),
-                child: (mockInfoList == null)
-                    ? Container()
-                    : (mockInfoList.length == 0)
-                        ? Center(
-                            child: Text('Tiada Tempahan Pada Masa Ini'),
-                          )
-                        : ListView(
-                            children: <Widget>[
-                              GreyTitleBar(
-                                title: 'Permintaan Tempahan',
-                                trailing: Text(
-                                  '*Leret ke kanan untuk membatalkan tempahan',
-                                  style: TextStyle(
-                                      fontSize: FontSizes.tinyText,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              ListView.builder(
-                                scrollDirection: Axis.vertical,
-                                controller: ScrollController(),
-                                shrinkWrap: true,
-                                itemCount: mockInfoList.length,
-                                itemBuilder: (context, index) {
-                                  return getListItem(index: index);
-                                },
-                              )
-                            ],
-                          ),
-              ),
-            ),
-          );
+    return Scaffold(
+      backgroundColor: Colours.white,
+      body: SmartRefresher(
+        controller: _refreshController,
+        onRefresh: _onRefresh,
+        enablePullDown: true,
+        header: WaterDropHeader(),
+        child: (mockInfoList == null)
+            ? Center(child: CircularProgressIndicator())
+            : (mockInfoList.length == 0)
+                ? Center(
+                    child: Text('Tiada Tempahan Pada Masa Ini'),
+                  )
+                : ListView(
+                    children: <Widget>[
+                      GreyTitleBar(
+                        title: 'Permintaan Tempahan',
+                        trailing: Text(
+                          '*Leret ke kanan untuk membatalkan tempahan',
+                          style: TextStyle(
+                              fontSize: FontSizes.tinyText,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        controller: ScrollController(),
+                        shrinkWrap: true,
+                        itemCount: mockInfoList.length,
+                        itemBuilder: (context, index) {
+                          return getListItem(index: index);
+                        },
+                      )
+                    ],
+                  ),
+      ),
+    );
   }
 
   @override
@@ -290,84 +298,20 @@ class _SLIBookingPageState extends State<SLIBookingPage>
 
 class UserInfoTemp {
   String patientName;
-  String hospital;
-  String requestedDate;
-  String requestedTime;
+  String uid;
+  String datetime;
+  String bookingId = '123456';
 
   UserInfoTemp addInfo(
       {@required String name,
       @required String hospital,
-      @required String requestedDate,
+      @required String requestedDateTime,
       String requestedTime = ''}) {
     UserInfoTemp newPerson = UserInfoTemp();
     newPerson.patientName = name;
-    newPerson.hospital = hospital;
-    newPerson.requestedDate = requestedDate;
-    newPerson.requestedTime = requestedTime;
+    newPerson.uid = hospital;
+    newPerson.datetime = requestedDateTime;
 
     return newPerson;
   }
-}
-
-Future<bool> cancelBookingModal(
-    {BuildContext context,
-    bool isSLI,
-    bool touchToDismiss = true,
-    double height,
-    String header = '',
-    @required Widget content,
-    int contentFlexValue = 1,
-    String buttonText = 'Tutup',
-    Function onClick}) async {
-  return showDialog(
-      context: context,
-      barrierDismissible: touchToDismiss,
-      builder: (context) {
-        return Dialog(
-          child: Container(
-            height: height != null ? height : Dimensions.d_280,
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: Dimensions.d_15, horizontal: Dimensions.d_30),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(
-                    child: Padding(
-                      padding: EdgeInsets.only(top: Dimensions.d_10),
-                      child: Text(
-                        header,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: FontSizes.mainTitle,
-                            color: Colours.darkGrey),
-                      ),
-                    ),
-                  ),
-                  Flexible(
-                    flex: contentFlexValue,
-                    child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: Dimensions.d_15),
-                      child: content,
-                    ),
-                  ),
-                  Flexible(
-                    child: UserButton(
-                        text: buttonText,
-                        color: isSLI ? Colours.orange : Colours.blue,
-                        onClick: () async {
-                          Navigator.of(context).pop(true);
-                        }),
-                  )
-                ],
-              ),
-            ),
-          ),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(Dimensions.d_10))),
-          elevation: Dimensions.d_15,
-        );
-      });
 }
