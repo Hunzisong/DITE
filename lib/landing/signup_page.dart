@@ -44,8 +44,6 @@ class _SignUpPageState extends State<SignUpPage> {
     }
   }
 
-//  final globalKey = GlobalKey<ScaffoldState>();
-
   @override
   Widget build(BuildContext context) {
     if (isSLI == null) {
@@ -55,7 +53,6 @@ class _SignUpPageState extends State<SignUpPage> {
       child: ModalProgressHUD(
         inAsyncCall: showLoadingAnimation,
         child: Scaffold(
-//        key: globalKey,
           appBar: AppBar(
             backgroundColor: Colours.white,
             leading: IconButton(
