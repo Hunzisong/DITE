@@ -88,8 +88,7 @@ class AuthService {
           if (userExists == false) {
             await UserServices().createUser(
               headerToken: authTokenString,
-              name: userDetails.fullName.text,
-              phoneNumber: userDetails.phoneNumber.text,
+              userDetails: userDetails,
             );
           }
         } else {

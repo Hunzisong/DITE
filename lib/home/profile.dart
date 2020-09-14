@@ -53,6 +53,8 @@ class _ProfileState extends State<Profile> {
                                 'Medical Experience: ${widget.userDetails.experiencedMedical}'),
                             Text(
                                 'Fluency: ${widget.userDetails.experiencedBim}'),
+                            Text('Medical Years: ${widget.userDetails.yearsMedical}'),
+                            Text('BIM Years: ${widget.userDetails.yearsBim}'),
                           ],
                         )
                       : Column(
@@ -60,6 +62,8 @@ class _ProfileState extends State<Profile> {
                           children: <Widget>[
                             Text('Name: ${widget.userDetails.name}'),
                             Text('Phone Number: ${widget.userDetails.phoneNo}'),
+                            Text('Gender: ${widget.userDetails.gender}'),
+                            Text('Age: ${widget.userDetails.age}'),
                           ],
                         ),
                   UserButton(

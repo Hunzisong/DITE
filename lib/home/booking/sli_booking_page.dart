@@ -84,6 +84,8 @@ class _SLIBookingPageState extends State<SLIBookingPage>
   }
 
   void _onRefresh() async {
+    /// added get token again because token constantly changes
+    authToken = await AuthService.getToken();
     List<BookingRequest> allRequests =
         await BookingServices().getAllCurrentRequests(headerToken: authToken);
     setState(() {
@@ -101,8 +103,7 @@ class _SLIBookingPageState extends State<SLIBookingPage>
 
   void initializeBooking() async {
     String authTokenString = await AuthService.getToken();
-    List<BookingRequest> allRequests =
-        await BookingServices().getAllCurrentRequests(headerToken: authToken);
+    List<BookingRequest> allRequests = await BookingServices().getAllCurrentRequests(headerToken: authTokenString);
     setState(() {
       authToken = authTokenString;
       bookingRequests = allRequests;
@@ -144,12 +145,9 @@ class _SLIBookingPageState extends State<SLIBookingPage>
     );
     bool responseResult = await BookingServices().postSLIResponse(
         headerToken: authToken,
-        bookingID: mockInfoList[index].bookingId,
+        bookingID: bookingRequests[index].bookingId,
         isAcceptBooking: isAcceptBooking);
     Navigator.pop(context);
-
-    /// todo: remove the hard-coded true variable when api is implemented
-    responseResult = true;
 
     if (responseResult) {
       toRemoveBooking = true;
@@ -188,25 +186,25 @@ class _SLIBookingPageState extends State<SLIBookingPage>
     return SlidableListTile(
       onDismissed: (actionType) {
         setState(() {
-          mockInfoList.removeAt(index);
+          bookingRequests.removeAt(index);
         });
       },
       title: Text(
-        '${mockInfoList[index].patientName}',
+        '${bookingRequests[index].userName}',
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            '${mockInfoList[index].uid}',
+            '${bookingRequests[index].hospitalName}',
           ),
           Text(
-            'Tarikh: ${mockInfoList[index].datetime}',
+            'Tarikh: ${bookingRequests[index].date}',
             style: TextStyle(color: Colours.darkGrey),
           ),
           Text(
-            'Masa: ${mockInfoList[index].datetime}',
+            'Masa: ${bookingRequests[index].time}',
             style: TextStyle(color: Colours.darkGrey),
           ),
         ],
@@ -257,9 +255,9 @@ class _SLIBookingPageState extends State<SLIBookingPage>
         onRefresh: _onRefresh,
         enablePullDown: true,
         header: WaterDropHeader(),
-        child: (mockInfoList == null)
+        child: (bookingRequests == null)
             ? Center(child: CircularProgressIndicator())
-            : (mockInfoList.length == 0)
+            : (bookingRequests.length == 0)
                 ? Center(
                     child: Text('Tiada Tempahan Pada Masa Ini'),
                   )
@@ -278,7 +276,7 @@ class _SLIBookingPageState extends State<SLIBookingPage>
                         scrollDirection: Axis.vertical,
                         controller: ScrollController(),
                         shrinkWrap: true,
-                        itemCount: mockInfoList.length,
+                        itemCount: bookingRequests.length,
                         itemBuilder: (context, index) {
                           return getListItem(index: index);
                         },

@@ -86,6 +86,7 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
   }
 
   void _onRefresh() async {
+    authToken = await AuthService.getToken();
     List<OnDemandRequest> allRequests =
         await OnDemandServices().getAllRequests(headerToken: authToken);
     setState(() {

@@ -22,6 +22,7 @@ class _SignUpPageState extends State<SignUpPage> {
   UserDetails userDetails;
   bool isButtonDisabled = true;
   bool isSLI;
+  int age;
 
   @override
   void initState() {
@@ -78,8 +79,8 @@ class _SignUpPageState extends State<SignUpPage> {
               Padding(
                 padding: Paddings.signUpPage,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     InputField(
                       controller: userDetails.fullName,
@@ -101,56 +102,67 @@ class _SignUpPageState extends State<SignUpPage> {
                         });
                       },
                     ),
+                    isSLI ? SizedBox.shrink() : InputField(
+                      hintText: '',
+                      controller: userDetails.age,
+                      labelText: 'Umur',
+                      keyboardType: TextInputType.number,
+                      onChanged: (String text) {
+                        setState(() {
+                          checkAllInformationFilled(checkBox: userDetails.termsAndConditions);
+                        });
+                      },
+                    ),
                     SizedBox(height: Dimensions.d_15),
+                    Padding(
+                      padding: Paddings.vertical_5,
+                      child: Text(
+                        'Jantina',
+                        style: TextStyle(
+                            fontSize: FontSizes.normal,
+                            fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Flexible(
+                          flex: 20,
+                          child: RadioListTile(
+                              title: Text(
+                                'Lelaki',
+                              ),
+                              value: Gender.male,
+                              groupValue: userDetails.gender,
+                              onChanged: (Gender value) {
+                                setState(() {
+                                  userDetails.gender = value;
+                                  checkAllInformationFilled(checkBox: userDetails.termsAndConditions);
+                                });
+                              }),
+                        ),
+                        Flexible(
+                          flex: 26,
+                          child: RadioListTile(
+                            // dense: true,
+                              title: Text(
+                                'Perempuan',
+
+                              ),
+                              value: Gender.female,
+                              groupValue: userDetails.gender,
+                              onChanged: (Gender value) {
+                                setState(() {
+                                  userDetails.gender = value;
+                                  checkAllInformationFilled(checkBox: userDetails.termsAndConditions);
+                                });
+                              }),
+                        ),
+                      ],
+                    ),
                     isSLI
                         ? Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Padding(
-                                padding: Paddings.vertical_5,
-                                child: Text(
-                                  'Jantina',
-                                  style: TextStyle(
-                                      fontSize: FontSizes.normal,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ),
-                              Row(
-                                children: <Widget>[
-                                  Flexible(
-                                    flex: 20,
-                                    child: RadioListTile(
-                                        title: Text(
-                                          'Lelaki',
-                                        ),
-                                        value: Gender.male,
-                                        groupValue: userDetails.gender,
-                                        onChanged: (Gender value) {
-                                          setState(() {
-                                            userDetails.gender = value;
-                                            checkAllInformationFilled(checkBox: userDetails.termsAndConditions);
-                                          });
-                                        }),
-                                  ),
-                                  Flexible(
-                                    flex: 26,
-                                    child: RadioListTile(
-                                        // dense: true,
-                                        title: Text(
-                                          'Perempuan',
-
-                                        ),
-                                        value: Gender.female,
-                                        groupValue: userDetails.gender,
-                                        onChanged: (Gender value) {
-                                          setState(() {
-                                            userDetails.gender = value;
-                                            checkAllInformationFilled(checkBox: userDetails.termsAndConditions);
-                                          });
-                                        }),
-                                  ),
-                                ],
-                              ),
                               SizedBox(
                                 height: Dimensions.d_15,
                               ),
@@ -209,12 +221,14 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   bool allFieldsFilled(bool isSLI) {
-    return !isSLI
-        ? userDetails.phoneNumber.text.isNotEmpty &&
-            userDetails.fullName.text.isNotEmpty
-        : userDetails.phoneNumber.text.isNotEmpty &&
-            userDetails.fullName.text.isNotEmpty &&
+    bool fieldCheck = userDetails.phoneNumber.text.isNotEmpty &&
+        userDetails.fullName.text.isNotEmpty &&
         userDetails.gender != null;
+
+    return !isSLI
+        ? fieldCheck &&
+        userDetails.age.text.isNotEmpty
+        : fieldCheck;
   }
 
   void checkAllInformationFilled({bool checkBox}) {
@@ -236,9 +250,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Future<void> verifyPhone(phoneNo) async {
     final auth.PhoneVerificationCompleted verified = (auth.AuthCredential authResult) async {
-      print('first line');
 //      AuthService().signIn(context, authResult);
-      print('after');
     };
 
     final auth.PhoneVerificationFailed verificationFailed =
