@@ -79,8 +79,8 @@ class _SignUpPageState extends State<SignUpPage> {
               Padding(
                 padding: Paddings.signUpPage,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     InputField(
                       controller: userDetails.fullName,
@@ -102,7 +102,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         });
                       },
                     ),
-                    InputField(
+                    isSLI ? SizedBox.shrink() : InputField(
                       hintText: '',
                       controller: userDetails.age,
                       labelText: 'Umur',
@@ -221,11 +221,14 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   bool allFieldsFilled(bool isSLI) {
-    return
-      userDetails.phoneNumber.text.isNotEmpty &&
-          userDetails.fullName.text.isNotEmpty &&
-          userDetails.gender != null &&
-          userDetails.age.text.isNotEmpty;
+    bool fieldCheck = userDetails.phoneNumber.text.isNotEmpty &&
+        userDetails.fullName.text.isNotEmpty &&
+        userDetails.gender != null;
+
+    return !isSLI
+        ? fieldCheck &&
+        userDetails.age.text.isNotEmpty
+        : fieldCheck;
   }
 
   void checkAllInformationFilled({bool checkBox}) {
@@ -247,9 +250,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Future<void> verifyPhone(phoneNo) async {
     final auth.PhoneVerificationCompleted verified = (auth.AuthCredential authResult) async {
-      print('first line');
 //      AuthService().signIn(context, authResult);
-      print('after');
     };
 
     final auth.PhoneVerificationFailed verificationFailed =
