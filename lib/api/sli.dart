@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
+
 class SLI {
-  String name;
+  TextEditingController name = TextEditingController();
   String gender;
   String phoneNo;
   String profilePic;
@@ -23,7 +25,7 @@ class SLI {
         this.createdAt});
 
   SLI.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
+    name.text = json['name'];
     gender = json['gender'];
     phoneNo = json['phone_no'];
     profilePic = json['profile_pic'];
