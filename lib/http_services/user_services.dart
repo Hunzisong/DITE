@@ -37,6 +37,17 @@ class UserServices {
     print('Create User response: ${response.statusCode}, body: ${response.body}');
   }
 
+  Future<void> editUser({String headerToken, String key, dynamic value}) async {
+    var response = await http
+        .post('https://heard-project.herokuapp.com/user/edit', headers: {
+      'Authorization': headerToken,
+    }, body: {
+        key: value
+    });
+
+    print('Edit User response: ${response.statusCode}, body: ${response.body}');
+  }
+
   Future<bool> doesUserExist({String headerToken}) async {
     var response = await http
         .get('https://heard-project.herokuapp.com/user/exists', headers: {
