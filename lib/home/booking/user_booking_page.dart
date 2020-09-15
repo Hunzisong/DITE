@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
-import 'package:heard/home/booking/user_booking_result.dart';
+import 'package:heard/home/booking/user_booking_result_page.dart';
 import 'package:heard/widgets/widgets.dart';
 import 'package:intl/intl.dart';
 
@@ -16,10 +16,10 @@ class _UserBookingPageState extends State<UserBookingPage> {
   DateTime startDate;
   String formattedDate;
 
-  List <DropdownMenuItem <String>> languageList = [];
+  List <DropdownMenuItem <String>> languageList;
   String selectedLanguage;
 
-  List <DropdownMenuItem <String>> clinicList = [];
+  List <DropdownMenuItem <String>> clinicList;
   String selectedClinic;
 
   String _getFormattedTime(TimeOfDay currentTime) {
