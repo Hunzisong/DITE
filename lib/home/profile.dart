@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:heard/api/user.dart';
 import 'package:heard/constants.dart';
 import 'package:heard/firebase_services/auth_service.dart';
+import 'package:heard/http_services/sli_services.dart';
+import 'package:heard/http_services/user_services.dart';
 import 'package:heard/widgets/user_button.dart';
+import 'package:heard/widgets/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class Profile extends StatefulWidget {
-  final dynamic userDetails;
+  final User userDetails;
 
   Profile({this.userDetails});
 
@@ -16,7 +19,10 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
   bool isSLI;
-  bool showLoadingAnimation = false;
+  User userDetails;
+  List <DropdownMenuItem<String>> genderOptions;
+  List <DropdownMenuItem<String>> yearsBimOptions;
+  List <DropdownMenuItem<String>> yearsMedicalOptions;
 
   @override
   void initState() {
@@ -31,9 +37,48 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
     });
   }
 
+  void initialize() {
+    genderOptions=[];
+    genderOptions.add(DropdownMenuItem(
+      child: Text('Lelaki'),
+      value: 'male',
+    ));
+    genderOptions.add(DropdownMenuItem(
+        child: Text('Perempuan'),
+      value: 'female',
+    ));
+
+    yearsBimOptions = [];
+    yearsMedicalOptions = [];
+    for (int i = 0; i < 51; i++) {
+      yearsBimOptions.add(DropdownMenuItem(
+        child: Text('$i Tahun'),
+        value: i.toString(),
+      ));
+      yearsMedicalOptions.add(DropdownMenuItem(
+        child: Text('$i Tahun'),
+        value: i.toString(),
+      ));
+    }
+  }
+
+  void showLoadingAnimation() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return Center(child: CircularProgressIndicator());
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    if (userDetails == null && genderOptions == null) {
+      userDetails = widget.userDetails;
+      initialize();
+    }
     return isSLI == null
         ? Container()
         : Scaffold(
@@ -62,9 +107,39 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                               padding: EdgeInsets.only(top: Dimensions.d_65),
                               child: ListTile(
                                 title: Text('Nama'),
-                                trailing: Text('${widget.userDetails.name}'),
+                                trailing: Text('${userDetails.name.text}', style: TextStyle(fontSize: FontSizes.normal),),
                                 onTap: () {
-                                  print('tapped');
+                                  print('tapped ${userDetails.age}');
+                                  showDialog<void>(
+                                    context: context,
+                                    builder: (BuildContext alertContext) {
+                                      return AlertDialog(
+                                        title: Text('Tukar Nama'),
+                                        content: InputField(
+                                          controller: userDetails.name,
+                                          labelText: 'Nama Baru',
+                                        ),
+                                        actions: <Widget>[
+                                          FlatButton(
+                                            child: Text('Tukar'),
+                                            onPressed: () async {
+                                              Navigator.of(alertContext).pop();
+
+                                              showLoadingAnimation();
+                                              String authTokenString = await AuthService.getToken();
+                                              isSLI ? await SLIServices().editSLI(headerToken: authTokenString, key: 'name', value: userDetails.name.text) : await UserServices().editUser(headerToken: authTokenString, key: 'name', value: userDetails.name.text);
+                                              User userDetailsTest = isSLI ? await SLIServices().getSLI(headerToken: authTokenString) : await UserServices().getUser(headerToken: authTokenString);
+                                              Navigator.pop(context);
+
+                                              setState(() {
+                                                userDetails = userDetailsTest;
+                                              });
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
                                   },
                               ),
                             ),
@@ -73,10 +148,130 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                               thickness: Dimensions.d_3,
                               color: Colours.lightGrey,
                             ),
-                            ListTile(
-                              title: Text('Jantina'),
-                              trailing: Text('${widget.userDetails.gender}'),
-                              onTap: () {print('tapped');},
+                            Stack(
+                              children: [
+                                ListTile(
+                                  title: Text('Jantina'),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: Dimensions.d_85 * 2.2, top: Dimensions.d_2*2.3),
+                                  child: DropdownList(
+                                    noColour: true,
+                                    padding: EdgeInsets.all(0),
+                                    hintText: userDetails.gender,
+                                    selectedItem: userDetails.gender,
+                                    itemList: genderOptions,
+                                    onChanged: (value) async {
+                                      /// todo: can make it into a function later on
+                                      showLoadingAnimation();
+                                      String authTokenString = await AuthService.getToken();
+                                      isSLI ? await SLIServices().editSLI(headerToken: authTokenString, key: 'gender', value: value) : await UserServices().editUser(headerToken: authTokenString, key: 'gender', value: value);
+                                      User userDetailsTest = isSLI ? await SLIServices().getSLI(headerToken: authTokenString) : await UserServices().getUser(headerToken: authTokenString);
+                                      Navigator.pop(context);
+
+                                      setState(() {
+                                        userDetails = userDetailsTest;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                            !isSLI ? Column(
+                              children: [
+                                Divider(
+                                  height: Dimensions.d_0,
+                                  thickness: Dimensions.d_3,
+                                  color: Colours.lightGrey,
+                                ),
+                                ListTile(
+                                  title: Text('Umur'),
+                                  trailing: Text('${userDetails.age ?? ''}', style: TextStyle(fontSize: FontSizes.normal),),
+                                ),
+                              ],
+                            ) : Column(
+                              children: [
+                                Divider(
+                                  height: Dimensions.d_0,
+                                  thickness: Dimensions.d_3,
+                                  color: Colours.lightGrey,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(vertical: Dimensions.d_10),
+                                  child: Stack(
+                                    children: [
+                                      ListTile(
+                                        title: Text('Pengalaman Menterjemah'),
+                                        trailing: SizedBox(
+                                          width: Dimensions.d_130,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: Dimensions.d_85 * 2.55, top: Dimensions.d_2*2.3),
+                                        child: DropdownList(
+                                          noColour: true,
+                                          padding: EdgeInsets.all(0),
+                                          hintText: userDetails.yearsBim.toString(),
+                                          selectedItem: userDetails.yearsBim.toString(),
+                                          itemList: yearsBimOptions,
+                                          onChanged: (value) async {
+                                            /// todo: can make it into a function later on
+                                            showLoadingAnimation();
+                                            String authTokenString = await AuthService.getToken();
+                                            isSLI ? await SLIServices().editSLI(headerToken: authTokenString, key: 'yearsBim', value: value) : await UserServices().editUser(headerToken: authTokenString, key: 'yearsBim', value: value);
+                                            User userDetailsTest = isSLI ? await SLIServices().getSLI(headerToken: authTokenString) : await UserServices().getUser(headerToken: authTokenString);
+                                            Navigator.pop(context);
+
+                                            setState(() {
+                                              userDetails = userDetailsTest;
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Divider(
+                                  height: Dimensions.d_0,
+                                  thickness: Dimensions.d_3,
+                                  color: Colours.lightGrey,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(vertical: Dimensions.d_10),
+                                  child: Stack(
+                                    children: [
+                                      ListTile(
+                                        title: Text('Pengalaman Dalam Bidang Perubatan'),
+                                        trailing: SizedBox(
+                                          width: Dimensions.d_130,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: Dimensions.d_85 * 2.55, top: Dimensions.d_2*2.3),
+                                        child: DropdownList(
+                                          noColour: true,
+                                          padding: EdgeInsets.all(0),
+                                          hintText: userDetails.yearsMedical.toString(),
+                                          selectedItem: userDetails.yearsMedical.toString(),
+                                          itemList: yearsMedicalOptions,
+                                          onChanged: (value) async {
+                                            /// todo: can make it into a function later on
+                                            showLoadingAnimation();
+                                            String authTokenString = await AuthService.getToken();
+                                            isSLI ? await SLIServices().editSLI(headerToken: authTokenString, key: 'yearsMedical', value: value) : await UserServices().editUser(headerToken: authTokenString, key: 'yearsMedical', value: value);
+                                            User userDetailsTest = isSLI ? await SLIServices().getSLI(headerToken: authTokenString) : await UserServices().getUser(headerToken: authTokenString);
+                                            Navigator.pop(context);
+
+                                            setState(() {
+                                              userDetails = userDetailsTest;
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -85,91 +280,65 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                     Center(
                       child: Container(
                         margin: EdgeInsets.only(top: Dimensions.d_35),
-                        child: Icon(
-                          Icons.account_circle,
-                          size: Dimensions.d_140,
-                          color: Colours.darkGrey,
+                        child: CircleAvatar(
+                          backgroundColor: Colours.lightGrey,
+                          radius: Dimensions.d_65,
+                          child: Icon(
+                            Icons.account_circle,
+                            size: Dimensions.d_130,
+                            color: Colours.darkGrey,
+                          ),
                         ),
                       ),
                     ),
                     Center(
                       child: Container(
                         margin: EdgeInsets.only(left: Dimensions.d_100, top: Dimensions.d_120),
-                        child: CircleAvatar(
-                          backgroundColor: isSLI ? Colours.orange : Colours.blue,
-                          radius: Dimensions.d_25,
-                          child: Icon(
-                            Icons.camera_alt,
-                            color: Colors.white,
+                        child: GestureDetector(
+                          onTap: () {
+                            print('tapped!');
+                          },
+                          child: CircleAvatar(
+                            backgroundColor: isSLI ? Colours.orange : Colours.blue,
+                            radius: Dimensions.d_20,
+                            child: Icon(
+                              Icons.camera_alt,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       )
                     ),
-                    // isSLI
-                    //     ?
-                    //     Column(
-                    //         crossAxisAlignment: CrossAxisAlignment.start,
-                    //         children: <Widget>[
-                    //           Text('Name: ${widget.userDetails.name.text}'),
-                    //           Text('Phone Number: ${widget.userDetails.phoneNo}'),
-                    //           // Text('Gender: ${widget.userDetails.gender}'),
-                    //           // Text(
-                    //           //     'Medical Experience: ${widget.userDetails.experiencedMedical}'),
-                    //           // Text(
-                    //           //     'Fluency: ${widget.userDetails.experiencedBim}'),
-                    //           // Text('Medical Years: ${widget.userDetails.yearsMedical}'),
-                    //           // Text('BIM Years: ${widget.userDetails.yearsBim}'),
-                    //         ],
-                    //       )
-                    //     : Column(
-                    //         crossAxisAlignment: CrossAxisAlignment.start,
-                    //         children: <Widget>[
-                    //           Text('Name: ${widget.userDetails.name}'),
-                    //           Text('Phone Number: ${widget.userDetails.phoneNo}'),
-                    //           Text('Gender: ${widget.userDetails.gender}'),
-                    //           Text('Age: ${widget.userDetails.age}'),
-                    //         ],
-                    //       ),
-                    Padding(
-                      padding: EdgeInsets.only(top: Dimensions.d_100 * 3.5),
-                      child: UserButton(
-                          color: isSLI ? Colours.orange : Colours.blue,
-                          text: "Log Out",
-                          onClick: () {
-                            setState(() {
-                              showLoadingAnimation = true;
-                            });
-                            AuthService().signOut(context);
-                          }),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: Dimensions.d_100 * 4.3),
-                      child: UserButton(
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: Dimensions.d_20),
+                child: Column(
+                  children: [
+                    UserButton(
                         color: isSLI ? Colours.orange : Colours.blue,
-                        text: "Delete Account",
-                        onClick: () {
-                          setState(() {
-                            showLoadingAnimation = true;
-                          });
-                          AuthService().deleteAndSignOut(context: context);
-                        },
-                      ),
+                        text: "Log Out",
+                        onClick: () async {
+                          showLoadingAnimation();
+                          await AuthService().signOut(context);
+                          Navigator.pop(context);
+                        }),
+                    UserButton(
+                      color: isSLI ? Colours.orange : Colours.blue,
+                      text: "Delete Account",
+                      onClick: () async {
+                        showLoadingAnimation();
+                        await AuthService().deleteAndSignOut(context: context);
+                        Navigator.pop(context);
+                      },
                     ),
                   ],
                 ),
               ),
+
             ],
           ),
-      // bottomNavigationBar: UserButton(
-      //   color: isSLI ? Colours.orange : Colours.blue,
-      //   text: "Delete Account",
-      //   onClick: () {
-      //     setState(() {
-      //       showLoadingAnimation = true;
-      //     });
-      //     AuthService().deleteAndSignOut(context: context);
-      //   },
-      // ),
         );
   }
 
