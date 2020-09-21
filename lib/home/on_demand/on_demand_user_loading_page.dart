@@ -22,11 +22,15 @@ class OnDemandUserLoadingPage extends StatefulWidget {
 
 class OnDemandUserLoadingPageState extends State<OnDemandUserLoadingPage> {
   String _authToken;
+  bool requested = false;
 
   @override
   void initState() {
     super.initState();
-    onDemandRequest();
+    print("State: $requested");
+    if (!requested) {
+      onDemandRequest();
+    }
   }
 
   void onDemandRequest() async {
@@ -45,6 +49,10 @@ class OnDemandUserLoadingPageState extends State<OnDemandUserLoadingPage> {
         fcmListener.cancel();
       }
     });
+
+    setState(() {
+      requested = true;
+    });
   }
 
   @override
@@ -52,7 +60,7 @@ class OnDemandUserLoadingPageState extends State<OnDemandUserLoadingPage> {
     return Scaffold(
       backgroundColor: Colours.white,
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           SpinKitRing(
             color: Colours.blue,
