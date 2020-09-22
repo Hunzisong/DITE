@@ -211,14 +211,14 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                         child: DropdownList(
                                           noColour: true,
                                           padding: EdgeInsets.all(0),
-                                          hintText: userDetails.yearsBim.toString(),
-                                          selectedItem: userDetails.yearsBim.toString(),
+                                          hintText: userDetails.years_bim.toString(),
+                                          selectedItem: userDetails.years_bim.toString(),
                                           itemList: yearsBimOptions,
                                           onChanged: (value) async {
                                             /// todo: can make it into a function later on
                                             showLoadingAnimation();
                                             String authTokenString = await AuthService.getToken();
-                                            isSLI ? await SLIServices().editSLI(headerToken: authTokenString, key: 'yearsBim', value: value) : await UserServices().editUser(headerToken: authTokenString, key: 'yearsBim', value: value);
+                                            isSLI ? await SLIServices().editSLI(headerToken: authTokenString, key: 'years_bim', value: value) : await UserServices().editUser(headerToken: authTokenString, key: 'yearsBim', value: value);
                                             User userDetailsTest = isSLI ? await SLIServices().getSLI(headerToken: authTokenString) : await UserServices().getUser(headerToken: authTokenString);
                                             Navigator.pop(context);
 
@@ -251,14 +251,14 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                         child: DropdownList(
                                           noColour: true,
                                           padding: EdgeInsets.all(0),
-                                          hintText: userDetails.yearsMedical.toString(),
-                                          selectedItem: userDetails.yearsMedical.toString(),
+                                          hintText: userDetails.years_medical.toString(),
+                                          selectedItem: userDetails.years_medical.toString(),
                                           itemList: yearsMedicalOptions,
                                           onChanged: (value) async {
                                             /// todo: can make it into a function later on
                                             showLoadingAnimation();
                                             String authTokenString = await AuthService.getToken();
-                                            isSLI ? await SLIServices().editSLI(headerToken: authTokenString, key: 'yearsMedical', value: value) : await UserServices().editUser(headerToken: authTokenString, key: 'yearsMedical', value: value);
+                                            isSLI ? await SLIServices().editSLI(headerToken: authTokenString, key: 'years_medical', value: value) : await UserServices().editUser(headerToken: authTokenString, key: 'yearsMedical', value: value);
                                             User userDetailsTest = isSLI ? await SLIServices().getSLI(headerToken: authTokenString) : await UserServices().getUser(headerToken: authTokenString);
                                             Navigator.pop(context);
 

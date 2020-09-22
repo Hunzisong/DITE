@@ -6,10 +6,10 @@ class User {
   String phoneNo;
   String profilePic;
   String description;
-  bool experiencedMedical;
-  bool experiencedBim;
-  int yearsMedical;
-  int yearsBim;
+  bool experienced_medical;
+  bool experienced_bim;
+  int years_medical;
+  int years_bim;
   int age;
   String createdAt;
 
@@ -19,10 +19,10 @@ class User {
         this.phoneNo,
         this.profilePic,
         this.description,
-        this.experiencedMedical,
-        this.experiencedBim,
-        this.yearsMedical,
-        this.yearsBim,
+        this.experienced_medical,
+        this.experienced_bim,
+        this.years_medical,
+        this.years_bim,
         this.createdAt});
 
   User.fromJson(Map<String, dynamic> json) {
@@ -31,10 +31,10 @@ class User {
     phoneNo = json['phone_no'];
     profilePic = json['profile_pic'];
     description = json['description'];
-    experiencedMedical = json['experienced_medical'];
-    experiencedBim = json['experienced_bim'];
-    yearsMedical = json['years_medical'];
-    yearsBim = json['years_bim'];
+    experienced_medical = json['experienced_medical'];
+    experienced_bim = json['experienced_bim'];
+    years_medical = json['years_medical'];
+    years_bim = json['years_bim'];
     age = json['age'];
     createdAt = json['created_at'];
   }
@@ -46,10 +46,10 @@ class User {
     data['phone_no'] = this.phoneNo;
     data['profile_pic'] = this.profilePic;
     data['description'] = this.description;
-    data['experienced_medical'] = this.experiencedMedical;
-    data['experienced_bim'] = this.experiencedBim;
-    data['years_medical'] = this.yearsMedical;
-    data['years_bim'] = this.yearsBim;
+    data['experienced_medical'] = this.experienced_medical;
+    data['experienced_bim'] = this.experienced_bim;
+    data['years_medical'] = this.years_medical;
+    data['years_bim'] = this.years_bim;
     data['age'] = this.age;
     data['created_at'] = this.createdAt;
     return data;
