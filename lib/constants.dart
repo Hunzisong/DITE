@@ -58,6 +58,7 @@ class Colours {
   static Color orange = Color(0xFFFFA382);
   static Color accept = Colors.green[300];
   static Color cancel = Colors.red[400];
+  static Color pending = Colors.orangeAccent;
   static Color lightGrey = Colors.grey[200];
   static Color grey = Colors.grey[350];
   static Color darkGrey = Colors.grey[800];

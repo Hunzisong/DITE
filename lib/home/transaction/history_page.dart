@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:heard/api/transaction.dart';
 import 'package:heard/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:heard/home/transaction/transaction_page.dart';
+import 'package:heard/firebase_services/auth_service.dart';
+import 'package:heard/http_services/booking_services.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class HistoryPage extends StatefulWidget {
   final bool isSLI;
-  final List<UserInfoTemp> transactionRequests;
+  final List<Transaction> transactionRequests;
 
   HistoryPage({@required this.isSLI, this.transactionRequests});
 
@@ -17,17 +19,16 @@ class HistoryPage extends StatefulWidget {
 class _HistoryPageState extends State<HistoryPage> {
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
-  List<UserInfoTemp> transactionHistory;
+  List<Transaction> transactionHistory;
 
   void _onRefresh() async {
     /// added get token again because token constantly changes
-    // String authToken = await AuthService.getToken();
-    // List<BookingRequest> allRequests =
-    // await BookingServices().getAllCurrentRequests(headerToken: authToken);
-    // setState(() {
-    //   transactionRequests = allRequests;
-    // });
-    print('Refreshing all booking requests ...');
+    String authToken = await AuthService.getToken();
+    List<Transaction> transactions = await BookingServices().getAllTransactions(headerToken: authToken, isSLI: widget.isSLI);
+    setState(() {
+      transactionHistory = transactions;
+    });
+    print('Refreshing all transaction history ...');
     if (transactionHistory == null) {
       _refreshController.refreshFailed();
     } else {
@@ -35,8 +36,8 @@ class _HistoryPageState extends State<HistoryPage> {
     }
   }
 
-  Widget getListItem({UserInfoTemp transaction}) {
-    return (transaction.status == 'Tamat' || transaction.status == 'Dibatal')
+  Widget getListItem({Transaction transaction}) {
+    return (transaction.status == 'Tamat' || transaction.status == 'declined')
         ? Column(
             children: [
               ListTile(
@@ -50,7 +51,7 @@ class _HistoryPageState extends State<HistoryPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${!widget.isSLI ? 'BIM:' : 'Pesakit:'} ${transaction.name}',
+                      '${!widget.isSLI ? 'BIM: ${transaction.sliName}': 'Pesakit: ${transaction.userName}'}',
                       style: TextStyle(
                           color: Colours.black,
                           fontSize: FontSizes.smallerText),
@@ -76,7 +77,7 @@ class _HistoryPageState extends State<HistoryPage> {
                               fontSize: FontSizes.smallerText),
                         ),
                         Text(
-                          '${transaction.status}',
+                          '${transaction.status == 'Tamat' ? 'Tamat' : 'Dibatal'}',
                           style: TextStyle(
                               color: transaction.status == 'Tamat'
                                   ? Colours.accept
