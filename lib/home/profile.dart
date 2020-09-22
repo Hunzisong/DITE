@@ -298,7 +298,6 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                         onClick: () async {
                           showLoadingAnimation();
                           await AuthService().signOut(context);
-                          Navigator.pop(context);
                         }),
                     UserButton(
                       color: isSLI ? Colours.orange : Colours.blue,
@@ -306,7 +305,6 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                       onClick: () async {
                         showLoadingAnimation();
                         await AuthService().deleteAndSignOut(context: context);
-                        Navigator.pop(context);
                       },
                     ),
                   ],

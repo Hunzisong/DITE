@@ -17,6 +17,8 @@ class AuthService {
     preferences.clear();
     print('preference now isSLI after logout: ${preferences.containsKey('isSLI')}');
     Navigator.pop(context);
+    Navigator.pop(context);
+    Navigator.pop(context);
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => LandingPage()),

@@ -37,7 +37,7 @@ class _HistoryPageState extends State<HistoryPage> {
   }
 
   Widget getListItem({Transaction transaction}) {
-    return (transaction.status == 'Tamat' || transaction.status == 'declined')
+    return (transaction.status == 'complete' || transaction.status == 'declined')
         ? Column(
             children: [
               ListTile(
@@ -77,9 +77,9 @@ class _HistoryPageState extends State<HistoryPage> {
                               fontSize: FontSizes.smallerText),
                         ),
                         Text(
-                          '${transaction.status == 'Tamat' ? 'Tamat' : 'Dibatal'}',
+                          '${transaction.status == 'complete' ? 'Tamat' : 'Dibatal'}',
                           style: TextStyle(
-                              color: transaction.status == 'Tamat'
+                              color: transaction.status == 'complete'
                                   ? Colours.accept
                                   : Colours.cancel,
                               fontSize: FontSizes.smallerText,
