@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
+import 'package:heard/home/booking/user_booking_result_SLI_profile_page.dart';
 import 'package:heard/widgets/widgets.dart';
 
 
@@ -43,6 +44,99 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
       child: new Text ('2'),
       value: "two",
     ));
+  }
+
+  Widget SLITemplate(){
+    return InkWell(
+      borderRadius:BorderRadius.circular(Dimensions.d_25),
+      onTap:(){
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => UserBookingResultSLIProfilePage()),
+        );
+      },
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(Dimensions.d_20),
+        ),
+        elevation: Dimensions.d_10,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              width:Dimensions.d_100,
+              height: Dimensions.d_100,
+              child: Padding(
+                padding: EdgeInsets.all(Dimensions.d_10),
+                child: ClipRRect(
+                  borderRadius: new BorderRadius.circular(Dimensions.d_20),
+                  child:Image(
+                    image: AssetImage('images/avatar.png'),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(Dimensions.d_20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children:<Widget> [
+                  RichText(
+                    text:TextSpan(
+                      style: new TextStyle(
+                        fontSize: FontSizes.normal,
+                        color: Colours.black,
+                      ),
+                      children: <TextSpan>[
+                        TextSpan(
+                            text: 'Nama: ',
+                            style: new TextStyle(fontWeight: FontWeight.bold)),
+                        TextSpan(
+                          text: 'Hun',
+                        )
+                      ],
+                    ),
+                  ),
+                  RichText(
+                    text:TextSpan(
+                      style: new TextStyle(
+                        fontSize: FontSizes.normal,
+                        color: Colours.black,
+                      ),
+                      children: <TextSpan>[
+                        TextSpan(
+                            text: 'Jantina: ',
+                            style: new TextStyle(fontWeight: FontWeight.bold)),
+                        TextSpan(
+                          text: 'Lelaki',
+                        )
+                      ],
+                    ),
+                  ),
+                  RichText(
+                    text:TextSpan(
+                      style: new TextStyle(
+                        fontSize: FontSizes.normal,
+                        color: Colours.black,
+                      ),
+                      children: <TextSpan>[
+                        TextSpan(
+                            text: 'Umur: ',
+                            style: new TextStyle(fontWeight: FontWeight.bold)),
+                        TextSpan(
+                          text: '60',
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -97,11 +191,8 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
                     ],
                   ),
                   SizedBox(height: Dimensions.d_20),
-                  Text(
-                    "Something.."
-                  ),
+                  SLITemplate(),
                 ],
-
               ),
             ),
           ],
