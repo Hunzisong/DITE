@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:heard/api/booking_request.dart';
+import 'package:heard/api/transaction.dart';
 import 'package:http/http.dart' as http;
 
 class BookingServices {
@@ -29,8 +30,8 @@ class BookingServices {
         .post('https://heard-project.herokuapp.com/booking/SLI_response', headers: {
       'Authorization': headerToken,
     }, body: {
-      'Booking_ID': bookingID,
-      'Response': isAcceptBooking ? 'accept' : 'decline'
+      'booking_id': bookingID,
+      'response': isAcceptBooking ? 'accept' : 'decline'
     });
 
     print('Posted SLI Response: ${response.statusCode}, body: ${response.body}');
@@ -41,6 +42,26 @@ class BookingServices {
     else {
       return false;
     }
+  }
+
+  Future<List<Transaction>> getAllTransactions({String headerToken, bool isSLI}) async {
+    var response = await http
+        .get('https://heard-project.herokuapp.com/booking/get_bookings?type=${isSLI ? 'sli' : 'user'}', headers: {
+      'Authorization': headerToken,
+    });
+
+    print('Get all transactions: ${response.statusCode}, body: ${response.body}');
+
+    List<Transaction> allTransactions = [];
+    if (response.statusCode == 200) {
+      List<dynamic> requestsBody = jsonDecode(response.body);
+      for (int i = 0; i < requestsBody.length; i++) {
+        Transaction request = Transaction.fromJson(requestsBody[i]);
+        allTransactions.add(request);
+      }
+    }
+
+    return allTransactions;
   }
 
 //  Future<bool> acceptOnDemandRequest({String headerToken, String onDemandID}) async {

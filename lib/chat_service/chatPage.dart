@@ -1,3 +1,4 @@
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/foundation.dart';
@@ -9,6 +10,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:heard/chat_service/VideoPlayerWidget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:heard/constants.dart';
+import 'package:heard/chat_service/chathome.dart';
 
 
 final _firestore = FirebaseFirestore.instance;
@@ -17,11 +19,12 @@ auth.User loggedInUser ;
 
 class ChatScreen extends StatefulWidget {
 
+  static const routeName = '/chatPage';
   static String id = 'chat_screen';
-  final dynamic userDetails;
+  String userID;
+  String sliID ;
 
-  ChatScreen({this.userDetails});
-
+  ChatScreen({this.userID, this.sliID});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -37,7 +40,7 @@ class _ChatScreenState extends State<ChatScreen> {
   var messageText ;
   var fileURL ;
   var file ;   /* This is an attachment file */
-  bool isSLI;
+  var isSLI = false;  // assign a default value
 
 
   @override
@@ -45,12 +48,18 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
     getCurrentUser();
     setSLI();
+
   }
 
   void setSLI() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       isSLI = preferences.getBool('isSLI');
+
+      print('check if is SLI');
+      print(isSLI);
+
+
     });
   }
 
@@ -128,13 +137,19 @@ class _ChatScreenState extends State<ChatScreen> {
         'text' : content,
         'sender' : loggedInUser.phoneNumber,
         'type': type.toString(),
-        'isSLI': isSLI.toString(),
+        'isSLI': isSLI,
       });
     }
   }
 
+
+
   @override
   Widget build(BuildContext context) {
+
+    final ChatHomeScreen args = ModalRoute.of(context).settings.arguments;
+
+
     return Scaffold(
       appBar: AppBar(
         leading: null,
@@ -148,7 +163,8 @@ class _ChatScreenState extends State<ChatScreen> {
                 Navigator.pop(context);
               }),
         ],
-        title: Icon(Icons.question_answer),
+        title: Icon(Icons.question_answer
+        ),
         backgroundColor: isSLI ? Colours.orange : Colours.blue,
       ),
       body: SafeArea(
@@ -242,6 +258,8 @@ class _ChatScreenState extends State<ChatScreen> {
 class MessageStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
+    // errors are caused here.
     return StreamBuilder<QuerySnapshot>(
       stream  : _firestore.collection('messages').snapshots(),
       builder : (context, snapshot){
@@ -254,7 +272,6 @@ class MessageStream extends StatelessWidget {
           );
         }
 
-
         final messages = snapshot.data.docs.reversed ;
         List<MessageBubble> messageBubbles = [] ;
         for (var message in messages){
@@ -264,7 +281,7 @@ class MessageStream extends StatelessWidget {
           final messageType   = message.data()['type'];
 
           final currentUser = loggedInUser.phoneNumber;
-          final isSLI       = message.data()['isSLI'];
+          final isSLI= message.data()['isSLI'];
 
 //          if (currentUser == messageSender){
 //            isMe = true ;

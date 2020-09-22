@@ -9,12 +9,13 @@ import 'package:heard/home/on_demand/on_demand_sli_page.dart';
 import 'package:heard/home/on_demand/on_demand_user_page.dart';
 import 'package:heard/home/reservation.dart';
 import 'package:heard/home/profile.dart';
-import 'package:heard/home/transaction.dart';
+import 'package:heard/home/transaction/transaction_page.dart';
 import 'package:heard/http_services/on_demand_services.dart';
 import 'package:heard/http_services/sli_services.dart';
 import 'package:heard/http_services/user_services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:heard/chat_service/chatPage.dart';
+import 'package:heard/chat_service/chathome.dart';
+import 'package:heard/home/covid19/questionnaire.dart';
 
 class Navigation extends StatefulWidget {
   final bool isSLI;
@@ -87,13 +88,13 @@ class _NavigationState extends State<Navigation> {
           ? [
               OnDemandSLIPage(onDemandRequests: onDemandRequests,),
               SLIBookingPage(),
-              Transaction(),
+              TransactionPage(),
               Profile(userDetails: userDetails)
             ]
           : [
               OnDemandUserPage(),
               Reservation(),
-              Transaction(),
+              TransactionPage(),
               Profile(userDetails: userDetails)
             ];
       var fcm = FCM();
@@ -109,7 +110,13 @@ class _NavigationState extends State<Navigation> {
             child: IconButton(
               icon: Icon(Icons.assignment),
               iconSize: Dimensions.d_30,
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  /// push the chat screen over here
+                  MaterialPageRoute(builder: (context) => Questionnaire()),
+                );
+              },
               tooltip: 'Soal Selidik Covid-19',
             ),
           ),
@@ -132,7 +139,7 @@ class _NavigationState extends State<Navigation> {
                   Navigator.push(
                     context,
                     /// push the chat screen over here
-                    MaterialPageRoute(builder: (context) => ChatScreen()),
+                    MaterialPageRoute(builder: (context) => ChatHomeScreen()),
                   );
                 },
               ),

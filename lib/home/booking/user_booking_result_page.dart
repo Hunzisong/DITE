@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
+import 'package:heard/home/booking/user_booking_result_SLI_profile_page.dart';
 import 'package:heard/widgets/widgets.dart';
 
 
@@ -48,7 +49,12 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
   Widget SLITemplate(){
     return InkWell(
       borderRadius:BorderRadius.circular(Dimensions.d_25),
-      onTap:(){},
+      onTap:(){
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => UserBookingResultSLIProfilePage()),
+        );
+      },
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(Dimensions.d_20),
@@ -187,7 +193,6 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
                   SizedBox(height: Dimensions.d_20),
                   SLITemplate(),
                 ],
-
               ),
             ),
           ],

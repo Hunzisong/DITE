@@ -220,7 +220,7 @@ class _UserBookingPageState extends State<UserBookingPage> {
                         MaterialPageRoute(builder: (context) => UserBookingResultPage()),
                       );
                     },
-                  )
+                  ),
                 ],
               ),
             ),

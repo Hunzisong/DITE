@@ -72,6 +72,18 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
     );
   }
 
+  Future<void> editDetails({String key, dynamic value}) async {
+    showLoadingAnimation();
+    String authTokenString = await AuthService.getToken();
+    isSLI ? await SLIServices().editSLI(headerToken: authTokenString, key: key, value: value) : await UserServices().editUser(headerToken: authTokenString, key: key, value: value);
+    User userDetailsTest = isSLI ? await SLIServices().getSLI(headerToken: authTokenString) : await UserServices().getUser(headerToken: authTokenString);
+    Navigator.pop(context);
+
+    setState(() {
+    userDetails = userDetailsTest;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -124,16 +136,7 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                             child: Text('Tukar'),
                                             onPressed: () async {
                                               Navigator.of(alertContext).pop();
-
-                                              showLoadingAnimation();
-                                              String authTokenString = await AuthService.getToken();
-                                              isSLI ? await SLIServices().editSLI(headerToken: authTokenString, key: 'name', value: userDetails.name.text) : await UserServices().editUser(headerToken: authTokenString, key: 'name', value: userDetails.name.text);
-                                              User userDetailsTest = isSLI ? await SLIServices().getSLI(headerToken: authTokenString) : await UserServices().getUser(headerToken: authTokenString);
-                                              Navigator.pop(context);
-
-                                              setState(() {
-                                                userDetails = userDetailsTest;
-                                              });
+                                              editDetails(key: 'name', value: userDetails.name.text);
                                             },
                                           ),
                                         ],
@@ -162,16 +165,7 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                     selectedItem: userDetails.gender,
                                     itemList: genderOptions,
                                     onChanged: (value) async {
-                                      /// todo: can make it into a function later on
-                                      showLoadingAnimation();
-                                      String authTokenString = await AuthService.getToken();
-                                      isSLI ? await SLIServices().editSLI(headerToken: authTokenString, key: 'gender', value: value) : await UserServices().editUser(headerToken: authTokenString, key: 'gender', value: value);
-                                      User userDetailsTest = isSLI ? await SLIServices().getSLI(headerToken: authTokenString) : await UserServices().getUser(headerToken: authTokenString);
-                                      Navigator.pop(context);
-
-                                      setState(() {
-                                        userDetails = userDetailsTest;
-                                      });
+                                      editDetails(key: 'gender', value: value);
                                     },
                                   ),
                                 ),
@@ -211,20 +205,11 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                         child: DropdownList(
                                           noColour: true,
                                           padding: EdgeInsets.all(0),
-                                          hintText: userDetails.yearsBim.toString(),
-                                          selectedItem: userDetails.yearsBim.toString(),
+                                          hintText: userDetails.years_bim.toString(),
+                                          selectedItem: userDetails.years_bim.toString(),
                                           itemList: yearsBimOptions,
                                           onChanged: (value) async {
-                                            /// todo: can make it into a function later on
-                                            showLoadingAnimation();
-                                            String authTokenString = await AuthService.getToken();
-                                            isSLI ? await SLIServices().editSLI(headerToken: authTokenString, key: 'yearsBim', value: value) : await UserServices().editUser(headerToken: authTokenString, key: 'yearsBim', value: value);
-                                            User userDetailsTest = isSLI ? await SLIServices().getSLI(headerToken: authTokenString) : await UserServices().getUser(headerToken: authTokenString);
-                                            Navigator.pop(context);
-
-                                            setState(() {
-                                              userDetails = userDetailsTest;
-                                            });
+                                            editDetails(key: 'years_bim', value: value);
                                           },
                                         ),
                                       ),
@@ -251,20 +236,11 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                         child: DropdownList(
                                           noColour: true,
                                           padding: EdgeInsets.all(0),
-                                          hintText: userDetails.yearsMedical.toString(),
-                                          selectedItem: userDetails.yearsMedical.toString(),
+                                          hintText: userDetails.years_medical.toString(),
+                                          selectedItem: userDetails.years_medical.toString(),
                                           itemList: yearsMedicalOptions,
                                           onChanged: (value) async {
-                                            /// todo: can make it into a function later on
-                                            showLoadingAnimation();
-                                            String authTokenString = await AuthService.getToken();
-                                            isSLI ? await SLIServices().editSLI(headerToken: authTokenString, key: 'yearsMedical', value: value) : await UserServices().editUser(headerToken: authTokenString, key: 'yearsMedical', value: value);
-                                            User userDetailsTest = isSLI ? await SLIServices().getSLI(headerToken: authTokenString) : await UserServices().getUser(headerToken: authTokenString);
-                                            Navigator.pop(context);
-
-                                            setState(() {
-                                              userDetails = userDetailsTest;
-                                            });
+                                            editDetails(key: 'years_medical', value: value);
                                           },
                                         ),
                                       ),
@@ -336,7 +312,6 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                   ],
                 ),
               ),
-
             ],
           ),
         );

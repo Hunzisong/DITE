@@ -255,7 +255,7 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
                 controller: _refreshController,
                 onRefresh: _onRefresh,
                 enablePullDown: true,
-                header: WaterDropHeader(),
+                header: ClassicHeader(),
                 child: (onDemandRequests == null)
                     ? Container()
                     : (onDemandRequests.length == 0)
