@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:heard/api/on_demand_request.dart';
-import 'package:heard/api/sli.dart';
 import 'package:heard/api/user.dart';
 import 'package:heard/constants.dart';
 import 'package:heard/firebase_services/auth_service.dart';
@@ -55,19 +54,18 @@ class _NavigationState extends State<Navigation> {
     String token = await AuthService.getToken();
     print('Auth Token: $token');
     User user;
-    SLI sli;
     List<OnDemandRequest> allRequests;
     if (widget.isSLI == false) {
       user = await UserServices().getUser(headerToken: token);
     } else {
-      sli = await SLIServices().getSLI(headerToken: token);
+      user = await SLIServices().getSLI(headerToken: token);
       allRequests = await OnDemandServices().getAllRequests(headerToken: token);
       print('Got all on-demand requests ...');
 //      print('Request: $onDemandRequests and length of ${onDemandRequests.length}');
     }
     setState(() {
       authToken = token;
-      userDetails = widget.isSLI ? sli : user;
+      userDetails = user;
       onDemandRequests = allRequests;
       showLoadingAnimation = false;
     });
@@ -150,7 +148,7 @@ class _NavigationState extends State<Navigation> {
                 controller: pageController,
                 onPageChanged: onPageChanged,
               ),
-        bottomNavigationBar: BottomNavigationBar(
+        bottomNavigationBar: showLoadingAnimation ? SizedBox.shrink() : BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             onTap: (int index) {
               pageController.jumpToPage(index);

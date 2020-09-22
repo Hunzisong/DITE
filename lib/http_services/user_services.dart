@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:heard/api/user.dart';
+import 'package:heard/landing/user_details.dart';
 import 'package:http/http.dart' as http;
 
 class UserServices {
@@ -21,17 +22,30 @@ class UserServices {
     return user;
   }
 
-  Future<void> createUser({String headerToken, String name, String phoneNumber, String profilePic}) async {
+  Future<void> createUser({String headerToken, UserDetails userDetails}) async {
     var response = await http
         .post('https://heard-project.herokuapp.com/user/create', headers: {
       'Authorization': headerToken,
     }, body: {
-      'name': name,
-      'phone_no': phoneNumber,
-      'profile_pic': 'test1'
+      'name': userDetails.fullName.text,
+      'phone_no': userDetails.phoneNumber.text,
+      'profile_pic': 'test1',
+      'gender': userDetails.gender.toString().split('.').last,
+      'age': userDetails.age.text,
     });
 
     print('Create User response: ${response.statusCode}, body: ${response.body}');
+  }
+
+  Future<void> editUser({String headerToken, String key, dynamic value}) async {
+    var response = await http
+        .post('https://heard-project.herokuapp.com/user/edit', headers: {
+      'Authorization': headerToken,
+    }, body: {
+        key: value
+    });
+
+    print('Edit User response: ${response.statusCode}, body: ${response.body}');
   }
 
   Future<bool> doesUserExist({String headerToken}) async {

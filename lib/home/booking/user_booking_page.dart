@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
+import 'package:heard/home/booking/user_booking_result_page.dart';
 import 'package:heard/widgets/widgets.dart';
 import 'package:intl/intl.dart';
 
@@ -15,10 +16,10 @@ class _UserBookingPageState extends State<UserBookingPage> {
   DateTime startDate;
   String formattedDate;
 
-  List <DropdownMenuItem <String>> languageList = [];
+  List <DropdownMenuItem <String>> languageList;
   String selectedLanguage;
 
-  List <DropdownMenuItem <String>> clinicList = [];
+  List <DropdownMenuItem <String>> clinicList;
   String selectedClinic;
 
   String _getFormattedTime(TimeOfDay currentTime) {
@@ -71,71 +72,59 @@ class _UserBookingPageState extends State<UserBookingPage> {
     ));
   }
 
-  Widget _timePickerField(String initialTitle, TimeOfDay currentTime) {
+  Widget _timePickerField(TimeOfDay currentTime) {
     return StatefulBuilder(builder: (context, setState) {
-      return ClipRRect(
-        borderRadius: BorderRadius.circular(Dimensions.d_10),
-        child: Container(
-          color: Colours.lightBlue,
-          padding: EdgeInsets.all(Dimensions.d_0),
-//          margin: EdgeInsets.fromLTRB(Dimensions.d_30,Dimensions.d_0,Dimensions.d_30,Dimensions.d_0),
-          child: ListTile(
-            title: Text(
-              currentTime == null
-                  ? initialTitle
-                  : _getFormattedTime(currentTime),
-              style: TextStyle(
-                  color: Colours.darkGrey,
-                  fontSize: FontSizes.normal,
-                  fontWeight: FontWeight.w300),
-            ),
-            trailing: IconButton(
-              icon: Icon(Icons.keyboard_arrow_down),
-              onPressed: () async {
-                TimeOfDay selectedTime = await _pickTime();
-                if (selectedTime != null) {
-                  setState(() {
-                    currentTime = selectedTime;
-                  });
-                }
-              },
-            ),
-          ),
+      return Ink(
+        decoration:BoxDecoration(
+          color:Colours.lightBlue,
+          borderRadius: BorderRadius.all(Radius.circular(Dimensions.d_10))
         ),
-      );
+        child: ListTile(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Dimensions.d_10)),
+            title: Text(
+                currentTime == null ?
+                'Pilih Masa ...' :
+                _getFormattedTime(currentTime),
+            ),
+          trailing: Icon(Icons.keyboard_arrow_down),
+          onTap: () async {
+            TimeOfDay selectedTime= await _pickTime();
+            if (selectedTime != null) {
+              setState(() {
+                currentTime = selectedTime;
+              });
+            }
+          },
+         ),
+        );
     });
   }
 
-  Widget _datePickerField(String initialTitle, DateTime currentDate) {
+  Widget _datePickerField(DateTime currentDate) {
     return StatefulBuilder(builder: (context, setState) {
-      return ClipRRect(
-        borderRadius: BorderRadius.circular(Dimensions.d_10),
-        child: Container(
-          color: Colours.lightBlue,
-          padding: EdgeInsets.all(Dimensions.d_0),
-//          margin: EdgeInsets.fromLTRB(Dimensions.d_30,Dimensions.d_0,Dimensions.d_30,Dimensions.d_0),
-          child: ListTile(
-            title: Text(
-              currentDate == null
-                  ? initialTitle
-                  : DateFormat('yyyy-MM-dd').format(currentDate),
-              style: TextStyle(
-                  color: Colours.darkGrey,
-                  fontSize: FontSizes.normal,
-                  fontWeight: FontWeight.w300),
-            ),
-            trailing: IconButton(
-              icon: Icon(Icons.keyboard_arrow_down),
-              onPressed: () async {
-                DateTime selectedDate= await _pickDate();
-                if (selectedDate != null) {
-                  setState(() {
-                    currentDate = selectedDate;
-                  });
-                }
-              },
-            ),
+      return Ink(
+        decoration:BoxDecoration(
+            color:Colours.lightBlue,
+            borderRadius: BorderRadius.all(Radius.circular(Dimensions.d_10))
+        ),
+        child: ListTile(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(Dimensions.d_10)),
+          title: Text(
+            currentDate == null ?
+            'Pilih Masa ...' :
+            DateFormat('yyyy-MM-dd').format(currentDate),
           ),
+          trailing: Icon(Icons.keyboard_arrow_down),
+          onTap: () async {
+            DateTime selectedDate= await _pickDate();
+            if (selectedDate != null) {
+              setState(() {
+                currentDate = selectedDate;
+              });
+            }
+          },
         ),
       );
     });
@@ -164,27 +153,6 @@ class _UserBookingPageState extends State<UserBookingPage> {
                       ),
                     ),
                   ),
-                  Ink(
-                    decoration: BoxDecoration(
-                        color: Colours.lightOrange,
-                        borderRadius:
-                        BorderRadius.all(Radius.circular(Dimensions.d_10))
-                    ),
-                    child: ListTile(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(Dimensions.d_10)),
-                      title: Text(startDate == null ? 'Pilih Tarikh ...' : DateFormat('yyyy-MM-dd').format(startDate)),
-                      trailing: Icon(Icons.keyboard_arrow_down),
-                      onTap: () async {
-                        DateTime selectedDate= await _pickDate();
-                        if (selectedDate != null) {
-                          setState(() {
-                            startDate = selectedDate;
-                          });
-                        }
-                      },
-                    ),
-                  ),
                   SizedBox(
                     height: Dimensions.d_15,
                   ),
@@ -194,9 +162,7 @@ class _UserBookingPageState extends State<UserBookingPage> {
                   SizedBox(
                     height: Dimensions.d_5,
                   ),
-                  _datePickerField(
-                      "Pilih Tarikh..",
-                      startDate),
+                  _datePickerField(startDate),
                   SizedBox(
                     height: Dimensions.d_5,
                   ),
@@ -206,9 +172,7 @@ class _UserBookingPageState extends State<UserBookingPage> {
                   SizedBox(
                     height: Dimensions.d_5,
                   ),
-                  _timePickerField(
-                      "Pilih Masa..",
-                      startTime),
+                  _timePickerField(startTime),
                   FieldLabel(
                     text:"Pilihan Bahasa",
                   ),
@@ -249,10 +213,14 @@ class _UserBookingPageState extends State<UserBookingPage> {
                   ),
                   UserButton(
                     text: 'Carian',
-//                    padding: EdgeInsets.all(Dimensions.d_30),
                     color: Colours.blue,
-                    onClick: (){},
-                  )
+                    onClick: (){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => UserBookingResultPage()),
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
