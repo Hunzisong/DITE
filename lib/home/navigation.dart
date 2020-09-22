@@ -16,6 +16,7 @@ import 'package:heard/http_services/sli_services.dart';
 import 'package:heard/http_services/user_services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:heard/chat_service/chatPage.dart';
+import 'package:heard/chat_service/chathome.dart';
 
 class Navigation extends StatefulWidget {
   final bool isSLI;
@@ -134,7 +135,7 @@ class _NavigationState extends State<Navigation> {
                   Navigator.push(
                     context,
                     /// push the chat screen over here
-                    MaterialPageRoute(builder: (context) => ChatScreen()),
+                    MaterialPageRoute(builder: (context) => ChatHomeScreen()),
                   );
                 },
               ),
