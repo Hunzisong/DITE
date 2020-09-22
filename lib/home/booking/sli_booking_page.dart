@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:heard/api/booking_request.dart';
-import 'package:heard/api/on_demand_request.dart';
 import 'package:heard/constants.dart';
 import 'package:heard/firebase_services/auth_service.dart';
 import 'package:heard/http_services/booking_services.dart';
@@ -11,17 +10,12 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class SLIBookingPage extends StatefulWidget {
-  final List<OnDemandRequest> onDemandRequests;
-
-  SLIBookingPage({this.onDemandRequests});
-
   @override
   _SLIBookingPageState createState() => _SLIBookingPageState();
 }
 
 class _SLIBookingPageState extends State<SLIBookingPage>
     with AutomaticKeepAliveClientMixin {
-  SlidableController slidableController;
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 
@@ -79,7 +73,6 @@ class _SLIBookingPageState extends State<SLIBookingPage>
   @override
   void initState() {
     super.initState();
-    slidableController = SlidableController();
     initializeBooking();
   }
 
@@ -254,7 +247,7 @@ class _SLIBookingPageState extends State<SLIBookingPage>
         controller: _refreshController,
         onRefresh: _onRefresh,
         enablePullDown: true,
-        header: WaterDropHeader(),
+        header: ClassicHeader(),
         child: (bookingRequests == null)
             ? Center(child: CircularProgressIndicator())
             : (bookingRequests.length == 0)
