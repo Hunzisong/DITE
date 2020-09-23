@@ -14,8 +14,9 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class OnDemandSLIPage extends StatefulWidget {
   final List<OnDemandRequest> onDemandRequests;
+  final OnDemandStatus status;
 
-  OnDemandSLIPage({this.onDemandRequests});
+  OnDemandSLIPage({this.onDemandRequests, this.status});
 
   @override
   _OnDemandSLIPageState createState() => _OnDemandSLIPageState();
@@ -87,14 +88,15 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
 
   void _onRefresh() async {
     authToken = await AuthService.getToken();
+
     List<OnDemandRequest> allRequests =
-        await OnDemandServices().getAllRequests(headerToken: authToken);
+    await OnDemandServices().getAllRequests(headerToken: authToken);
     setState(() {
       onDemandRequests = allRequests;
     });
     print('Refreshed all on-demand requests ...');
-    print(
-        'Updated Request: $onDemandRequests and length of ${onDemandRequests.length}');
+    print('Updated Request: $onDemandRequests and length of ${onDemandRequests
+        .length}');
     if (onDemandRequests == null) {
       _refreshController.refreshFailed();
     } else {
@@ -104,8 +106,12 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
 
   void getOnDemandRequests() async {
     String authTokenString = await AuthService.getToken();
+    if (widget.status.status == 'ongoing') {
+      showPairingComplete = true;
+    }
     setState(() {
       authToken = authTokenString;
+      onDemandStatus = widget.status;
       onDemandRequests = widget.onDemandRequests;
     });
     print('Set state complete! on-demand: $onDemandRequests}');
@@ -241,7 +247,6 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
             isSLI: true,
             onDemandStatus: onDemandStatus,
             onCancelClick: () {
-              Navigator.pop(context);
               setState(() {
                 showPairingComplete = false;
               });

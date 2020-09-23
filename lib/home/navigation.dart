@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heard/api/on_demand_request.dart';
+import 'package:heard/api/on_demand_status.dart';
 import 'package:heard/api/user.dart';
 import 'package:heard/constants.dart';
 import 'package:heard/firebase_services/auth_service.dart';
@@ -37,7 +38,8 @@ class _NavigationState extends State<Navigation> {
   ];
   bool showLoadingAnimation = false;
   String authToken;
-  dynamic userDetails;
+  User userDetails;
+  OnDemandStatus onDemandStatus;
   List<OnDemandRequest> onDemandRequests;
   final pageController = PageController();
 
@@ -54,13 +56,18 @@ class _NavigationState extends State<Navigation> {
     String token = await AuthService.getToken();
     print('Auth Token: $token');
     User user;
-    List<OnDemandRequest> allRequests;
+    List<OnDemandRequest> allRequests = [];
+    OnDemandStatus status;
     if (widget.isSLI == false) {
       user = await UserServices().getUser(headerToken: token);
     } else {
       user = await SLIServices().getSLI(headerToken: token);
-      allRequests = await OnDemandServices().getAllRequests(headerToken: token);
-      print('Got all on-demand requests ...');
+      status = await OnDemandServices().getOnDemandStatus(isSLI: true, headerToken: token);
+      if (status.status != 'ongoing') {
+        allRequests =
+        await OnDemandServices().getAllRequests(headerToken: token);
+        print('Got all on-demand requests ...');
+      }
 //      print('Request: $onDemandRequests and length of ${onDemandRequests.length}');
     }
     setState(() {
@@ -68,6 +75,7 @@ class _NavigationState extends State<Navigation> {
       userDetails = user;
       onDemandRequests = allRequests;
       showLoadingAnimation = false;
+      onDemandStatus = status;
     });
   }
 
@@ -86,7 +94,7 @@ class _NavigationState extends State<Navigation> {
       // determine whether its user or sli tab pages
       _pages = widget.isSLI
           ? [
-              OnDemandSLIPage(onDemandRequests: onDemandRequests,),
+              OnDemandSLIPage(onDemandRequests: onDemandRequests, status: onDemandStatus),
               SLIBookingPage(),
               TransactionPage(),
               Profile(userDetails: userDetails)
