@@ -24,11 +24,12 @@ class _HistoryPageState extends State<HistoryPage> {
   void _onRefresh() async {
     /// added get token again because token constantly changes
     String authToken = await AuthService.getToken();
-    List<Transaction> transactions = await BookingServices().getAllTransactions(headerToken: authToken, isSLI: widget.isSLI);
+    List<Transaction> transactions = await BookingServices()
+        .getAllTransactions(headerToken: authToken, isSLI: widget.isSLI);
     setState(() {
       transactionHistory = transactions;
     });
-    print('Refreshing all transaction history ...');
+    print('Refreshing all transaction history ... ');
     if (transactionHistory == null) {
       _refreshController.refreshFailed();
     } else {
@@ -37,7 +38,8 @@ class _HistoryPageState extends State<HistoryPage> {
   }
 
   Widget getListItem({Transaction transaction}) {
-    return (transaction.status == 'complete' || transaction.status == 'declined')
+    return (transaction.status == 'complete' ||
+            transaction.status == 'declined')
         ? Column(
             children: [
               ListTile(
@@ -51,7 +53,7 @@ class _HistoryPageState extends State<HistoryPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${!widget.isSLI ? 'BIM: ${transaction.sliName}': 'Pesakit: ${transaction.userName}'}',
+                      '${!widget.isSLI ? 'BIM: ${transaction.sliName}' : 'Pesakit: ${transaction.userName}'}',
                       style: TextStyle(
                           color: Colours.black,
                           fontSize: FontSizes.smallerText),
@@ -127,10 +129,10 @@ class _HistoryPageState extends State<HistoryPage> {
           enablePullDown: true,
           header: ClassicHeader(),
           child: (transactionHistory == null)
-              ? Container
+              ? Container()
               : (transactionHistory.length == 0)
                   ? Center(
-                      child: Text('Tiada Sejarah Pada Masa Ini'),
+                      child: Text('Tiada Sejarah Transaksi Pada Masa Ini'),
                     )
                   : ListView(
                       children: <Widget>[

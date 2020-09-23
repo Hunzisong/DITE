@@ -121,10 +121,8 @@ class _TransactionPageState extends State<TransactionPage>
         ListTile(
           contentPadding: EdgeInsets.all(Dimensions.d_20),
           isThreeLine: true,
-          leading: Icon(
-            Icons.account_circle,
-            size: Dimensions.d_55,
-          ),
+          leading: Image(
+              image: AssetImage('images/avatar.png')),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -167,7 +165,7 @@ class _TransactionPageState extends State<TransactionPage>
         )
             : ListView(
           children: <Widget>[
-            isSLI ? SizedBox.shrink() : Column(
+            (isSLI || pendingList.length == 0) ? SizedBox.shrink() : Column(
               children: [
                 GreyTitleBar(
                     title: 'Transaksi Belum Diterima',
@@ -186,36 +184,40 @@ class _TransactionPageState extends State<TransactionPage>
                 )
               ],
             ),
-            GreyTitleBar(
-              title: 'Transaksi Diterima',
-              trailing: Container(
-                height: Dimensions.d_25,
-                child: ButtonTheme(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(Dimensions.buttonRadius)),
-                  child: RaisedButton(
-                    color: Colours.white,
-                    child: Text('Sejarah'),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                              builder: (context) =>
-                                  HistoryPage(isSLI: isSLI, transactionRequests: transactionRequests)));
-                    },
-                  ),
+            (acceptedList.length == 0) ? SizedBox.shrink() : Column(
+              children: [
+                GreyTitleBar(
+                  title: 'Transaksi Diterima',
+                  trailing: Container(
+                    height: Dimensions.d_25,
+                    child: ButtonTheme(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(Dimensions.buttonRadius)),
+                      child: RaisedButton(
+                        color: Colours.white,
+                        child: Text('Sejarah'),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (context) =>
+                                      HistoryPage(isSLI: isSLI, transactionRequests: transactionRequests)));
+                        },
+                      ),
+                    ),
+                  )
                 ),
-              )
+                ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  controller: ScrollController(),
+                  shrinkWrap: true,
+                  itemCount: acceptedList.length,
+                  itemBuilder: (context, index) {
+                    return getListItem(transaction: acceptedList[index]);
+                  },
+                )
+              ],
             ),
-            ListView.builder(
-              scrollDirection: Axis.vertical,
-              controller: ScrollController(),
-              shrinkWrap: true,
-              itemCount: acceptedList.length,
-              itemBuilder: (context, index) {
-                return getListItem(transaction: acceptedList[index]);
-              },
-            )
           ],
         ),
       ),
