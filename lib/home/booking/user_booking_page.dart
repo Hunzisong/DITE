@@ -36,8 +36,8 @@ class _UserBookingPageState extends State<UserBookingPage> {
   Future<DateTime> _pickDate({bool isStart = true}) async {
     DateTime selectedDate =
     await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
+        context: context,
+        initialDate: DateTime.now(),
         firstDate: DateTime(2020),
         lastDate: DateTime(2021)
     );
@@ -76,17 +76,17 @@ class _UserBookingPageState extends State<UserBookingPage> {
     return StatefulBuilder(builder: (context, setState) {
       return Ink(
         decoration:BoxDecoration(
-          color:Colours.lightBlue,
-          borderRadius: BorderRadius.all(Radius.circular(Dimensions.d_10))
+            color:Colours.lightBlue,
+            borderRadius: BorderRadius.all(Radius.circular(Dimensions.d_10))
         ),
         child: ListTile(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(Dimensions.d_10)),
-            title: Text(
-                currentTime == null ?
-                'Pilih Masa ...' :
-                _getFormattedTime(currentTime),
-            ),
+              borderRadius: BorderRadius.circular(Dimensions.d_10)),
+          title: Text(
+            currentTime == null ?
+            'Pilih Masa ...' :
+            _getFormattedTime(currentTime),
+          ),
           trailing: Icon(Icons.keyboard_arrow_down),
           onTap: () async {
             TimeOfDay selectedTime= await _pickTime();
@@ -96,8 +96,8 @@ class _UserBookingPageState extends State<UserBookingPage> {
               });
             }
           },
-         ),
-        );
+        ),
+      );
     });
   }
 
