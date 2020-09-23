@@ -180,7 +180,7 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
                                     MainAxisAlignment.spaceBetween,
                                     children: [
                                       Flexible(
-                                        child: Text('Description'),
+                                        child: Text('Penerangan'),
                                       ),
                                       Expanded(
                                         child: Text(

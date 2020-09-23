@@ -5,6 +5,7 @@ import 'package:heard/api/transaction.dart';
 import 'package:heard/constants.dart';
 import 'package:heard/firebase_services/auth_service.dart';
 import 'package:heard/home/transaction/history_page.dart';
+import 'package:heard/home/transaction/information_page.dart';
 import 'package:heard/http_services/booking_services.dart';
 import 'package:heard/widgets/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -70,7 +71,7 @@ class _TransactionPageState extends State<TransactionPage>
     initializeTransaction();
   }
 
-  void _onRefresh() async {
+  Future<void> _onRefresh() async {
     /// added get token again because token constantly changes
     authToken = await AuthService.getToken();
     List<Transaction> allRequests = await BookingServices().getAllTransactions(headerToken: authToken, isSLI: isSLI);
@@ -137,6 +138,21 @@ class _TransactionPageState extends State<TransactionPage>
               ),
             ],
           ),
+          onTap: () async {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (routeContext) =>
+                        InformationPage(
+                          isSLI: isSLI,
+                          transaction: transaction,
+                          onCancelClick: () async {
+                            Navigator.pop(routeContext);
+                            showLoadingAnimation(context: context);
+                            await _onRefresh();
+                            Navigator.pop(context);
+                          },)));
+          },
         ),
         Divider(
           height: Dimensions.d_0,
@@ -196,12 +212,19 @@ class _TransactionPageState extends State<TransactionPage>
                       child: RaisedButton(
                         color: Colours.white,
                         child: Text('Sejarah'),
-                        onPressed: () {
+                        onPressed: () async {
                           Navigator.push(
                               context,
-                              CupertinoPageRoute(
-                                  builder: (context) =>
-                                      HistoryPage(isSLI: isSLI, transactionRequests: transactionRequests)));
+                              MaterialPageRoute(
+                                  builder: (routeContext) =>
+                                      HistoryPage(
+                                          isSLI: isSLI,
+                                          onBackPress: () async {
+                                            Navigator.pop(routeContext);
+                                            showLoadingAnimation(context: context);
+                                            await _onRefresh();
+                                            Navigator.pop(context);
+                                          },)));
                         },
                       ),
                     ),
