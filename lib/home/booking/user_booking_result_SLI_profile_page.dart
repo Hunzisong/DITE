@@ -29,8 +29,8 @@ class _UserBookingResultSLIProfilePageState extends State<UserBookingResultSLIPr
     popUpDialog(
       context: context,
       isSLI: false,
-      height: Dimensions.d_130 * 3.5,
-      contentFlexValue: 3,
+      height: Dimensions.d_160 * 4.0,
+      contentFlexValue: 5,
       buttonText: 'Mengesah',
       onClick: () {
         Navigator.pop(context);
