@@ -129,7 +129,7 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
         onClick: () async {
           Navigator.pop(context);
           showLoadingAnimation(context: context);
-          print('on demand id: ${onDemandRequests[index].onDemandId}');
+          print('on demand id: ${onDemandRequests[index].onDemandId} ${onDemandRequests[index].patientName} index: $index');
           bool acceptanceResult = await OnDemandServices()
               .acceptOnDemandRequest(
                   headerToken: authToken,
@@ -241,8 +241,9 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
             isSLI: true,
             onDemandStatus: onDemandStatus,
             onCancelClick: () {
-              setState(() {
+              setState(() async {
                 showPairingComplete = false;
+                _onRefresh();
               });
             },
           )
@@ -310,7 +311,7 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
                                 slideLeftActionFunctions:
                                     SlideActionBuilderDelegate(
                                         actionCount: 1,
-                                        builder: (context, index, animation,
+                                        builder: (context, sliderIndex, animation,
                                             renderingMode) {
                                           return IconSlideAction(
                                               caption: 'Terima',
