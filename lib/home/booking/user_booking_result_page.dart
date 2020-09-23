@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
 import 'package:heard/home/booking/user_booking_result_SLI_profile_page.dart';
 import 'package:heard/widgets/widgets.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 
 class UserBookingResultPage extends StatefulWidget {
@@ -126,7 +127,7 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
                             style: new TextStyle(fontWeight: FontWeight.bold)),
                         TextSpan(
                           text: '60',
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -146,10 +147,29 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colours.white,
+        appBar: AppBar(
+          backgroundColor: Colours.blue,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          title: Text(
+            'Hasil Carian',
+            style: GoogleFonts.lato(
+              fontSize: FontSizes.mainTitle,
+              fontWeight: FontWeight.bold,
+              color: Colours.white,
+            ),
+          ),
+          centerTitle: true,
+          elevation: 0.0,
+        ),
         body: ListView(
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.all(Dimensions.d_30),
+              padding: EdgeInsets.fromLTRB(Dimensions.d_30,Dimensions.d_10,Dimensions.d_30,Dimensions.d_30),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,

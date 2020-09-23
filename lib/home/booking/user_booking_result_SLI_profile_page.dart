@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
-import 'package:heard/home/booking/user_booking_result_page.dart';
 import 'package:heard/widgets/widgets.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class UserBookingResultSLIProfilePage extends StatefulWidget {
   @override
@@ -11,11 +11,86 @@ class UserBookingResultSLIProfilePage extends StatefulWidget {
 
 class _UserBookingResultSLIProfilePageState extends State<UserBookingResultSLIProfilePage> {
 
+  void showUserInformation({int index}) {
+    popUpDialog(
+      context: context,
+      isSLI: false,
+      height: Dimensions.d_130 * 3.5,
+      contentFlexValue: 3,
+      buttonText: 'Mengesah',
+      onClick: () {
+        Navigator.pop(context);
+      },
+      header: 'Pengesahan',
+      content: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Flexible(
+            child: ListTile(
+              isThreeLine: true,
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'a',
+                    style: TextStyle(color: Colours.darkGrey),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Flexible(
+            flex: 3,
+            child: Padding(
+              padding: EdgeInsets.only(top: Dimensions.d_35),
+              child: Container(
+                height: Dimensions.d_280,
+                decoration: BoxDecoration(
+                  color: Colours.white,
+                  borderRadius: BorderRadius.all(Radius.circular(Dimensions.d_10)),
+                  border: Border.all(),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: Dimensions.d_25),
+                  child: InputField(
+                    //       controller: onDemandInputs.noteToSLI,
+                    labelText: 'Nota kepada JBIM \n(Tempoh masa meeting)',
+                    backgroundColour: Colours.white,
+                    moreLines: true,
+                  ),
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child:Scaffold(
         backgroundColor: Colours.white,
+        appBar: AppBar(
+          backgroundColor: Colours.blue,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          title: Text(
+            'Profil JBIM',
+            style: GoogleFonts.lato(
+              fontSize: FontSizes.mainTitle,
+              fontWeight: FontWeight.bold,
+              color: Colours.white,
+            ),
+          ),
+          centerTitle: true,
+          elevation: 0.0,
+        ),
         body:ListView(
           children: <Widget> [
             Center(
@@ -102,17 +177,14 @@ class _UserBookingResultSLIProfilePageState extends State<UserBookingResultSLIPr
                 ),
               ),
             ),
-            SizedBox(height:Dimensions.d_100),
+            SizedBox(height:Dimensions.d_65),
             Padding(
               padding: EdgeInsets.all(Dimensions.d_10),
               child: UserButton(
                 text: 'Buat Tempahan',
                 color: Colours.blue,
                 onClick: (){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => UserBookingResultPage()),
-                  );
+                  showUserInformation();
                 },
               ),
             ),

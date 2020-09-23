@@ -6,6 +6,7 @@ import 'package:heard/constants.dart';
 import 'package:heard/firebase_services/auth_service.dart';
 import 'package:heard/firebase_services/fcm.dart';
 import 'package:heard/home/booking/sli_booking_page.dart';
+import 'package:heard/home/booking/user_booking_page.dart';
 import 'package:heard/home/on_demand/on_demand_sli_page.dart';
 import 'package:heard/home/on_demand/on_demand_user_page.dart';
 import 'package:heard/home/reservation.dart';
@@ -101,7 +102,7 @@ class _NavigationState extends State<Navigation> {
             ]
           : [
               OnDemandUserPage(),
-              Reservation(),
+              UserBookingPage(),
               TransactionPage(),
               Profile(userDetails: userDetails)
             ];
