@@ -31,10 +31,11 @@ class _UserBookingResultSLIProfilePageState extends State<UserBookingResultSLIPr
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Text(
-                    'a',
-                    style: TextStyle(color: Colours.darkGrey),
-                  ),
+                  RichTextField("Nama","Hun"),
+                  RichTextField("Jantina","Lelaki"),
+                  RichTextField("Umur","60"),
+                  RichTextField("Tarikh","20/04/2020"),
+                  RichTextField("Masa","2.00pm"),
                 ],
               ),
             ),
@@ -112,40 +113,10 @@ class _UserBookingResultSLIProfilePageState extends State<UserBookingResultSLIPr
             ),
             SizedBox(height: Dimensions.d_20),
             Center(
-              child: RichText(
-                text:TextSpan(
-                  style: new TextStyle(
-                    fontSize: FontSizes.normal,
-                    color: Colours.black,
-                  ),
-                  children: <TextSpan>[
-                    TextSpan(
-                        text: 'Jantina: ',
-                        style: new TextStyle(fontWeight: FontWeight.bold)),
-                    TextSpan(
-                      text: 'Lelaki',
-                    )
-                  ],
-                ),
-              ),
+              child: RichTextField("Jantina","Lelaki"),
             ),
             Center(
-              child: RichText(
-                text:TextSpan(
-                  style: new TextStyle(
-                    fontSize: FontSizes.normal,
-                    color: Colours.black,
-                  ),
-                  children: <TextSpan>[
-                    TextSpan(
-                        text: 'Umur: ',
-                        style: new TextStyle(fontWeight: FontWeight.bold)),
-                    TextSpan(
-                      text: '60',
-                    )
-                  ],
-                ),
-              ),
+              child:RichTextField("Umur","60"),
             ),
             Padding(
               padding: EdgeInsets.all(Dimensions.d_20),

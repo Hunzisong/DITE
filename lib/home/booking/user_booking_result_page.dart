@@ -83,54 +83,9 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children:<Widget> [
-                  RichText(
-                    text:TextSpan(
-                      style: new TextStyle(
-                        fontSize: FontSizes.normal,
-                        color: Colours.black,
-                      ),
-                      children: <TextSpan>[
-                        TextSpan(
-                            text: 'Nama: ',
-                            style: new TextStyle(fontWeight: FontWeight.bold)),
-                        TextSpan(
-                          text: 'Hun',
-                        )
-                      ],
-                    ),
-                  ),
-                  RichText(
-                    text:TextSpan(
-                      style: new TextStyle(
-                        fontSize: FontSizes.normal,
-                        color: Colours.black,
-                      ),
-                      children: <TextSpan>[
-                        TextSpan(
-                            text: 'Jantina: ',
-                            style: new TextStyle(fontWeight: FontWeight.bold)),
-                        TextSpan(
-                          text: 'Lelaki',
-                        )
-                      ],
-                    ),
-                  ),
-                  RichText(
-                    text:TextSpan(
-                      style: new TextStyle(
-                        fontSize: FontSizes.normal,
-                        color: Colours.black,
-                      ),
-                      children: <TextSpan>[
-                        TextSpan(
-                            text: 'Umur: ',
-                            style: new TextStyle(fontWeight: FontWeight.bold)),
-                        TextSpan(
-                          text: '60',
-                        ),
-                      ],
-                    ),
-                  ),
+                  RichTextField("Nama","Hun"),
+                  RichTextField("Jantina","Lelaki"),
+                  RichTextField("Umur","60"),
                 ],
               ),
             ),
