@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:heard/api/booking_request.dart';
 import 'package:heard/api/transaction.dart';
 import 'package:http/http.dart' as http;
+import 'package:heard/api/user.dart';
 
 class BookingServices {
 
@@ -82,21 +83,38 @@ class BookingServices {
     }
   }
 
- Future<bool> finishBooking({String headerToken, String bookingID}) async {
-   var response = await http
-       .post('https://heard-project.herokuapp.com/booking/end', headers: {
-     'Authorization': headerToken,
-   }, body: {
-     'booking_id': bookingID,
-   });
+   Future<bool> finishBooking({String headerToken, String bookingID}) async {
+     var response = await http
+         .post('https://heard-project.herokuapp.com/booking/end', headers: {
+       'Authorization': headerToken,
+     }, body: {
+       'booking_id': bookingID,
+     });
 
-   print('End/Finish Booking Response: ${response.statusCode}, body: ${response.body}');
+     print('End/Finish Booking Response: ${response.statusCode}, body: ${response.body}');
 
-   if (response.statusCode == 200) {
-     return true;
+     if (response.statusCode == 200) {
+       return true;
+     }
+     else {
+       return false;
+     }
    }
-   else {
-     return false;
+   
+   Future<List<User>> getAllSLI({String headerToken}) async {
+     var response = await http
+        .get('https://heard-project.herokuapp.com/booking/all_sli', headers: {
+      'Authorization': headerToken,
+    });
+
+     List<User> allSli = [];
+     if (response.statusCode == 200) {
+       List<dynamic> requestsBody = jsonDecode(response.body);
+       for (int i = 0; i < requestsBody.length; i++) {
+         User user = User.fromJson(requestsBody[i]);
+         allSli.add(user);
+       }
+     }
+     return allSli;
    }
- }
 }

@@ -5,6 +5,20 @@ import 'package:heard/widgets/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class UserBookingResultSLIProfilePage extends StatefulWidget {
+  final String name;
+  final String gender;
+  final String age;
+  final String description;
+  final String profilePic;
+
+  UserBookingResultSLIProfilePage(
+      {this.name,
+        this.gender,
+        this.age,
+        this.description,
+        this.profilePic,
+      });
+
   @override
   _UserBookingResultSLIProfilePageState createState() => _UserBookingResultSLIProfilePageState();
 }
@@ -31,11 +45,11 @@ class _UserBookingResultSLIProfilePageState extends State<UserBookingResultSLIPr
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  RichTextField("Nama","Hun"),
-                  RichTextField("Jantina","Lelaki"),
-                  RichTextField("Umur","60"),
-                  RichTextField("Tarikh","20/04/2020"),
-                  RichTextField("Masa","2.00pm"),
+                  RichTextField("Nama", widget.name),
+                  RichTextField("Jantina", widget.gender),
+                  RichTextField("Umur", widget.age),
+                  RichTextField("Tarikh", "20/04/2020"),
+                  RichTextField("Masa", "2.00pm"),
                 ],
               ),
             ),
@@ -100,23 +114,23 @@ class _UserBookingResultSLIProfilePageState extends State<UserBookingResultSLIPr
                 child: Container(
                   height: Dimensions.d_100,
                   child: Image(
-                    image: AssetImage('images/avatar.png'),
+                    image: AssetImage(widget.profilePic ?? 'images/avatar.png'),
                   ),
                 ),
               ),
             ),
             Center(
               child: Text(
-                "Hun",
+                widget.name,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: FontSizes.title),
               ),
             ),
             SizedBox(height: Dimensions.d_20),
             Center(
-              child: RichTextField("Jantina","Lelaki"),
+              child: RichTextField("Jantina", widget.gender),
             ),
             Center(
-              child:RichTextField("Umur","60"),
+              child:RichTextField("Umur", widget.age),
             ),
             Padding(
               padding: EdgeInsets.all(Dimensions.d_20),
@@ -139,7 +153,7 @@ class _UserBookingResultSLIProfilePageState extends State<UserBookingResultSLIPr
                         SizedBox(height: Dimensions.d_10),
                         Container(
                           child:Text(
-                            "75 year old man looking to feed a family with sign language interpretation. 60 years of experience in the field.",
+                            widget.description,
                           ),
                         ),
                       ],

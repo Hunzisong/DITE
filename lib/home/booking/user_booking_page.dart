@@ -11,7 +11,6 @@ class UserBookingPage extends StatefulWidget {
 }
 
 class _UserBookingPageState extends State<UserBookingPage> {
-
   TimeOfDay startTime;
   DateTime startDate;
   String formattedDate;

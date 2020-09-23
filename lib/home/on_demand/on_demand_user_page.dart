@@ -80,8 +80,6 @@ class _OnDemandUserPageState extends State<OnDemandUserPage>
       }
     }
 
-    print("Pending: $requestPending");
-
     return loadingScreen
         ? Scaffold(
             backgroundColor: Colours.white,
