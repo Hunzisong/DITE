@@ -37,7 +37,7 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
     getOnDemandRequests();
   }
 
-  void _onRefresh() async {
+  Future<void> _onRefresh() async {
     authToken = await AuthService.getToken();
 
     List<OnDemandRequest> allRequests =
@@ -193,11 +193,13 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
         ? OnDemandSuccessPage(
             isSLI: true,
             onDemandStatus: onDemandStatus,
-            onCancelClick: () {
-              setState(() async {
+            onCancelClick: () async {
+              setState(() {
                 showPairingComplete = false;
-                _onRefresh();
               });
+              showLoadingAnimation(context: context);
+              await _onRefresh();
+              Navigator.pop(context);
             },
           )
         : Scaffold(
