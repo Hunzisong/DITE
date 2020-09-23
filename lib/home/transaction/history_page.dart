@@ -45,10 +45,8 @@ class _HistoryPageState extends State<HistoryPage> {
               ListTile(
                 contentPadding: EdgeInsets.all(Dimensions.d_20),
                 isThreeLine: true,
-                leading: Icon(
-                  Icons.account_circle,
-                  size: Dimensions.d_55,
-                ),
+                leading: Image(
+                    image: AssetImage('images/avatar.png')),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

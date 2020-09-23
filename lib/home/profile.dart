@@ -259,11 +259,8 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                         child: CircleAvatar(
                           backgroundColor: Colours.lightGrey,
                           radius: Dimensions.d_65,
-                          child: Icon(
-                            Icons.account_circle,
-                            size: Dimensions.d_130,
-                            color: Colours.darkGrey,
-                          ),
+                          child: Image(
+                              image: AssetImage('images/avatar.png')),
                         ),
                       ),
                     ),

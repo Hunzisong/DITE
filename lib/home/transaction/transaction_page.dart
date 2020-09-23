@@ -184,7 +184,7 @@ class _TransactionPageState extends State<TransactionPage>
                 )
               ],
             ),
-            (acceptedList.length == 0) ? SizedBox.shrink() : Column(
+            Column(
               children: [
                 GreyTitleBar(
                   title: 'Transaksi Diterima',

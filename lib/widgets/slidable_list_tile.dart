@@ -32,10 +32,8 @@ class SlidableListTile extends StatelessWidget {
             child: ListTile(
               contentPadding: EdgeInsets.all(Dimensions.d_20),
               isThreeLine: true,
-              leading: Icon(
-                Icons.account_circle,
-                size: Dimensions.d_55,
-              ),
+              leading: Image(
+                  image: AssetImage('images/avatar.png')),
               title: title,
               subtitle: subtitle,
               trailing: onTrailingButtonPress != null ? onTrailingButtonPress : SizedBox.shrink(),
