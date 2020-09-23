@@ -31,53 +31,6 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
   bool showPairingComplete = false;
   OnDemandStatus onDemandStatus;
 
-  List<UserInfoTemp> mockInfoList = [
-    UserInfoTemp().addInfo(
-        name: 'James Cooper',
-        hospital: 'Hospital Sg Buloh',
-        hospitalDepartment: 'Jabatan Jantung',
-        note: 'Jangan pakai baju warna merah jambu',
-        emergency: true),
-    UserInfoTemp().addInfo(
-        name: 'Kyle Jenner',
-        hospital: 'Hospital Sg Long',
-        hospitalDepartment: 'Jabatan Tangan',
-        emergency: true),
-    UserInfoTemp().addInfo(
-        name: 'Kim Possible',
-        hospital: 'Hospital Sarawak',
-        hospitalDepartment: 'Jabatan Rambut',
-        note: 'Jangan pakai baju warna merah'),
-    UserInfoTemp().addInfo(
-        name: 'Arthur Knight',
-        hospital: 'Hospital Kuala Lumpur',
-        hospitalDepartment: 'Jabatan Telinga'),
-    UserInfoTemp().addInfo(
-        name: 'John Monash',
-        hospital: 'Hospital Selangor',
-        hospitalDepartment: 'Jabatan Muka'),
-    UserInfoTemp().addInfo(
-        name: 'Michael Lee',
-        hospital: 'Hospital Pahang',
-        hospitalDepartment: 'Jabatan Mata'),
-    UserInfoTemp().addInfo(
-        name: 'Takashi Hiro',
-        hospital: 'Hospital Sabah',
-        hospitalDepartment: 'Jabatan Kaki'),
-    UserInfoTemp().addInfo(
-        name: 'James Cooper',
-        hospital: 'Hospital Pulau Pinang',
-        hospitalDepartment: 'Jabatan Mulut'),
-    UserInfoTemp().addInfo(
-        name: 'James Cooper',
-        hospital: 'Hospital Seremban',
-        hospitalDepartment: 'Jabatan Arteri'),
-    UserInfoTemp().addInfo(
-        name: 'James Cooper',
-        hospital: 'Hospital Shah Alam',
-        hospitalDepartment: 'Jabatan Badan'),
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -341,28 +294,4 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
 
   @override
   bool get wantKeepAlive => true;
-}
-
-class UserInfoTemp {
-  String patientName;
-  String hospital;
-  String hospitalDepartment;
-  String note;
-  bool emergency;
-
-  UserInfoTemp addInfo(
-      {@required String name,
-      @required String hospital,
-      @required String hospitalDepartment,
-      String note = '',
-      bool emergency = false}) {
-    UserInfoTemp newPerson = UserInfoTemp();
-    newPerson.patientName = name;
-    newPerson.hospital = hospital;
-    newPerson.hospitalDepartment = hospitalDepartment;
-    newPerson.note = note;
-    newPerson.emergency = emergency;
-
-    return newPerson;
-  }
 }
