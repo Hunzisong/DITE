@@ -10,7 +10,6 @@ import 'package:heard/http_services/on_demand_services.dart';
 import 'package:heard/widgets/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class OnDemandSLIPage extends StatefulWidget {
   final List<OnDemandRequest> onDemandRequests;
@@ -27,7 +26,6 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 
-  bool showLoadingAnimation = false;
   List<OnDemandRequest> onDemandRequests;
   String authToken;
   bool showPairingComplete = false;
@@ -130,9 +128,7 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
         buttonText: 'Teruskan',
         onClick: () async {
           Navigator.pop(context);
-          setState(() {
-            showLoadingAnimation = true;
-          });
+          showLoadingAnimation(context: context);
           print('on demand id: ${onDemandRequests[index].onDemandId}');
           bool acceptanceResult = await OnDemandServices()
               .acceptOnDemandRequest(
@@ -149,9 +145,7 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
           } else {
             confirmRequestError();
           }
-          setState(() {
-            showLoadingAnimation = false;
-          });
+          Navigator.pop(context);
         });
   }
 
@@ -252,99 +246,96 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
               });
             },
           )
-        : ModalProgressHUD(
-            inAsyncCall: showLoadingAnimation,
-            child: Scaffold(
-              backgroundColor: Colours.white,
-              body: SmartRefresher(
-                controller: _refreshController,
-                onRefresh: _onRefresh,
-                enablePullDown: true,
-                header: ClassicHeader(),
-                child: (onDemandRequests == null)
-                    ? Container()
-                    : (onDemandRequests.length == 0)
-                        ? Center(
-                            child: Text('Tiada Permintaan Pada Masa Ini'),
-                          )
-                        : ListView(
-                            children: <Widget>[
-                              GreyTitleBar(
-                                title: 'Permintaan Aktif',
-                                trailing: Text(
-                                  '*Leret ke kiri untuk pengesahan',
+        : Scaffold(
+          backgroundColor: Colours.white,
+          body: SmartRefresher(
+            controller: _refreshController,
+            onRefresh: _onRefresh,
+            enablePullDown: true,
+            header: ClassicHeader(),
+            child: (onDemandRequests == null)
+                ? Container()
+                : (onDemandRequests.length == 0)
+                    ? Center(
+                        child: Text('Tiada Permintaan Pada Masa Ini'),
+                      )
+                    : ListView(
+                        children: <Widget>[
+                          GreyTitleBar(
+                            title: 'Permintaan Aktif',
+                            trailing: Text(
+                              '*Leret ke kiri untuk pengesahan',
+                              style: TextStyle(
+                                  fontSize: FontSizes.tinyText,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            controller: ScrollController(),
+                            shrinkWrap: true,
+                            itemCount: onDemandRequests.length,
+                            itemBuilder: (context, index) {
+                              return SlidableListTile(
+                                // userInfo: onDemandRequests[index],
+                                tileColour:
+                                    onDemandRequests[index].emergency
+                                        ? Colours.lightOrange
+                                        : Colours.white,
+                                title: Text(
+                                  '${onDemandRequests[index].patientName}',
                                   style: TextStyle(
-                                      fontSize: FontSizes.tinyText,
                                       fontWeight: FontWeight.bold),
                                 ),
-                              ),
-                              ListView.builder(
-                                scrollDirection: Axis.vertical,
-                                controller: ScrollController(),
-                                shrinkWrap: true,
-                                itemCount: onDemandRequests.length,
-                                itemBuilder: (context, index) {
-                                  return SlidableListTile(
-                                    // userInfo: onDemandRequests[index],
-                                    tileColour:
-                                        onDemandRequests[index].emergency
-                                            ? Colours.lightOrange
-                                            : Colours.white,
-                                    title: Text(
-                                      '${onDemandRequests[index].patientName}',
+                                subtitle: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      '${onDemandRequests[index].hospital}',
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                          color: Colours.darkGrey),
                                     ),
-                                    subtitle: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Text(
-                                          '${onDemandRequests[index].hospital}',
-                                          style: TextStyle(
-                                              color: Colours.darkGrey),
-                                        ),
-                                        onDemandRequests[index].emergency
-                                            ? Text(
-                                                'KECEMASAN',
-                                                style: TextStyle(
-                                                    color: Colours.fail,
-                                                    fontSize:
-                                                        FontSizes.biggerText),
-                                              )
-                                            : SizedBox.shrink(),
-                                      ],
-                                    ),
-                                    slideLeftActionFunctions:
-                                        SlideActionBuilderDelegate(
-                                            actionCount: 1,
-                                            builder: (context, index, animation,
-                                                renderingMode) {
-                                              return IconSlideAction(
-                                                  caption: 'Terima',
-                                                  color: Colours.accept,
-                                                  icon: Icons.done,
-                                                  onTap: () {
-                                                    confirmRequest(
-                                                        index: index);
-                                                  });
-                                            }),
-                                    onTrailingButtonPress: IconButton(
-                                      icon: Icon(Icons.info_outline),
-                                      color: Colours.orange,
-                                      iconSize: Dimensions.d_30,
-                                      onPressed: () {
-                                        showUserInformation(index: index);
-                                      },
-                                    ),
-                                  );
-                                },
-                              )
-                            ],
-                          ),
-              ),
-            ),
-          );
+                                    onDemandRequests[index].emergency
+                                        ? Text(
+                                            'KECEMASAN',
+                                            style: TextStyle(
+                                                color: Colours.fail,
+                                                fontSize:
+                                                    FontSizes.biggerText),
+                                          )
+                                        : SizedBox.shrink(),
+                                  ],
+                                ),
+                                slideLeftActionFunctions:
+                                    SlideActionBuilderDelegate(
+                                        actionCount: 1,
+                                        builder: (context, index, animation,
+                                            renderingMode) {
+                                          return IconSlideAction(
+                                              caption: 'Terima',
+                                              color: Colours.accept,
+                                              icon: Icons.done,
+                                              onTap: () {
+                                                confirmRequest(
+                                                    index: index);
+                                              });
+                                        }),
+                                onTrailingButtonPress: IconButton(
+                                  icon: Icon(Icons.info_outline),
+                                  color: Colours.orange,
+                                  iconSize: Dimensions.d_30,
+                                  onPressed: () {
+                                    showUserInformation(index: index);
+                                  },
+                                ),
+                              );
+                            },
+                          )
+                        ],
+                      ),
+          ),
+        );
   }
 
   @override

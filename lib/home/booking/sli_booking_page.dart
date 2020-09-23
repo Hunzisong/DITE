@@ -129,13 +129,7 @@ class _SLIBookingPageState extends State<SLIBookingPage>
     bool toRemoveBooking = false;
 
     /// showing loading screen when post response to backend
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return Center(child: CircularProgressIndicator());
-      },
-    );
+    showLoadingAnimation(context: context);
     bool responseResult = await BookingServices().postSLIResponse(
         headerToken: authToken,
         bookingID: bookingRequests[index].bookingId,

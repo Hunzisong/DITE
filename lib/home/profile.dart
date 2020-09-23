@@ -62,18 +62,8 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
     }
   }
 
-  void showLoadingAnimation() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return Center(child: CircularProgressIndicator());
-      },
-    );
-  }
-
   Future<void> editDetails({String key, dynamic value}) async {
-    showLoadingAnimation();
+    showLoadingAnimation(context: context);
     String authTokenString = await AuthService.getToken();
     isSLI ? await SLIServices().editSLI(headerToken: authTokenString, key: key, value: value) : await UserServices().editUser(headerToken: authTokenString, key: key, value: value);
     User userDetailsTest = isSLI ? await SLIServices().getSLI(headerToken: authTokenString) : await UserServices().getUser(headerToken: authTokenString);
@@ -293,7 +283,7 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                         color: isSLI ? Colours.orange : Colours.blue,
                         text: "Log Out",
                         onClick: () async {
-                          showLoadingAnimation();
+                          showLoadingAnimation(context: context);
                           await AuthService().signOut(context);
                         }),
                     UserButton(
