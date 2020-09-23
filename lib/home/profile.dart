@@ -290,7 +290,7 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                       color: isSLI ? Colours.orange : Colours.blue,
                       text: "Delete Account",
                       onClick: () async {
-                        showLoadingAnimation();
+                        showLoadingAnimation(context: context);
                         await AuthService().deleteAndSignOut(context: context);
                       },
                     ),
