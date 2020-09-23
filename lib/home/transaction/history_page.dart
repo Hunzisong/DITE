@@ -8,9 +8,9 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class HistoryPage extends StatefulWidget {
   final bool isSLI;
-  final List<Transaction> transactionRequests;
+  final Function onBackPress;
 
-  HistoryPage({@required this.isSLI, this.transactionRequests});
+  HistoryPage({@required this.isSLI, this.onBackPress});
 
   @override
   _HistoryPageState createState() => _HistoryPageState();
@@ -103,14 +103,20 @@ class _HistoryPageState extends State<HistoryPage> {
   @override
   Widget build(BuildContext context) {
     if (transactionHistory == null) {
-      setState(() {
-        transactionHistory = widget.transactionRequests;
-      });
+      _onRefresh();
     }
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colours.white,
         appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(
+                Icons.arrow_back
+            ),
+            onPressed: () {
+              widget.onBackPress();
+            },
+          ),
           title: Text(
             'Sejarah',
             style: GoogleFonts.lato(
@@ -127,7 +133,7 @@ class _HistoryPageState extends State<HistoryPage> {
           enablePullDown: true,
           header: ClassicHeader(),
           child: (transactionHistory == null)
-              ? Container()
+              ? Center(child: CircularProgressIndicator(),)
               : (transactionHistory.length == 0)
                   ? Center(
                       child: Text('Tiada Sejarah Transaksi Pada Masa Ini'),
