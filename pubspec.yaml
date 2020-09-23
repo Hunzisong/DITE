@@ -62,6 +62,8 @@ dev_dependencies:
   downloads_path_provider: ^0.1.0
   cached_network_image: ^2.2.0+1
   photo_view: ^0.10.2
+  flappy_search_bar: 1.4.1
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
