@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
+import 'package:heard/home/booking/user_booking_success.dart';
 import 'package:heard/widgets/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -33,7 +34,10 @@ class _UserBookingResultSLIProfilePageState extends State<UserBookingResultSLIPr
       contentFlexValue: 5,
       buttonText: 'Mengesah',
       onClick: () {
-        Navigator.pop(context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => UserBookingSuccessPage()),
+        );
       },
       header: 'Pengesahan',
       content: Column(

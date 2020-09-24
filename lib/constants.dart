@@ -36,6 +36,7 @@ class Dimensions {
   static double d_130 = 130.0;
   static double d_140 = 140.0;
   static double d_160 = 160.0 ;
+  static double d_200 = 200.0 ;
   static double d_280 = 280.0;
 }
 
