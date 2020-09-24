@@ -4,6 +4,7 @@ import 'package:heard/constants.dart';
 import 'package:heard/home/booking/user_booking_success.dart';
 import 'package:heard/widgets/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class UserBookingResultSLIProfilePage extends StatefulWidget {
   final String name;
@@ -25,7 +26,6 @@ class UserBookingResultSLIProfilePage extends StatefulWidget {
 }
 
 class _UserBookingResultSLIProfilePageState extends State<UserBookingResultSLIProfilePage> {
-
   void showUserInformation({int index}) {
     popUpDialog(
       context: context,
