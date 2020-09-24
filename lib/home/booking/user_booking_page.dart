@@ -14,6 +14,8 @@ class _UserBookingPageState extends State<UserBookingPage> {
   TimeOfDay currentTime;
   DateTime currentDate;
   String formattedDate;
+  bool isButtonDisabled = true;
+
 
   List <DropdownMenuItem <String>> languageList;
   String selectedLanguage;
@@ -24,9 +26,10 @@ class _UserBookingPageState extends State<UserBookingPage> {
   void resetSearchCriteria() {
     setState(() {
       selectedLanguage = null;
-      selectedLanguage = null;
+      selectedClinic = null;
       currentDate = null;
       currentTime = null;
+      isButtonDisabled= true;
     });
   }
 
@@ -210,6 +213,7 @@ class _UserBookingPageState extends State<UserBookingPage> {
                     onChanged: (value){
                       setState(() {
                         selectedClinic= value;
+                        checkAllInformationFilled();
                       });
                     },
                   ),
@@ -219,7 +223,7 @@ class _UserBookingPageState extends State<UserBookingPage> {
                   UserButton(
                     text: 'Carian',
                     color: Colours.blue,
-                    onClick: () async {
+                    onClick: isButtonDisabled ? null: () async {
                       bool canResetSearchCriteria = await Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => UserBookingResultPage(
@@ -240,4 +244,14 @@ class _UserBookingPageState extends State<UserBookingPage> {
       ),
     );
   }
+
+  void checkAllInformationFilled() {
+    if (selectedLanguage.isNotEmpty &&  selectedClinic.isNotEmpty &&
+        currentDate != null &&  currentTime != null)
+      isButtonDisabled = false;
+    else
+      isButtonDisabled = true;
+  }
+
+
 }
