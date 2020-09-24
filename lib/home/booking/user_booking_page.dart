@@ -157,7 +157,7 @@ class _UserBookingPageState extends State<UserBookingPage> {
                     child: SizedBox(
                       height: Dimensions.d_160,
                       child: Image(
-                          image: AssetImage('images/booking_calendar.png')
+                          image: AssetImage('images/bookingCalendar.png')
                       ),
                     ),
                   ),

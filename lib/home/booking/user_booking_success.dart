@@ -38,7 +38,7 @@ class _UserBookingSuccessPageState extends State<UserBookingSuccessPage> {
                 height: Dimensions.d_200,
                 child: FittedBox(
                   child: Image(
-                    image: AssetImage('images/successTick.png'),
+                    image: AssetImage('images/bookingSuccessTick.png'),
                     fit: BoxFit.fill,
                   ),
                 ),
@@ -56,7 +56,7 @@ class _UserBookingSuccessPageState extends State<UserBookingSuccessPage> {
               ),
             ),
             SizedBox(
-              height: Dimensions.d_160,
+              height: Dimensions.d_200,
             ),
             Padding(
               padding: EdgeInsets.all(Dimensions.d_10),

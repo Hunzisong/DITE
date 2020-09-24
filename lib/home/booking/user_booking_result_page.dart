@@ -55,15 +55,12 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
 
   void loadExperienceList() {
     experienceList = [];
-    experienceList.add(new DropdownMenuItem(
-      child: new Text('1'),
-      value: 'one',
-    ));
-
-    experienceList.add(new DropdownMenuItem(
-      child: new Text('2'),
-      value: "two",
-    ));
+    for (int i = 0; i < 10; i++) {
+      experienceList.add(DropdownMenuItem(
+        child: Text('$i Tahun'),
+        value: i.toString(),
+      ));
+    }
   }
 
   Widget loadSliList() {
