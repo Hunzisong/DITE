@@ -67,7 +67,7 @@ class _UserBookingSuccessPageState extends State<UserBookingSuccessPage> {
                   Navigator.pop(context);
                   Navigator.pop(context);
                   Navigator.pop(context);
-                  Navigator.pop(context);
+                  Navigator.pop(context, true);
                 },
               ),
             ),

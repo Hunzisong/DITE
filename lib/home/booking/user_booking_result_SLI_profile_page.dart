@@ -14,27 +14,30 @@ class UserBookingResultSLIProfilePage extends StatefulWidget {
   final String pickedDate;
   final String pickedTime;
 
-  UserBookingResultSLIProfilePage(
-      {this.name,
-        this.gender,
-        this.age,
-        this.description,
-        this.profilePic,
-        this.pickedTime,
-        this.pickedDate,
-      });
+  UserBookingResultSLIProfilePage({
+    this.name,
+    this.gender,
+    this.age,
+    this.description,
+    this.profilePic,
+    this.pickedTime,
+    this.pickedDate,
+  });
 
   @override
-  _UserBookingResultSLIProfilePageState createState() => _UserBookingResultSLIProfilePageState();
+  _UserBookingResultSLIProfilePageState createState() =>
+      _UserBookingResultSLIProfilePageState();
 }
 
-class _UserBookingResultSLIProfilePageState extends State<UserBookingResultSLIProfilePage> {
+class _UserBookingResultSLIProfilePageState
+    extends State<UserBookingResultSLIProfilePage> {
+  TextEditingController notes = TextEditingController();
 
   void showUserInformation({int index}) {
     popUpDialog(
       context: context,
       isSLI: false,
-      height: Dimensions.d_160 * 4.0,
+      height: Dimensions.d_160 * 3.5,
       contentFlexValue: 5,
       buttonText: 'Mengesah',
       onClick: () {
@@ -48,38 +51,42 @@ class _UserBookingResultSLIProfilePageState extends State<UserBookingResultSLIPr
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Flexible(
-            child: ListTile(
-              isThreeLine: true,
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  RichTextField("Nama", widget.name),
-                  RichTextField("Jantina", widget.gender),
-                  RichTextField("Umur", widget.age),
-                  RichTextField("Tarikh", widget.pickedDate),
-                  RichTextField("Masa", widget.pickedTime),
-                ],
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: Dimensions.d_20),
+              child: ListTile(
+                isThreeLine: true,
+                subtitle: ListView(
+                  children: <Widget>[
+                    RichTextField("Nama", widget.name),
+                    RichTextField("Jantina", widget.gender),
+                    RichTextField("Umur", widget.age),
+                    RichTextField("Tarikh", widget.pickedDate),
+                    RichTextField("Masa", widget.pickedTime),
+                  ],
+                ),
               ),
             ),
           ),
           Flexible(
-            flex: 3,
+            flex: 2,
             child: Padding(
-              padding: EdgeInsets.only(top: Dimensions.d_35),
+              padding: EdgeInsets.only(top: Dimensions.d_15),
               child: Container(
-                height: Dimensions.d_280,
+                height: Dimensions.d_100 * 2,
                 decoration: BoxDecoration(
-                  color: Colours.white,
-                  borderRadius: BorderRadius.all(Radius.circular(Dimensions.d_10)),
-                  border: Border.all(),
+                  color: Colours.lightGrey,
+                  borderRadius:
+                      BorderRadius.all(Radius.circular(Dimensions.d_10)),
+                  // border: Border.all(),
                 ),
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: Dimensions.d_25),
                   child: InputField(
-                    //       controller: onDemandInputs.noteToSLI,
-                    labelText: 'Nota kepada JBIM \n(Tempoh masa meeting)',
-                    backgroundColour: Colours.white,
+                    controller: notes,
+                    labelText: 'Nota kepada JBIM',
+                    backgroundColour: Colours.lightGrey,
                     moreLines: true,
+                    hintText: '(Tempoh masa meeting)',
                   ),
                 ),
               ),
@@ -93,7 +100,7 @@ class _UserBookingResultSLIProfilePageState extends State<UserBookingResultSLIPr
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child:Scaffold(
+      child: Scaffold(
         backgroundColor: Colours.white,
         appBar: AppBar(
           backgroundColor: Colours.blue,
@@ -114,11 +121,12 @@ class _UserBookingResultSLIProfilePageState extends State<UserBookingResultSLIPr
           centerTitle: true,
           elevation: 0.0,
         ),
-        body:ListView(
-          children: <Widget> [
+        body: ListView(
+          children: <Widget>[
             Center(
-              child:Padding(
-                padding: EdgeInsets.fromLTRB(Dimensions.d_0, Dimensions.d_55, Dimensions.d_0, Dimensions.d_10),
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(Dimensions.d_0, Dimensions.d_55,
+                    Dimensions.d_0, Dimensions.d_10),
                 child: Container(
                   height: Dimensions.d_100,
                   child: Image(
@@ -130,7 +138,8 @@ class _UserBookingResultSLIProfilePageState extends State<UserBookingResultSLIPr
             Center(
               child: Text(
                 widget.name,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: FontSizes.title),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, fontSize: FontSizes.title),
               ),
             ),
             SizedBox(height: Dimensions.d_20),
@@ -138,29 +147,28 @@ class _UserBookingResultSLIProfilePageState extends State<UserBookingResultSLIPr
               child: RichTextField("Jantina", widget.gender),
             ),
             Center(
-              child:RichTextField("Umur", widget.age),
+              child: RichTextField("Umur", widget.age),
             ),
             Padding(
-              padding: EdgeInsets.all(Dimensions.d_20),
+              padding: EdgeInsets.all(Dimensions.d_35),
               child: Container(
-                height:Dimensions.d_160,
-                decoration:BoxDecoration(
-                  color:Colours.lightBlue,
-                  borderRadius: BorderRadius.all(Radius.circular(Dimensions.d_10)),
+                height: Dimensions.d_160,
+                decoration: BoxDecoration(
+                  color: Colours.lightBlue,
+                  borderRadius:
+                      BorderRadius.all(Radius.circular(Dimensions.d_10)),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.all(Dimensions.d_10),
+                  padding: EdgeInsets.all(Dimensions.d_20),
                   child: Container(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(
-                            "Deskripsi",
-                            style: new TextStyle(fontWeight: FontWeight.bold)
-                        ),
+                        Text("Deskripsi",
+                            style: TextStyle(fontWeight: FontWeight.bold)),
                         SizedBox(height: Dimensions.d_10),
                         Container(
-                          child:Text(
+                          child: Text(
                             widget.description,
                           ),
                         ),
@@ -170,18 +178,15 @@ class _UserBookingResultSLIProfilePageState extends State<UserBookingResultSLIPr
                 ),
               ),
             ),
-            SizedBox(height:Dimensions.d_65),
-            Padding(
-              padding: EdgeInsets.all(Dimensions.d_10),
-              child: UserButton(
-                text: 'Buat Tempahan',
-                color: Colours.blue,
-                onClick: (){
-                  showUserInformation();
-                },
-              ),
-            ),
           ],
+        ),
+        bottomNavigationBar: UserButton(
+          text: 'Buat Tempahan',
+          color: Colours.blue,
+          padding: EdgeInsets.all(Dimensions.d_30),
+          onClick: () {
+            showUserInformation();
+          },
         ),
       ),
     );
