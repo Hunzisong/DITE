@@ -2,9 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:heard/home/navigation.dart';
 import 'package:heard/widgets/user_button.dart';
-
 
 class UserBookingSuccessPage extends StatefulWidget {
   @override
@@ -18,6 +16,7 @@ class _UserBookingSuccessPageState extends State<UserBookingSuccessPage> {
         backgroundColor: Colours.white,
       appBar: AppBar(
         backgroundColor: Colours.blue,
+        leading: SizedBox.shrink(),
         title: Text(
           'Status Tempahan',
           style: GoogleFonts.lato(
@@ -65,10 +64,10 @@ class _UserBookingSuccessPageState extends State<UserBookingSuccessPage> {
                 text: 'Balik Ke Laman Utama',
                 color: Colours.blue,
                 onClick: (){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Navigation()),
-                  );
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  Navigator.pop(context);
                 },
               ),
             ),

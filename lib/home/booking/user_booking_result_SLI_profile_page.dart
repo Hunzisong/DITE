@@ -11,6 +11,8 @@ class UserBookingResultSLIProfilePage extends StatefulWidget {
   final String age;
   final String description;
   final String profilePic;
+  final String pickedDate;
+  final String pickedTime;
 
   UserBookingResultSLIProfilePage(
       {this.name,
@@ -18,6 +20,8 @@ class UserBookingResultSLIProfilePage extends StatefulWidget {
         this.age,
         this.description,
         this.profilePic,
+        this.pickedTime,
+        this.pickedDate,
       });
 
   @override
@@ -52,8 +56,8 @@ class _UserBookingResultSLIProfilePageState extends State<UserBookingResultSLIPr
                   RichTextField("Nama", widget.name),
                   RichTextField("Jantina", widget.gender),
                   RichTextField("Umur", widget.age),
-                  RichTextField("Tarikh", "20/04/2020"),
-                  RichTextField("Masa", "2.00pm"),
+                  RichTextField("Tarikh", widget.pickedDate),
+                  RichTextField("Masa", widget.pickedTime),
                 ],
               ),
             ),

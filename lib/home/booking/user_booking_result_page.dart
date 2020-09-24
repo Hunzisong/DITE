@@ -10,6 +10,14 @@ import 'package:heard/api/user.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class UserBookingResultPage extends StatefulWidget {
+
+  final String pickedDate;
+  final String pickedTime;
+
+  UserBookingResultPage({
+    this.pickedDate,
+    this.pickedTime});
+
   @override
   _UserBookingResultPageState createState() => _UserBookingResultPageState();
 }
@@ -80,6 +88,8 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
                 age: age,
                 profilePic: profilePic,
                 description: description,
+                pickedDate: widget.pickedDate,
+                pickedTime: widget.pickedTime,
               )),
         );
       },

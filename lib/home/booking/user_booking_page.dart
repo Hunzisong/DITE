@@ -11,8 +11,8 @@ class UserBookingPage extends StatefulWidget {
 }
 
 class _UserBookingPageState extends State<UserBookingPage> {
-  TimeOfDay startTime;
-  DateTime startDate;
+  TimeOfDay currentTime;
+  DateTime currentDate;
   String formattedDate;
 
   List <DropdownMenuItem <String>> languageList;
@@ -71,7 +71,7 @@ class _UserBookingPageState extends State<UserBookingPage> {
     ));
   }
 
-  Widget _timePickerField(TimeOfDay currentTime) {
+  Widget _timePickerField() {
     return StatefulBuilder(builder: (context, setState) {
       return Ink(
         decoration:BoxDecoration(
@@ -100,7 +100,7 @@ class _UserBookingPageState extends State<UserBookingPage> {
     });
   }
 
-  Widget _datePickerField(DateTime currentDate) {
+  Widget _datePickerField() {
     return StatefulBuilder(builder: (context, setState) {
       return Ink(
         decoration:BoxDecoration(
@@ -161,7 +161,7 @@ class _UserBookingPageState extends State<UserBookingPage> {
                   SizedBox(
                     height: Dimensions.d_5,
                   ),
-                  _datePickerField(startDate),
+                  _datePickerField(),
                   SizedBox(
                     height: Dimensions.d_5,
                   ),
@@ -171,7 +171,7 @@ class _UserBookingPageState extends State<UserBookingPage> {
                   SizedBox(
                     height: Dimensions.d_5,
                   ),
-                  _timePickerField(startTime),
+                  _timePickerField(),
                   FieldLabel(
                     text:"Pilihan Bahasa",
                   ),
@@ -216,7 +216,10 @@ class _UserBookingPageState extends State<UserBookingPage> {
                     onClick: (){
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => UserBookingResultPage()),
+                        MaterialPageRoute(builder: (context) => UserBookingResultPage(
+                          pickedDate: DateFormat('yyyy-MM-dd').format(currentDate) ,
+                          pickedTime: _getFormattedTime(currentTime),
+                        )),
                       );
                     },
                   ),
