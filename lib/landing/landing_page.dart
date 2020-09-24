@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:heard/api/user.dart';
 import 'package:heard/constants.dart';
+import 'package:heard/firebase_services/auth_service.dart';
 import 'package:heard/home/navigation.dart';
+import 'package:heard/http_services/sli_services.dart';
+import 'package:heard/http_services/user_services.dart';
 import 'package:heard/landing/login_page.dart';
 import 'package:heard/landing/signup_page.dart';
 import 'package:heard/widgets/widgets.dart';
@@ -28,16 +32,33 @@ class _LandingPageState extends State<LandingPage> {
     });
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    auth.User user = auth.FirebaseAuth.instance.currentUser;
-    print('Firebase user: $user');
+    auth.User firebaseUser = auth.FirebaseAuth.instance.currentUser;
+    String token = await AuthService.getToken();
+    print('Firebase user: $firebaseUser');
     print('Shared Preference isSLI: ${preferences.containsKey('isSLI')}');
 
-    if (user != null) {
-//      AuthService().deleteAndSignOut(context: context);
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Navigation(isSLI: preferences.getBool('isSLI'))),
-      );
+    User user;
+    if (preferences.containsKey('isSLI')) {
+      if (preferences.getBool('isSLI')) {
+        user = await SLIServices().getSLI(headerToken: token);
+      }
+      else {
+        user = await UserServices().getUser(headerToken: token);
+      }
+    }
+
+    if (firebaseUser != null) {
+      if (user != null) {
+        Navigator.pop(context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) =>
+              Navigation(isSLI: preferences.getBool('isSLI'))),
+        );
+      }
+      else {
+        AuthService().deleteAndSignOut(context: context);
+      }
     }
     else {
       this.setState(() {

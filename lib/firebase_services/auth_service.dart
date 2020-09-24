@@ -16,9 +16,9 @@ class AuthService {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.clear();
     print('preference now isSLI after logout: ${preferences.containsKey('isSLI')}');
-    Navigator.pop(context);
-    Navigator.pop(context);
-    Navigator.pop(context);
+    Navigator.canPop(context);
+    Navigator.canPop(context);
+    Navigator.canPop(context);
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => LandingPage()),
@@ -121,7 +121,10 @@ class AuthService {
 
   static Future<String> getToken() async {
     auth.User user = auth.FirebaseAuth.instance.currentUser;
-    String token = await user.getIdToken();
+    String token = '';
+    if (user != null) {
+      token = await user.getIdToken();
+    }
     return token;
   }
 }
