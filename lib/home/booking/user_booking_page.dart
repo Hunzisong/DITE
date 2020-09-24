@@ -21,6 +21,15 @@ class _UserBookingPageState extends State<UserBookingPage> {
   List <DropdownMenuItem <String>> clinicList;
   String selectedClinic;
 
+  void resetSearchCriteria() {
+    setState(() {
+      selectedLanguage = null;
+      selectedLanguage = null;
+      currentDate = null;
+      currentTime = null;
+    });
+  }
+
   String _getFormattedTime(TimeOfDay currentTime) {
     return currentTime.toString().substring(
         currentTime.toString().length - 6, currentTime.toString().length - 1);
@@ -213,14 +222,17 @@ class _UserBookingPageState extends State<UserBookingPage> {
                   UserButton(
                     text: 'Carian',
                     color: Colours.blue,
-                    onClick: (){
-                      Navigator.push(
+                    onClick: () async {
+                      bool canResetSearchCriteria = await Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => UserBookingResultPage(
                           pickedDate: DateFormat('yyyy-MM-dd').format(currentDate) ,
                           pickedTime: _getFormattedTime(currentTime),
                         )),
                       );
+                      if (canResetSearchCriteria) {
+                        resetSearchCriteria();
+                      }
                     },
                   ),
                 ],
