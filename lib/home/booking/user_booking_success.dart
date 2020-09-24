@@ -29,6 +29,7 @@ class _UserBookingSuccessPageState extends State<UserBookingSuccessPage> {
         elevation: 0.0,
       ),
       body: ListView(
+        physics: NeverScrollableScrollPhysics(),
           children: <Widget>[
             SizedBox(
               height: Dimensions.d_35,
@@ -36,11 +37,9 @@ class _UserBookingSuccessPageState extends State<UserBookingSuccessPage> {
             Center(
               child: SizedBox(
                 height: Dimensions.d_200,
-                child: FittedBox(
-                  child: Image(
-                    image: AssetImage('images/bookingSuccessTick.png'),
-                    fit: BoxFit.fill,
-                  ),
+                child: Image(
+                  image: AssetImage('images/bookingSuccessTick.png'),
+                  fit: BoxFit.fill,
                 ),
               ),
             ),
@@ -55,23 +54,18 @@ class _UserBookingSuccessPageState extends State<UserBookingSuccessPage> {
                     fontWeight: FontWeight.bold),
               ),
             ),
-            SizedBox(
-              height: Dimensions.d_200,
-            ),
-            Padding(
-              padding: EdgeInsets.all(Dimensions.d_10),
-              child: UserButton(
-                text: 'Balik Ke Laman Utama',
-                color: Colours.blue,
-                onClick: (){
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                  Navigator.pop(context, true);
-                },
-              ),
-            ),
           ],
+      ),
+      bottomNavigationBar: UserButton(
+        text: 'Balik Ke Laman Utama',
+        color: Colours.blue,
+        padding: EdgeInsets.all(Dimensions.d_30),
+        onClick: (){
+          Navigator.pop(context);
+          Navigator.pop(context);
+          Navigator.pop(context);
+          Navigator.pop(context, true);
+        },
       ),
     );
   }

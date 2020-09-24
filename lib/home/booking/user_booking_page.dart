@@ -161,9 +161,6 @@ class _UserBookingPageState extends State<UserBookingPage> {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: Dimensions.d_15,
-                  ),
                   FieldLabel(
                     text:"Tarikh Temu Janji",
                   ),

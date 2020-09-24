@@ -66,13 +66,13 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
   Widget loadSliList() {
     return Column(
       children: allSli
-          .map((sli) => SLITemplate(
+          .map((sli) => createSLITemplate(
               name: sli['name'].text, gender: sli['gender'], age: sli['age'], description: sli['description']))
           .toList(),
     );
   }
 
-  Widget SLITemplate({String name, String gender, String age, String profilePic, String description}) {
+  Widget createSLITemplate({String name, String gender, String age, String profilePic, String description}) {
     return InkWell(
       borderRadius: BorderRadius.circular(Dimensions.d_25),
       onTap: () {
@@ -146,38 +146,15 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
   Widget build(BuildContext context) {
     loadGenderList();
     loadExperienceList();
-    return loading
-        ? Scaffold(
-            backgroundColor: Colours.white,
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SpinKitRing(
-                  color: Colours.blue,
-                  lineWidth: Dimensions.d_5,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: Dimensions.d_15),
-                  child: Text(
-                    'Sedang memuatkan, sila bersabar ...',
-                    style: TextStyle(
-                        fontSize: FontSizes.smallerText,
-                        color: Colours.grey,
-                        fontWeight: FontWeight.w500),
-                  ),
-                )
-              ],
-            ),
-          )
-        : SafeArea(
+    return SafeArea(
             child: Scaffold(
               backgroundColor: Colours.white,
               appBar: AppBar(
                 backgroundColor: Colours.blue,
                 leading: IconButton(
-                  icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+                  icon: Icon(Icons.arrow_back, color: Colors.white),
                   onPressed: () {
-                    Navigator.pop(context);
+                    Navigator.pop(context, false);
                   },
                 ),
                 title: Text(
@@ -191,7 +168,25 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
                 centerTitle: true,
                 elevation: 0.0,
               ),
-              body: ListView(
+              body: loading ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SpinKitRing(
+                    color: Colours.blue,
+                    lineWidth: Dimensions.d_5,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: Dimensions.d_15),
+                    child: Text(
+                      'Sedang memuatkan, sila bersabar ...',
+                      style: TextStyle(
+                          fontSize: FontSizes.smallerText,
+                          color: Colours.grey,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  )
+                ],
+              ) : ListView(
                 children: <Widget>[
                   Padding(
                     padding: EdgeInsets.fromLTRB(Dimensions.d_30,

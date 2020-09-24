@@ -7,13 +7,16 @@ class FieldLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      text,
-      textAlign: TextAlign.left,
-      style: TextStyle(
-          fontWeight: FontWeight.w500,
-          fontSize: FontSizes.normal,
-          color: Colours.darkGrey),
+    return Padding(
+      padding: EdgeInsets.only(top: Dimensions.d_15, left: Dimensions.d_3),
+      child: Text(
+        text,
+        textAlign: TextAlign.left,
+        style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: FontSizes.normal,
+            color: Colours.darkGrey),
+      ),
     );
   }
 }
