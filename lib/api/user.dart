@@ -12,18 +12,20 @@ class User {
   int years_bim;
   int age;
   String createdAt;
+  String sli_id;
 
   User(
       {this.name,
-        this.gender,
-        this.phoneNo,
-        this.profilePic,
-        this.description,
-        this.experienced_medical,
-        this.experienced_bim,
-        this.years_medical,
-        this.years_bim,
-        this.createdAt});
+      this.gender,
+      this.phoneNo,
+      this.profilePic,
+      this.description,
+      this.experienced_medical,
+      this.experienced_bim,
+      this.years_medical,
+      this.years_bim,
+      this.createdAt,
+      this.sli_id});
 
   User.fromJson(Map<String, dynamic> json) {
     name.text = json['name'];
@@ -37,6 +39,7 @@ class User {
     years_bim = json['years_bim'];
     age = json['age'];
     createdAt = json['created_at'];
+    sli_id = json['sli_id'];
   }
 
   Map<String, dynamic> toJson() {
@@ -52,6 +55,7 @@ class User {
     data['years_bim'] = this.years_bim;
     data['age'] = this.age;
     data['created_at'] = this.createdAt;
+    data['sli_id'] = this.sli_id;
     return data;
   }
 }

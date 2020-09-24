@@ -1,11 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
+import 'package:heard/firebase_services/auth_service.dart';
 import 'package:heard/home/booking/user_booking_success.dart';
+import 'package:heard/http_services/booking_services.dart';
+import 'package:heard/http_services/user_services.dart';
+import 'package:heard/widgets/loading_screen.dart';
 import 'package:heard/widgets/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class UserBookingResultSLIProfilePage extends StatefulWidget {
+  final String id;
   final String name;
   final String gender;
   final String age;
@@ -13,8 +18,11 @@ class UserBookingResultSLIProfilePage extends StatefulWidget {
   final String profilePic;
   final String pickedDate;
   final String pickedTime;
+  final String hospitalName;
+  final String preferredLanguage;
 
   UserBookingResultSLIProfilePage({
+    this.id,
     this.name,
     this.gender,
     this.age,
@@ -22,6 +30,8 @@ class UserBookingResultSLIProfilePage extends StatefulWidget {
     this.profilePic,
     this.pickedTime,
     this.pickedDate,
+    this.hospitalName,
+    this.preferredLanguage,
   });
 
   @override
@@ -29,8 +39,24 @@ class UserBookingResultSLIProfilePage extends StatefulWidget {
       _UserBookingResultSLIProfilePageState();
 }
 
-class _UserBookingResultSLIProfilePageState extends State<UserBookingResultSLIProfilePage> {
+class _UserBookingResultSLIProfilePageState
+    extends State<UserBookingResultSLIProfilePage> {
   TextEditingController notes = TextEditingController();
+  bool sendingRequest = false;
+  String authToken;
+
+  @override
+  void initState() {
+    super.initState();
+    getAuthToken();
+  }
+
+  void getAuthToken() async {
+    String _authToken = await AuthService.getToken();
+    setState(() {
+      authToken = _authToken;
+    });
+  }
 
   void showUserInformation({int index}) {
     popUpDialog(
@@ -40,10 +66,11 @@ class _UserBookingResultSLIProfilePageState extends State<UserBookingResultSLIPr
       contentFlexValue: 5,
       buttonText: 'Mengesah',
       onClick: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => UserBookingSuccessPage()),
-        );
+        Navigator.pop(context);
+        setState(() {
+          sendingRequest = true;
+        });
+        requestBooking();
       },
       header: 'Pengesahan',
       content: Column(
@@ -58,7 +85,7 @@ class _UserBookingResultSLIProfilePageState extends State<UserBookingResultSLIPr
                   children: <Widget>[
                     RichTextField("Nama", widget.name),
                     RichTextField("Jantina", widget.gender),
-                    RichTextField("Umur", widget.age),
+                    //RichTextField("Umur", widget.age),
                     RichTextField("Tarikh", widget.pickedDate),
                     RichTextField("Masa", widget.pickedTime),
                   ],
@@ -71,7 +98,7 @@ class _UserBookingResultSLIProfilePageState extends State<UserBookingResultSLIPr
             child: Padding(
               padding: EdgeInsets.only(top: Dimensions.d_15),
               child: Container(
-                height: Dimensions.d_100 * 2,
+                height: Dimensions.d_100 * 1.5,
                 decoration: BoxDecoration(
                   color: Colours.lightGrey,
                   borderRadius:
@@ -96,6 +123,26 @@ class _UserBookingResultSLIProfilePageState extends State<UserBookingResultSLIPr
     );
   }
 
+  requestBooking() async {
+    int response = await BookingServices().requestBooking(
+        headerToken: authToken,
+        sliId: widget.id,
+        date: widget.pickedDate,
+        time: widget.pickedTime,
+        hospitalName: widget.hospitalName,
+        notes: 'Preferred language is ${widget.preferredLanguage}. ${notes.text.toString()}',
+    );
+    if (response == 200) {
+      setState(() {
+        sendingRequest = false;
+      });
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => UserBookingSuccessPage()),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -114,73 +161,80 @@ class _UserBookingResultSLIProfilePageState extends State<UserBookingResultSLIPr
           centerTitle: true,
           elevation: 0.0,
         ),
-        body: ListView(
-          children: <Widget>[
-            Center(
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(Dimensions.d_0, Dimensions.d_55,
-                    Dimensions.d_0, Dimensions.d_10),
-                child: Container(
-                  height: Dimensions.d_100,
-                  child: Image(
-                    image: AssetImage(widget.profilePic ?? 'images/avatar.png'),
-                  ),
-                ),
-              ),
-            ),
-            Center(
-              child: Text(
-                widget.name,
-                style: TextStyle(
-                    fontWeight: FontWeight.bold, fontSize: FontSizes.title),
-              ),
-            ),
-            SizedBox(height: Dimensions.d_20),
-            Center(
-              child: RichTextField("Jantina", widget.gender),
-            ),
-            Center(
-              child: RichTextField("Umur", widget.age),
-            ),
-            Padding(
-              padding: EdgeInsets.all(Dimensions.d_35),
-              child: Container(
-                height: Dimensions.d_160,
-                decoration: BoxDecoration(
-                  color: Colours.lightBlue,
-                  borderRadius:
-                      BorderRadius.all(Radius.circular(Dimensions.d_10)),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(Dimensions.d_20),
-                  child: Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text("Deskripsi",
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        SizedBox(height: Dimensions.d_10),
-                        Container(
-                          child: Text(
-                            widget.description,
-                          ),
+        body: sendingRequest
+            ? LoadingScreen()
+            : ListView(
+                children: <Widget>[
+                  Center(
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(Dimensions.d_0,
+                          Dimensions.d_55, Dimensions.d_0, Dimensions.d_10),
+                      child: Container(
+                        height: Dimensions.d_100,
+                        child: Image(
+                          image: AssetImage(
+                              widget.profilePic ?? 'images/avatar.png'),
                         ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
+                  Center(
+                    child: Text(
+                      widget.name,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: FontSizes.title),
+                    ),
+                  ),
+                  SizedBox(height: Dimensions.d_20),
+                  Center(
+                    child: RichTextField("Jantina", widget.gender),
+                  ),
+//                  Center(
+//                    child: RichTextField("Umur", widget.age),
+//                  ),
+                  Padding(
+                    padding: EdgeInsets.all(Dimensions.d_35),
+                    child: Container(
+                      height: Dimensions.d_160,
+                      decoration: BoxDecoration(
+                        color: Colours.lightBlue,
+                        borderRadius:
+                            BorderRadius.all(Radius.circular(Dimensions.d_10)),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(Dimensions.d_20),
+                        child: Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text("Deskripsi",
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.bold)),
+                              SizedBox(height: Dimensions.d_10),
+                              Container(
+                                child: Text(
+                                  widget.description,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
-        bottomNavigationBar: UserButton(
-          text: 'Buat Tempahan',
-          color: Colours.blue,
-          padding: EdgeInsets.all(Dimensions.d_30),
-          onClick: () {
-            showUserInformation();
-          },
-        ),
+        bottomNavigationBar: sendingRequest
+            ? SizedBox.shrink()
+            : UserButton(
+                text: 'Buat Tempahan',
+                color: Colours.blue,
+                padding: EdgeInsets.all(Dimensions.d_30),
+                onClick: () {
+                  showUserInformation();
+                },
+              ),
       ),
     );
   }

@@ -4,19 +4,23 @@ import 'package:heard/constants.dart';
 import 'package:heard/firebase_services/auth_service.dart';
 import 'package:heard/home/booking/user_booking_result_SLI_profile_page.dart';
 import 'package:heard/http_services/booking_services.dart';
+import 'package:heard/widgets/loading_screen.dart';
 import 'package:heard/widgets/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:heard/api/user.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class UserBookingResultPage extends StatefulWidget {
-
   final String pickedDate;
   final String pickedTime;
+  final String hospitalName;
+  final String preferredLanguage;
 
-  UserBookingResultPage({
-    this.pickedDate,
-    this.pickedTime});
+  UserBookingResultPage(
+      {this.hospitalName,
+      this.pickedDate,
+      this.pickedTime,
+      this.preferredLanguage});
 
   @override
   _UserBookingResultPageState createState() => _UserBookingResultPageState();
@@ -33,6 +37,7 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
 
   List<Map<String, dynamic>> allSli;
   bool loading = true;
+  RefreshController _refreshController = RefreshController(initialRefresh: false);
 
   @override
   void initState() {
@@ -67,12 +72,22 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
     return Column(
       children: allSli
           .map((sli) => createSLITemplate(
-              name: sli['name'].text, gender: sli['gender'], age: sli['age'], description: sli['description']))
+              id: sli['sli_id'],
+              name: sli['name'].text,
+              gender: sli['gender'],
+              age: sli['age'],
+              description: sli['description']))
           .toList(),
     );
   }
 
-  Widget createSLITemplate({String name, String gender, String age, String profilePic, String description}) {
+  Widget createSLITemplate(
+      {String id,
+      String name,
+      String gender,
+      String age,
+      String profilePic,
+      String description}) {
     return InkWell(
       borderRadius: BorderRadius.circular(Dimensions.d_25),
       onTap: () {
@@ -80,14 +95,17 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
           context,
           MaterialPageRoute(
               builder: (context) => UserBookingResultSLIProfilePage(
-                name: name,
-                gender: gender,
-                age: age,
-                profilePic: profilePic,
-                description: description,
-                pickedDate: widget.pickedDate,
-                pickedTime: widget.pickedTime,
-              )),
+                    id: id,
+                    name: name,
+                    gender: gender,
+                    age: age,
+                    profilePic: profilePic,
+                    description: description,
+                    pickedDate: widget.pickedDate,
+                    pickedTime: widget.pickedTime,
+                    hospitalName: widget.hospitalName,
+                    preferredLanguage: widget.preferredLanguage,
+                  )),
         );
       },
       child: Card(
@@ -119,7 +137,7 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
                 children: <Widget>[
                   RichTextField("Nama", name),
                   RichTextField("Jantina", gender),
-                  RichTextField("Umur", age),
+                  //RichTextField("Umur", age),
                 ],
               ),
             ),
@@ -131,7 +149,8 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
 
   Future<void> getAllSli() async {
     String _authToken = await AuthService.getToken();
-    List<User> _allSli = await BookingServices().getAllSLI(headerToken: _authToken);
+    List<User> _allSli =
+        await BookingServices().getAllSLI(headerToken: _authToken);
     List<Map<String, dynamic>> _allSliJson = List<Map<String, dynamic>>();
     for (User sli in _allSli) {
       _allSliJson.add(sli.toJson());
@@ -142,103 +161,104 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
     });
   }
 
+  void _onRefresh() async {
+    await getAllSli();
+    if (allSli == null) {
+      _refreshController.refreshFailed();
+    } else {
+      _refreshController.refreshCompleted();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     loadGenderList();
     loadExperienceList();
+    print("Building");
     return SafeArea(
-            child: Scaffold(
-              backgroundColor: Colours.white,
-              appBar: AppBar(
-                backgroundColor: Colours.blue,
-                leading: IconButton(
-                  icon: Icon(Icons.arrow_back, color: Colors.white),
-                  onPressed: () {
-                    Navigator.pop(context, false);
-                  },
-                ),
-                title: Text(
-                  'Hasil Carian',
-                  style: GoogleFonts.lato(
-                    fontSize: FontSizes.mainTitle,
-                    fontWeight: FontWeight.bold,
-                    color: Colours.white,
-                  ),
-                ),
-                centerTitle: true,
-                elevation: 0.0,
-              ),
-              body: loading ? Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SpinKitRing(
-                    color: Colours.blue,
-                    lineWidth: Dimensions.d_5,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: Dimensions.d_15),
-                    child: Text(
-                      'Sedang memuatkan, sila bersabar ...',
-                      style: TextStyle(
-                          fontSize: FontSizes.smallerText,
-                          color: Colours.grey,
-                          fontWeight: FontWeight.w500),
-                    ),
-                  )
-                ],
-              ) : ListView(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(Dimensions.d_30,
-                        Dimensions.d_10, Dimensions.d_30, Dimensions.d_30),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Expanded(
-                              child: Container(
-                                height: Dimensions.d_45,
-                                child: DropdownList(
-                                  hintText: "Jantina",
-                                  selectedItem: selectedGender,
-                                  itemList: genderList,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      selectedGender = value;
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: Dimensions.d_10),
-                            Expanded(
-                              child: Container(
-                                height: Dimensions.d_45,
-                                child: DropdownList(
-                                  hintText: "Pengalaman",
-                                  selectedItem: selectedExperience,
-                                  itemList: experienceList,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      selectedExperience = value;
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: Dimensions.d_20),
-                        loadSliList(),
-                      ],
-                    ),
-                  ),
-                ],
+      child: Scaffold(
+          backgroundColor: Colours.white,
+          appBar: AppBar(
+            backgroundColor: Colours.blue,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () {
+                Navigator.pop(context, false);
+              },
+            ),
+            title: Text(
+              'Hasil Carian',
+              style: GoogleFonts.lato(
+                fontSize: FontSizes.mainTitle,
+                fontWeight: FontWeight.bold,
+                color: Colours.white,
               ),
             ),
-          );
+            centerTitle: true,
+            elevation: 0.0,
+          ),
+          body: loading
+              ? LoadingScreen()
+              : SmartRefresher(
+                  controller: _refreshController,
+                  onRefresh: _onRefresh,
+                  enablePullDown: true,
+                  header: ClassicHeader(),
+                  child: ListView(
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(Dimensions.d_30,
+                            Dimensions.d_10, Dimensions.d_30, Dimensions.d_30),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Expanded(
+                                  flex: 8,
+                                  child: Container(
+                                    height: Dimensions.d_45,
+                                    child: DropdownList(
+                                      hintText: "Jantina",
+                                      selectedItem: selectedGender,
+                                      itemList: genderList,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          selectedGender = value;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: Dimensions.d_10),
+                                Expanded(
+                                  flex: 10,
+                                  child: Container(
+                                    height: Dimensions.d_45,
+                                    child: DropdownList(
+                                      hintText: "Pengalaman",
+                                      selectedItem: selectedExperience,
+                                      itemList: experienceList,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          selectedExperience = value;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: Dimensions.d_20),
+                            loadSliList(),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                )),
+    );
   }
 }

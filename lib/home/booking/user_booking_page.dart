@@ -229,6 +229,8 @@ class _UserBookingPageState extends State<UserBookingPage> {
                         MaterialPageRoute(builder: (context) => UserBookingResultPage(
                           pickedDate: DateFormat('yyyy-MM-dd').format(currentDate) ,
                           pickedTime: _getFormattedTime(currentTime),
+                          hospitalName: selectedClinic,
+                          preferredLanguage: selectedLanguage,
                         )),
                       );
                       if (canResetSearchCriteria) {

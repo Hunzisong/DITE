@@ -5,6 +5,7 @@ import 'package:heard/api/user.dart';
 import 'package:heard/constants.dart';
 import 'package:heard/firebase_services/auth_service.dart';
 import 'package:heard/firebase_services/fcm.dart';
+import 'package:heard/widgets/loading_screen.dart';
 import 'package:heard/widgets/widgets.dart';
 import 'package:heard/http_services/on_demand_services.dart';
 import 'package:heard/home/on_demand/data_structure/OnDemandInputs.dart';
@@ -59,24 +60,7 @@ class OnDemandUserLoadingPageState extends State<OnDemandUserLoadingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colours.white,
-      body: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          SpinKitRing(
-            color: Colours.blue,
-            lineWidth: Dimensions.d_5,
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: Dimensions.d_15),
-            child: Text(
-              'Sedang memuatkan, sila bersabar ...',
-              style: TextStyle(fontSize: FontSizes.smallerText,
-                  color: Colours.grey,
-                  fontWeight: FontWeight.w500),
-            ),
-          )
-        ],
-      ),
+      body: LoadingScreen(),
       bottomNavigationBar: UserButton(
           text: 'Batal',
           padding: EdgeInsets.all(Dimensions.d_30),
