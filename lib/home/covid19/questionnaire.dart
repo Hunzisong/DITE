@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 
 
 class Questionnaire extends StatefulWidget {
@@ -82,7 +84,14 @@ class _QuestionnaireState extends State<Questionnaire> {
       appBar: AppBar(
         backgroundColor: isSLI ? Colours.orange : Colours.blue,
 
-        title: Text('Covid-19'),
+        title: Text('Covid-19',
+          style: GoogleFonts.lato(
+          fontSize: FontSizes.mainTitle,
+          fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
+
 
       ),
       body: Column(
@@ -130,7 +139,8 @@ class _QuestionnaireState extends State<Questionnaire> {
                     ),
                   );
                 },
-                separatorBuilder: (BuildContext context, int index) => const Divider(color: Colors.black),
+                separatorBuilder: (BuildContext context, int index) => const Divider(color: Colors.black, thickness: 1.0,
+                ),
               ),
             ),
           ],
