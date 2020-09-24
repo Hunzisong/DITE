@@ -95,30 +95,28 @@ class _QuestionnaireState extends State<Questionnaire> {
 
       ),
       body: Column(
-
           children: <Widget>[
-
             Container(
-              height: 100.0,
+              height: Dimensions.d_95,
               child: TextField(
                   decoration: InputDecoration(
                     fillColor: Colours.grey,
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(
-                                          Radius.circular(40.0),
+                                          Radius.circular(Dimensions.d_30),
                         ),
                     ),
-                    labelText: 'Search...',
-                    icon: Icon(Icons.search, color: Colours.black,)
+                    labelText: 'Cari Kata Kunci',
+                    icon: Icon(Icons.search, color: Colours.black, size: Dimensions.d_25,)
                   ),
                 ),
-              padding: EdgeInsets.all(30),
+              padding: EdgeInsets.all(25),
             ),
-
-            Container(
-              child: Divider(color: Colours.darkGrey,),
+            Divider(
+              height: Dimensions.d_0,
+              thickness: Dimensions.d_10,
+              color: Colours.lightGrey,
             ),
-
             /* Construct a list of questions for the users for viewing */
             Expanded(
               child: ListView.separated(
@@ -139,8 +137,11 @@ class _QuestionnaireState extends State<Questionnaire> {
                     ),
                   );
                 },
-                separatorBuilder: (BuildContext context, int index) => const Divider(color: Colors.black, thickness: 1.0,
-                ),
+                separatorBuilder: (BuildContext context, int index) => Divider(
+                  height: Dimensions.d_2,
+                  thickness: Dimensions.d_2*2,
+                  color: Colours.grey,
+                )
               ),
             ),
           ],
