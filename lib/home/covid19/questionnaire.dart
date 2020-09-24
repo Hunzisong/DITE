@@ -3,6 +3,54 @@ import 'package:heard/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+final List<String> images = <String>[
+  'images/gif/1.1.gif',
+  'images/gif/1.2.gif',
+  'images/gif/1.3.gif',
+  'images/gif/1.4.gif',
+  'images/gif/1.5.gif',
+  'images/gif/1.6.gif',
+  'images/gif/2.1.gif',
+  'images/gif/2.2.gif',
+  'images/gif/2.3.gif',
+  'images/gif/3.2.gif',
+  'images/gif/3.3.gif',
+  'images/gif/3.4.gif',
+  'images/gif/3.5.gif',
+  'images/gif/4.1.gif',
+  'images/gif/4.2.gif',
+  'images/gif/4.3.gif',
+  'images/gif/4.4.gif',
+  'images/gif/4.5.gif',
+  'images/gif/4.6.gif',
+  'images/gif/4.7.gif',
+  'images/gif/4.8.gif',
+  'images/gif/4.9.gif'  ];
+
+final List<String> questions = <String>[
+  "Adakah anda mengalami gejala-gejala ini dalam tempoh 14 hari yang lepas?\n",
+  "Batuk\n",
+  'Demam\n',
+  'Sakit tekak\n',
+  'Selesema\n',
+  'Sesak nafas\n',
+  'Dalam tempoh 14 hari yang lepas\n',
+  'Adakah anda pernah melawat negara luar Malaysia?\n',
+  'Jika ya, nyatakan\n',
+  'Adakah anda pernah terlibat dalam mana-mana perhimpunan?\n',
+  'Ijtimak tabligh\n',
+  'Majlis perkahwinan\n',
+  'Lain-lain\n',
+  'Adakah anda ada kontak rapat dengan pesakit positif COVID-19 sebelum peasakit tersebut mengalami simptom?\n',
+  'Jika ya, berapa hari lepas anda berjumpa dengan pesakit tersebut?\n',
+  'Adakah anda duduk serumah dengan pesakit tersebut?\n',
+  'Melawat perhimpunan kecil yang dihadiri pesakit yang disahkan COVID-19?\n',
+  'Bersemuka melebihi 15 minit dalam jarak kurang 1 meter dengan pesakit yang disahkan COVID-19?\n',
+  'Berada dalam ruangan tertutup selama lebih dari 2 jam dengan pesakit yang disahkan COVID-19?\n',
+  'Menaiki kenderaan yang sama melebihi 2 jam dengan pesakit yang disahkan COVID-19?\n',
+  'Siapakah mereka_ Apakah hubungan anda dengan mereka?\n',
+  'Kami memerlukan nombor-nombor orang yang dekat dengan mereka\n'
+];
 
 
 class Questionnaire extends StatefulWidget {
@@ -13,54 +61,6 @@ class Questionnaire extends StatefulWidget {
 class _QuestionnaireState extends State<Questionnaire> {
 
   bool isSLI = false ;
-  final List<String> images = <String>[
-    'images/gif/1.1.gif',
-    'images/gif/1.2.gif',
-    'images/gif/1.3.gif',
-    'images/gif/1.4.gif',
-    'images/gif/1.5.gif',
-    'images/gif/1.6.gif',
-    'images/gif/2.1.gif',
-    'images/gif/2.2.gif',
-    'images/gif/2.3.gif',
-    'images/gif/3.2.gif',
-    'images/gif/3.3.gif',
-    'images/gif/3.4.gif',
-    'images/gif/3.5.gif',
-    'images/gif/4.1.gif',
-    'images/gif/4.2.gif',
-    'images/gif/4.3.gif',
-    'images/gif/4.4.gif',
-    'images/gif/4.5.gif',
-    'images/gif/4.6.gif',
-    'images/gif/4.7.gif',
-    'images/gif/4.8.gif',
-    'images/gif/4.9.gif'  ];
-
-  final List<String> questions = <String>[
-    "Adakah anda mengalami gejala-gejala ini dalam tempoh 14 hari yang lepas?\n",
-    "Batuk\n",
-    'Demam\n',
-    'Sakit tekak\n',
-    'Selesema\n',
-    'Sesak nafas\n',
-    'Dalam tempoh 14 hari yang lepas\n',
-    'Adakah anda pernah melawat negara luar Malaysia?\n',
-    'Jika ya, nyatakan\n',
-    'Adakah anda pernah terlibat dalam mana-mana perhimpunan?\n',
-    'Ijtimak tabligh\n',
-    'Majlis perkahwinan\n',
-    'Lain-lain\n',
-    'Adakah anda ada kontak rapat dengan pesakit positif COVID-19 sebelum peasakit tersebut mengalami simptom?\n',
-    'Jika ya, berapa hari lepas anda berjumpa dengan pesakit tersebut?\n',
-    'Adakah anda duduk serumah dengan pesakit tersebut?\n',
-    'Melawat perhimpunan kecil yang dihadiri pesakit yang disahkan COVID-19?\n',
-    'Bersemuka melebihi 15 minit dalam jarak kurang 1 meter dengan pesakit yang disahkan COVID-19?\n',
-    'Berada dalam ruangan tertutup selama lebih dari 2 jam dengan pesakit yang disahkan COVID-19?\n',
-    'Menaiki kenderaan yang sama melebihi 2 jam dengan pesakit yang disahkan COVID-19?\n',
-    'Siapakah mereka_ Apakah hubungan anda dengan mereka?\n',
-    'Kami memerlukan nombor-nombor orang yang dekat dengan mereka\n'
-  ];
 
 
   @override
@@ -95,30 +95,34 @@ class _QuestionnaireState extends State<Questionnaire> {
 
       ),
       body: Column(
-
           children: <Widget>[
-
             Container(
-              height: 100.0,
+              height: Dimensions.d_95,
               child: TextField(
-                  decoration: InputDecoration(
+                    decoration: InputDecoration(
                     fillColor: Colours.grey,
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(
-                                          Radius.circular(40.0),
+                                          Radius.circular(Dimensions.d_30),
                         ),
                     ),
-                    labelText: 'Search...',
-                    icon: Icon(Icons.search, color: Colours.black,)
+                    labelText: 'Cari Kata Kunci',
+                    icon: IconButton(
+                        icon: Icon(Icons.search, color: Colours.black, size: Dimensions.d_25,),
+                        onPressed: (){
+                          print('I got pressed!!');
+                          showSearch(context: context, delegate: Search());
+                        },
+                    )
                   ),
                 ),
-              padding: EdgeInsets.all(30),
+              padding: EdgeInsets.all(25),
             ),
-
-            Container(
-              child: Divider(color: Colours.darkGrey,),
+            Divider(
+              height: Dimensions.d_0,
+              thickness: Dimensions.d_10,
+              color: Colours.lightGrey,
             ),
-
             /* Construct a list of questions for the users for viewing */
             Expanded(
               child: ListView.separated(
@@ -139,8 +143,11 @@ class _QuestionnaireState extends State<Questionnaire> {
                     ),
                   );
                 },
-                separatorBuilder: (BuildContext context, int index) => const Divider(color: Colors.black, thickness: 1.0,
-                ),
+                separatorBuilder: (BuildContext context, int index) => Divider(
+                  height: Dimensions.d_2,
+                  thickness: Dimensions.d_2*2,
+                  color: Colours.grey,
+                )
               ),
             ),
           ],
@@ -148,4 +155,95 @@ class _QuestionnaireState extends State<Questionnaire> {
         ),
     );
   }
+}
+
+class Search extends SearchDelegate{
+
+  String query;
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return <Widget>[
+      IconButton(
+        icon: Icon(Icons.close),
+        onPressed: (){
+          query = "";
+        },
+      )
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.arrow_back),
+      onPressed: (){
+        Navigator.pop(context);
+      },
+    );
+  }
+
+  String selectedResult;
+  @override
+  Widget buildResults(BuildContext context) {
+    return Container(
+      child: Center(
+        child: Text(selectedResult),
+      ),
+    );
+  }
+
+  List<String> recentList = ["Text 4", "Text 3"];
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+
+    List<String> suggestionList = [];
+
+    query.isEmpty
+      ? suggestionList = recentList
+      : suggestionList.addAll(questions.where(
+            (element) => element.contains(query),
+    ));
+
+    return ListView.separated(
+
+        padding: const EdgeInsets.all(10),
+        itemCount: suggestionList.length,
+        itemBuilder: (BuildContext context, int index) {
+          return Container(
+            margin: const EdgeInsets.symmetric(vertical: 20.0),
+            child: ListTile(
+
+              title: Text(
+                '${suggestionList[index]}',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+
+//              subtitle: Image(image: AssetImage(images[index]),),
+              onTap: (){
+                selectedResult = suggestionList[index];
+                showResults(context);
+              },
+            ),
+          );
+        },
+        separatorBuilder: (BuildContext context, int index) => Divider(
+          height: Dimensions.d_2,
+          thickness: Dimensions.d_2*2,
+          color: Colours.grey,
+        )
+    );
+
+
+
+
+
+  }
+
+
+
+
+
+
 }

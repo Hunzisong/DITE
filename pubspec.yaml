@@ -81,7 +81,8 @@ flutter:
     - images/onDemand.png
     - images/avatar.png
     - images/successTick.png
-    - images/booking_calendar.png
+    - images/bookingCalendar.png
+    - images/bookingSuccessTick.png
 
     # list of GIF format images
     - images/gif/1.1.gif

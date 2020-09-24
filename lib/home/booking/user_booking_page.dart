@@ -11,15 +11,27 @@ class UserBookingPage extends StatefulWidget {
 }
 
 class _UserBookingPageState extends State<UserBookingPage> {
-  TimeOfDay startTime;
-  DateTime startDate;
+  TimeOfDay currentTime;
+  DateTime currentDate;
   String formattedDate;
+  bool isButtonDisabled = true;
+
 
   List <DropdownMenuItem <String>> languageList;
   String selectedLanguage;
 
   List <DropdownMenuItem <String>> clinicList;
   String selectedClinic;
+
+  void resetSearchCriteria() {
+    setState(() {
+      selectedLanguage = null;
+      selectedClinic = null;
+      currentDate = null;
+      currentTime = null;
+      isButtonDisabled= true;
+    });
+  }
 
   String _getFormattedTime(TimeOfDay currentTime) {
     return currentTime.toString().substring(
@@ -71,7 +83,7 @@ class _UserBookingPageState extends State<UserBookingPage> {
     ));
   }
 
-  Widget _timePickerField(TimeOfDay currentTime) {
+  Widget _timePickerField() {
     return StatefulBuilder(builder: (context, setState) {
       return Ink(
         decoration:BoxDecoration(
@@ -100,7 +112,7 @@ class _UserBookingPageState extends State<UserBookingPage> {
     });
   }
 
-  Widget _datePickerField(DateTime currentDate) {
+  Widget _datePickerField() {
     return StatefulBuilder(builder: (context, setState) {
       return Ink(
         decoration:BoxDecoration(
@@ -148,12 +160,9 @@ class _UserBookingPageState extends State<UserBookingPage> {
                     child: SizedBox(
                       height: Dimensions.d_160,
                       child: Image(
-                          image: AssetImage('images/booking_calendar.png')
+                          image: AssetImage('images/bookingCalendar.png')
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: Dimensions.d_15,
                   ),
                   FieldLabel(
                     text:"Tarikh Temu Janji",
@@ -161,7 +170,7 @@ class _UserBookingPageState extends State<UserBookingPage> {
                   SizedBox(
                     height: Dimensions.d_5,
                   ),
-                  _datePickerField(startDate),
+                  _datePickerField(),
                   SizedBox(
                     height: Dimensions.d_5,
                   ),
@@ -171,7 +180,7 @@ class _UserBookingPageState extends State<UserBookingPage> {
                   SizedBox(
                     height: Dimensions.d_5,
                   ),
-                  _timePickerField(startTime),
+                  _timePickerField(),
                   FieldLabel(
                     text:"Pilihan Bahasa",
                   ),
@@ -204,6 +213,7 @@ class _UserBookingPageState extends State<UserBookingPage> {
                     onChanged: (value){
                       setState(() {
                         selectedClinic= value;
+                        checkAllInformationFilled();
                       });
                     },
                   ),
@@ -213,11 +223,17 @@ class _UserBookingPageState extends State<UserBookingPage> {
                   UserButton(
                     text: 'Carian',
                     color: Colours.blue,
-                    onClick: (){
-                      Navigator.push(
+                    onClick: isButtonDisabled ? null: () async {
+                      bool canResetSearchCriteria = await Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => UserBookingResultPage()),
+                        MaterialPageRoute(builder: (context) => UserBookingResultPage(
+                          pickedDate: DateFormat('yyyy-MM-dd').format(currentDate) ,
+                          pickedTime: _getFormattedTime(currentTime),
+                        )),
                       );
+                      if (canResetSearchCriteria) {
+                        resetSearchCriteria();
+                      }
                     },
                   ),
                 ],
@@ -228,4 +244,14 @@ class _UserBookingPageState extends State<UserBookingPage> {
       ),
     );
   }
+
+  void checkAllInformationFilled() {
+    if (selectedLanguage.isNotEmpty &&  selectedClinic.isNotEmpty &&
+        currentDate != null &&  currentTime != null)
+      isButtonDisabled = false;
+    else
+      isButtonDisabled = true;
+  }
+
+
 }
