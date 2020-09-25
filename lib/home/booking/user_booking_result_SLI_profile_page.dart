@@ -4,7 +4,6 @@ import 'package:heard/constants.dart';
 import 'package:heard/firebase_services/auth_service.dart';
 import 'package:heard/home/booking/user_booking_success.dart';
 import 'package:heard/http_services/booking_services.dart';
-import 'package:heard/http_services/user_services.dart';
 import 'package:heard/widgets/loading_screen.dart';
 import 'package:heard/widgets/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
