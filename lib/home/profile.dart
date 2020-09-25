@@ -191,7 +191,7 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                         ),
                                       ),
                                       Padding(
-                                        padding: EdgeInsets.only(left: Dimensions.d_85 * 2.4, top: Dimensions.d_2*2.2),
+                                        padding: EdgeInsets.only(left: Dimensions.d_85 * 2.25, top: Dimensions.d_2*2.2),
                                         child: DropdownList(
                                           noColour: true,
                                           padding: EdgeInsets.all(0),
@@ -222,7 +222,7 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                         ),
                                       ),
                                       Padding(
-                                        padding: EdgeInsets.only(left: Dimensions.d_85 * 2.4, top: Dimensions.d_2*2.2),
+                                        padding: EdgeInsets.only(left: Dimensions.d_85 * 2.25, top: Dimensions.d_2*2.2),
                                         child: DropdownList(
                                           noColour: true,
                                           padding: EdgeInsets.all(0),
