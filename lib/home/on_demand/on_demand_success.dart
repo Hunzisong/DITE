@@ -39,7 +39,7 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
     getOnDemandStatus();
   }
 
-  // TODO HERE!
+
   String getVideoCallRoomID() {
 
     Details details = onDemandStatus.details;
