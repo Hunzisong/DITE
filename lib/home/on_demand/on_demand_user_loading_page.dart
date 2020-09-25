@@ -39,6 +39,7 @@ class OnDemandUserLoadingPageState extends State<OnDemandUserLoadingPage> {
       if (!widget.reNavigation) {
         onDemandRequest();
       }
+      subscribeFCMListener();
     });
   }
 
@@ -46,6 +47,16 @@ class OnDemandUserLoadingPageState extends State<OnDemandUserLoadingPage> {
     String _authTokenString = await AuthService.getToken();
     setState(() {
       _authToken = _authTokenString;
+    });
+  }
+
+  void subscribeFCMListener() {
+    StreamSubscription<Map<String, dynamic>> fcmListener;
+    fcmListener = FCM.onFcmMessage.listen((event) async {
+      if (event['data']['type'] == 'ondemand-accepted') {
+        widget.onSearchComplete();
+        fcmListener.cancel();
+      }
     });
   }
 
@@ -59,14 +70,6 @@ class OnDemandUserLoadingPageState extends State<OnDemandUserLoadingPage> {
     }
     await OnDemandServices().makeOnDemandRequest(
         headerToken: _authToken, onDemandInputs: widget.onDemandInputs);
-
-    StreamSubscription<Map<String, dynamic>> fcmListener;
-    fcmListener = FCM.onFcmMessage.listen((event) async {
-      if (event['data']['type'] == 'ondemand-accepted') {
-        widget.onSearchComplete();
-        fcmListener.cancel();
-      }
-    });
   }
 
   @override
