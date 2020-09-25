@@ -187,11 +187,11 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                       ListTile(
                                         title: Text('Pengalaman Menterjemah'),
                                         trailing: SizedBox(
-                                          width: Dimensions.d_130,
+                                          width: Dimensions.d_120,
                                         ),
                                       ),
                                       Padding(
-                                        padding: EdgeInsets.only(left: Dimensions.d_85 * 2.55, top: Dimensions.d_2*2.3),
+                                        padding: EdgeInsets.only(left: Dimensions.d_85 * 2.4, top: Dimensions.d_2*2.2),
                                         child: DropdownList(
                                           noColour: true,
                                           padding: EdgeInsets.all(0),
@@ -218,11 +218,11 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                       ListTile(
                                         title: Text('Pengalaman Dalam Bidang Perubatan'),
                                         trailing: SizedBox(
-                                          width: Dimensions.d_130,
+                                          width: Dimensions.d_120,
                                         ),
                                       ),
                                       Padding(
-                                        padding: EdgeInsets.only(left: Dimensions.d_85 * 2.55, top: Dimensions.d_2*2.3),
+                                        padding: EdgeInsets.only(left: Dimensions.d_85 * 2.4, top: Dimensions.d_2*2.2),
                                         child: DropdownList(
                                           noColour: true,
                                           padding: EdgeInsets.all(0),
