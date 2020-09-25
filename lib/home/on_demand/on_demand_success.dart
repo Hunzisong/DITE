@@ -35,6 +35,17 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
     getOnDemandStatus();
   }
 
+  // TODO HERE!
+  void getVideoCallRoomID() {
+
+    Details details = onDemandStatus.details;
+
+    // get the unique two party on demand ID from on demand status object
+    String onDemandID = details.onDemandId;
+
+    print("Video call on demand ID: $onDemandID");
+  }
+
   void getOnDemandStatus() async {
     String authTokenString = await AuthService.getToken();
     setState(() {
@@ -242,7 +253,9 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
                                                   child: Icon(
                                                     Icons.videocam,
                                                     size: Dimensions.d_35,
+
                                                   ),
+
                                                 ))),
                                       ),
                                     ],
@@ -270,6 +283,7 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
   }
 
   void onTapVideo() {
+    getVideoCallRoomID();
     debugPrint("Video is tapped");
   }
 }
