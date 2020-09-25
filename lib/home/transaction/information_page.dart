@@ -43,17 +43,6 @@ class _InformationPageState extends State<InformationPage> {
     });
   }
 
-  String getVideoCallRoomID() {
-
-//    Details details = onDemandStatus.details;
-//
-//    // get the unique two party on demand ID from on demand status object
-//    String onDemandID = details.onDemandId;
-//
-//    print("Video call on demand ID: $onDemandID");
-//    return onDemandID;
-      return "apple";
-  }
 
   void confirmationModal({String keyword, Function onClick}) {
     popUpDialog(
@@ -233,7 +222,7 @@ class _InformationPageState extends State<InformationPage> {
   }
 
   void onTapVideo() async {
-    String onDemandID = getVideoCallRoomID();
+    String onDemandID = transaction.bookingId;
     debugPrint("Video is tapped");
 
     await _handleCameraAndMic();
