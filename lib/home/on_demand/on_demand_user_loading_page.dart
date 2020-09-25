@@ -12,36 +12,53 @@ import 'package:heard/home/on_demand/data_structure/OnDemandInputs.dart';
 import 'package:heard/http_services/user_services.dart';
 
 class OnDemandUserLoadingPage extends StatefulWidget {
-  OnDemandUserLoadingPage({Key key, @required this.onCancelClick, @required this.onSearchComplete, @required this.onDemandInputs}) : super(key: key);
+  OnDemandUserLoadingPage(
+      {Key key,
+      @required this.onCancelClick,
+      @required this.onSearchComplete,
+      @required this.onDemandInputs,
+      this.reNavigation = false})
+      : super(key: key);
   final Function onCancelClick;
   final Function onSearchComplete;
   final OnDemandInputs onDemandInputs;
+  final bool reNavigation;
 
   @override
-  OnDemandUserLoadingPageState createState() => new OnDemandUserLoadingPageState();
+  OnDemandUserLoadingPageState createState() =>
+      new OnDemandUserLoadingPageState();
 }
 
 class OnDemandUserLoadingPageState extends State<OnDemandUserLoadingPage> {
   String _authToken;
-  bool requested = false;
 
   @override
   void initState() {
     super.initState();
-    print("State: $requested");
-    if (!requested) {
-      onDemandRequest();
-    }
+    getAuthToken().whenComplete(() {
+      if (!widget.reNavigation) {
+        onDemandRequest();
+      }
+    });
+  }
+
+  Future<void> getAuthToken() async {
+    String _authTokenString = await AuthService.getToken();
+    setState(() {
+      _authToken = _authTokenString;
+    });
   }
 
   void onDemandRequest() async {
-    _authToken = await AuthService.getToken();
+    await getAuthToken();
     if (widget.onDemandInputs.patientName.text.isEmpty) {
       User _user = await UserServices().getUser(headerToken: _authToken);
       String _username = _user.name.text;
-      widget.onDemandInputs.patientName = TextEditingController.fromValue(TextEditingValue(text: _username));
+      widget.onDemandInputs.patientName =
+          TextEditingController.fromValue(TextEditingValue(text: _username));
     }
-    await OnDemandServices().makeOnDemandRequest(headerToken: _authToken, onDemandInputs: widget.onDemandInputs);
+    await OnDemandServices().makeOnDemandRequest(
+        headerToken: _authToken, onDemandInputs: widget.onDemandInputs);
 
     StreamSubscription<Map<String, dynamic>> fcmListener;
     fcmListener = FCM.onFcmMessage.listen((event) async {
@@ -49,10 +66,6 @@ class OnDemandUserLoadingPageState extends State<OnDemandUserLoadingPage> {
         widget.onSearchComplete();
         fcmListener.cancel();
       }
-    });
-
-    setState(() {
-      requested = true;
     });
   }
 
