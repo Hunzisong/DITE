@@ -3,7 +3,6 @@ import 'package:heard/constants.dart';
 import 'package:heard/firebase_services/auth_service.dart';
 import 'package:heard/landing/user_details.dart';
 import 'package:heard/widgets/widgets.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -19,7 +18,6 @@ class VerificationPage extends StatefulWidget {
 
 class _VerificationPageState extends State<VerificationPage> {
   TextEditingController verificationNumberController = TextEditingController();
-  bool showLoadingAnimation = false;
   bool isButtonDisabled = true;
 
   @override
@@ -29,80 +27,104 @@ class _VerificationPageState extends State<VerificationPage> {
     print('Disposed text editor on verification page');
   }
 
+  void showSmsCodeError() {
+    popUpDialog(
+        context: context,
+        isSLI: widget.userDetails.isSLI,
+        touchToDismiss: false,
+        header: 'Pengesahan',
+        content: Text(
+          'Kod SMS Anda Tidak Sah. Sila Isi Kod Yang Betul.',
+          textAlign: TextAlign.left,
+          style: TextStyle(
+              color: Colours.darkGrey,
+              fontSize: FontSizes.normal),
+        ),
+        onClick: () {
+          Navigator.pop(context);
+        }
+    );
+  }
+
   Widget build(BuildContext context) {
     return SafeArea(
-        child: ModalProgressHUD(
-          inAsyncCall: showLoadingAnimation,
-          child: Scaffold(
+        child: Scaffold(
+            backgroundColor: Colours.white,
+            appBar: AppBar(
               backgroundColor: Colours.white,
-              appBar: AppBar(
-                backgroundColor: Colours.white,
-                leading: IconButton(
-                  icon: Icon(Icons.arrow_back_ios, color: Colors.black),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                title: Text(
-                  'Pengesahan Akaun',
-                  style: GoogleFonts.lato(
-                      fontSize: FontSizes.mainTitle,
-                      fontWeight: FontWeight.bold,
-                      color: Colours.black),
-                ),
-                centerTitle: true,
-                elevation: 0.0,
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back_ios, color: Colors.black),
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                },
               ),
-              body: ListView(
-                physics: NeverScrollableScrollPhysics(),
-                children: <Widget>[
-                  Padding(
-                      padding: Paddings.signUpPage,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          SizedBox(height: Dimensions.d_65),
-                          Text(
-                            "Masukkan kod dihantar melalui SMS",
-                            style: TextStyle(fontSize: FontSizes.buttonText),
-                          ),
-                          InputField(
-                            controller: verificationNumberController,
-                            labelText: "Kod Anda",
-                            keyboardType: TextInputType.phone,
-                            isShortInput: true,
-                            isPassword: true,
-                            onChanged: (String text) {
-                              setState(() {
-                                if (verificationNumberController.text.length == 6)
-                                  isButtonDisabled = false;
-                                else
-                                  isButtonDisabled = true;
-                              });
-                            },
-                          ),
-                          UserButton(
-                            text: 'Teruskan',
-                            color: widget.userDetails.isSLI ? Colours.orange : Colours.blue,
-                            onClick: isButtonDisabled ? null : () async {
-                              setState(() {
-                                showLoadingAnimation = true;
-                              });
-                              AuthService().signInWithOTP(
-                                  context: context,
-                                  userDetails: widget.userDetails,
-                                  smsCode: verificationNumberController.text,
-                                  verId: widget.verificationId);
+              title: Text(
+                'Pengesahan Akaun',
+                style: GoogleFonts.lato(
+                    fontSize: FontSizes.mainTitle,
+                    fontWeight: FontWeight.bold,
+                    color: Colours.black),
+              ),
+              centerTitle: true,
+              elevation: 0.0,
+            ),
+            body: ListView(
+              physics: NeverScrollableScrollPhysics(),
+              children: <Widget>[
+                Padding(
+                    padding: Paddings.signUpPage,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        SizedBox(height: Dimensions.d_65),
+                        Text(
+                          "Masukkan kod dihantar melalui SMS",
+                          style: TextStyle(fontSize: FontSizes.buttonText),
+                        ),
+                        InputField(
+                          controller: verificationNumberController,
+                          labelText: "Kod Anda",
+                          keyboardType: TextInputType.phone,
+                          isShortInput: true,
+                          isPassword: true,
+                          onChanged: (String text) {
+                            setState(() {
+                              if (verificationNumberController.text.length == 6)
+                                isButtonDisabled = false;
+                              else
+                                isButtonDisabled = true;
+                            });
+                          },
+                        ),
+                        UserButton(
+                          text: 'Teruskan',
+                          color: widget.userDetails.isSLI ? Colours.orange : Colours.blue,
+                          onClick: isButtonDisabled ? null : () async {
+                            showLoadingAnimation(context: context);
+                            String token = await AuthService().signInWithOTP(
+                                context: context,
+                                userDetails: widget.userDetails,
+                                smsCode: verificationNumberController.text,
+                                verId: widget.verificationId);
 
-                              SharedPreferences preferences = await SharedPreferences.getInstance();
-                              preferences.setBool('isSLI', widget.userDetails.isSLI);
-                              print('preference for isSLI: ${preferences.getBool('isSLI')}');
-                            },
-                          ),
-                        ],
-                      )),
-                ],
-              )),
-        ));
+                            if (token != null) {
+                              SharedPreferences preferences = await SharedPreferences
+                                  .getInstance();
+                              preferences.setBool('isSLI',
+                                  widget.userDetails.isSLI);
+                              print('preference for isSLI: ${preferences
+                                  .getBool('isSLI')}');
+                            }
+                            else {
+                              Navigator.pop(context);
+                              showSmsCodeError();
+                            }
+                          },
+                        ),
+                      ],
+                    )),
+              ],
+            )));
   }
 }
