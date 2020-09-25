@@ -98,7 +98,7 @@ class _UserBookingResultSLIProfilePageState
             child: Padding(
               padding: EdgeInsets.only(top: Dimensions.d_15),
               child: Container(
-                height: Dimensions.d_100 * 1.5,
+                height: Dimensions.d_200,
                 decoration: BoxDecoration(
                   color: Colours.lightGrey,
                   borderRadius:
