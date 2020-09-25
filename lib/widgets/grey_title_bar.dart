@@ -17,11 +17,13 @@ class GreyTitleBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
-          Text(
-            title,
-            style: TextStyle(fontWeight: FontWeight.bold),
+          Expanded(
+            child: Text(
+              title,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
-          trailing ?? SizedBox.shrink()
+          Expanded(child: trailing ?? SizedBox.shrink())
         ],
       ),
     );
