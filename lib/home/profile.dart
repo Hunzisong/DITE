@@ -237,6 +237,93 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                     ],
                                   ),
                                 ),
+                                Divider(
+                                  height: Dimensions.d_0,
+                                  thickness: Dimensions.d_3,
+                                  color: Colours.lightGrey,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(bottom: Dimensions.d_5),
+                                  child: Stack(
+                                    children: [
+                                      ListTile(
+                                        title: Text('Bahasa Isyarat'),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: Dimensions.d_85 * 2.4),
+                                        child: CheckBoxTile(
+                                          padding: EdgeInsets.only(top: Dimensions.d_5),
+                                          value: userDetails.asl_proficient,
+                                          onChanged: (bool value) async {
+                                            setState(() {
+                                              userDetails.asl_proficient = value;
+                                            });
+                                            editDetails(key: 'asl_proficient', value: value.toString());
+                                          },
+                                          text:
+                                          'ASL﻿',
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: Dimensions.d_85 * 2.4, top: Dimensions.d_20*2),
+                                        child: CheckBoxTile(
+                                          padding: EdgeInsets.only(top: Dimensions.d_5),
+                                          value: userDetails.bim_proficient,
+                                          onChanged: (bool value) async {
+                                            setState(() {
+                                              userDetails.bim_proficient = value;
+                                            });
+                                            editDetails(key: 'bim_proficient', value: value.toString());
+                                          },
+                                          text:
+                                          'BIM',
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Divider(
+                                  height: Dimensions.d_0,
+                                  thickness: Dimensions.d_3,
+                                  color: Colours.lightGrey,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: Dimensions.d_15),
+                                  child: Stack(
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(left: MediaQuery.of(context).size.width / 2, top: Dimensions.d_5),
+                                        child: Text('${userDetails.education.text}', style: TextStyle(fontSize: FontSizes.normal),),
+                                      ),
+                                      ListTile(
+                                        title: Text('Pendidikan'),
+                                        onTap: () {
+                                          showDialog<void>(
+                                            context: context,
+                                            builder: (BuildContext alertContext) {
+                                              return AlertDialog(
+                                                title: Text('Isi Pendidikan'),
+                                                content: InputField(
+                                                  controller: userDetails.education,
+                                                  labelText: 'Pendidikan',
+                                                ),
+                                                actions: <Widget>[
+                                                  FlatButton(
+                                                    child: Text('Pasti'),
+                                                    onPressed: () async {
+                                                      Navigator.of(alertContext).pop();
+                                                      editDetails(key: 'education', value: userDetails.education.text);
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ],
                             ),
                           ],
