@@ -17,42 +17,30 @@ class OnDemandUserPage extends StatefulWidget {
   _OnDemandUserPageState createState() => _OnDemandUserPageState();
 }
 
-class _OnDemandUserPageState extends State<OnDemandUserPage>
-    with AutomaticKeepAliveClientMixin {
-  bool requestPending = false;
-  bool pairingComplete = false;
+class _OnDemandUserPageState extends State<OnDemandUserPage> with AutomaticKeepAliveClientMixin {
   bool loadingScreen = true;
   String authToken;
   OnDemandInputs onDemandInputs;
   OnDemandStatus onDemandStatus;
   final fieldsIncompleteSnackBar = SnackBar(content: Text('Fields incomplete'));
   SharedPreferences prefs;
+  bool refreshFlag = false;
+  bool reNavigation = true;
 
   @override
   void initState() {
     super.initState();
     onDemandInputs = OnDemandInputs();
-    (() async {
-      prefs = await SharedPreferences.getInstance();
-    })();
+    getSharedPreference();
+
     getOnDemandStatus().whenComplete(() {
       setState(() {
         loadingScreen = false;
       });
       if (onDemandStatus.toJson()["status"] == "ongoing") {
-        prefs.setBool("userOnDemandOngoing", true);
-        prefs.setBool("userOnDemandPending", false);
-        setState(() {
-          requestPending = false;
-          pairingComplete = true;
-        });
+        prefs.setString("userOnDemandStatus", "Ongoing");
       } else if (onDemandStatus.toJson()["status"] == "pending") {
-        prefs.setBool("userOnDemandOngoing", false);
-        prefs.setBool("userOnDemandPending", true);
-        setState(() {
-          requestPending = true;
-          pairingComplete = false;
-        });
+        prefs.setString("userOnDemandStatus", "Pending");
       }
     });
   }
@@ -66,19 +54,6 @@ class _OnDemandUserPageState extends State<OnDemandUserPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-
-    if (prefs != null) {
-      if (pairingComplete != prefs.getBool("userOnDemandOngoing") && prefs.containsKey("userOnDemandOngoing")) {
-        setState(() {
-          pairingComplete = prefs.getBool("userOnDemandOngoing");
-        });
-      }
-      if (requestPending != prefs.getBool("userOnDemandPending") && prefs.containsKey("userOnDemandPending")) {
-        setState(() {
-          requestPending = prefs.getBool("userOnDemandPending");
-        });
-      }
-    }
 
     return loadingScreen
         ? Scaffold(
@@ -103,37 +78,37 @@ class _OnDemandUserPageState extends State<OnDemandUserPage>
               ],
             ),
           )
-        : pairingComplete
-          ? OnDemandSuccessPage(
-              isSLI: false,
-              onDemandStatus: onDemandStatus,
-              onCancelClick: () {
-                setState(() {
-                  pairingComplete = false;
-                  onDemandInputs.reset();
-                });
-                prefs.setBool("userOnDemandOngoing", false);
-              },
-            )
-          : requestPending
-            ? OnDemandUserLoadingPage(
-              onDemandInputs: onDemandInputs,
-              onCancelClick: () {
-                setState(() {
-                  requestPending = false;
-                });
-                prefs.setBool("userOnDemandPending", false);
-              },
-              onSearchComplete: () async {
-                await getOnDemandStatus();
-                setState(() {
-                  requestPending = false;
-                  pairingComplete = true;
-                });
-                prefs.setBool("userOnDemandPending", false);
-                prefs.setBool("userOnDemandOngoing", true);
-              },
-            )
+        : (prefs.getString("userOnDemandStatus") == 'Ongoing')
+            ? OnDemandSuccessPage(
+                isSLI: false,
+                onDemandStatus: onDemandStatus,
+                onCancelClick: () {
+                  setState(() {
+                    refreshFlag = !refreshFlag;
+                    onDemandInputs.reset();
+                  });
+                  prefs.setString("userOnDemandStatus", "None");
+                },
+              )
+            : (prefs.getString("userOnDemandStatus") == "Pending")
+                ? OnDemandUserLoadingPage(
+                    reNavigation: reNavigation,
+                    onDemandInputs: onDemandInputs,
+                    onCancelClick: () {
+                      setState(() {
+                        refreshFlag = !refreshFlag;
+                        reNavigation = true;
+                      });
+                      prefs.setString("userOnDemandStatus", "None");
+                    },
+                    onSearchComplete: () async {
+                      await getOnDemandStatus();
+                      setState(() {
+                        refreshFlag = !refreshFlag;
+                      });
+                      prefs.setString("userOnDemandStatus", "Ongoing");
+                    },
+                  )
                 : Scaffold(
                     backgroundColor: Colours.white,
                     body: ListView(
@@ -295,9 +270,10 @@ class _OnDemandUserPageState extends State<OnDemandUserPage>
                       onClick: () {
                         if (allFieldsFilled()) {
                           setState(() {
-                            requestPending = true;
+                            refreshFlag = !refreshFlag;
+                            reNavigation = false;
                           });
-                          prefs.setBool("userOnDemandPending", true);
+                          prefs.setString("userOnDemandStatus", "Pending");
                         } else {
                           Scaffold.of(context)
                               .showSnackBar(fieldsIncompleteSnackBar);
@@ -330,6 +306,10 @@ class _OnDemandUserPageState extends State<OnDemandUserPage>
     setState(() {
       onDemandStatus = _onDemandStatus;
     });
+  }
+
+  Future<void> getSharedPreference() async {
+    prefs = await SharedPreferences.getInstance();
   }
 
   @override
