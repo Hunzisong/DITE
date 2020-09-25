@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:heard/constants.dart';
 import './call.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -29,6 +30,7 @@ class IndexState extends State<IndexPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Video Call Room'),
+        backgroundColor: Colours.blue,
       ),
       body: Center(
         child: Container(

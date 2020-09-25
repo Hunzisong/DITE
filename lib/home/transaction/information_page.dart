@@ -5,6 +5,8 @@ import 'package:heard/firebase_services/auth_service.dart';
 import 'package:heard/http_services/booking_services.dart';
 import 'package:heard/widgets/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:heard/video_chat_components/call.dart';
 
 class InformationPage extends StatefulWidget {
   final Function onCancelClick;
@@ -40,6 +42,7 @@ class _InformationPageState extends State<InformationPage> {
       transaction = widget.transaction;
     });
   }
+
 
   void confirmationModal({String keyword, Function onClick}) {
     popUpDialog(
@@ -218,7 +221,26 @@ class _InformationPageState extends State<InformationPage> {
     debugPrint("Message is tapped");
   }
 
-  void onTapVideo() {
+  void onTapVideo() async {
+    String onDemandID = transaction.bookingId;
     debugPrint("Video is tapped");
+
+    await _handleCameraAndMic();
+
+    await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>  CallPage(
+            channelName: onDemandID,
+          ),
+        )
+    );
+
+  }
+
+  Future<void> _handleCameraAndMic() async {
+    await PermissionHandler().requestPermissions(
+      [PermissionGroup.camera, PermissionGroup.microphone],
+    );
   }
 }
