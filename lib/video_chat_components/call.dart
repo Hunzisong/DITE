@@ -2,6 +2,9 @@ import 'dart:async';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'settings.dart';
+import 'package:heard/constants.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CallPage extends StatefulWidget {
   /// non-modifiable channel name of the page
@@ -18,6 +21,7 @@ class _CallPageState extends State<CallPage> {
   static final _users = <int>[];
   final _infoStrings = <String>[];
   bool muted = false;
+  bool isSLI = false;
 
   @override
   void dispose() {
@@ -34,6 +38,7 @@ class _CallPageState extends State<CallPage> {
     super.initState();
     // initialize agora sdk
     initialize();
+    setSLI();
   }
 
   Future<void> initialize() async {
@@ -53,6 +58,14 @@ class _CallPageState extends State<CallPage> {
     await AgoraRtcEngine.setParameters(
         '''{\"che.video.lowBitRateStreamParameter\":{\"width\":320,\"height\":180,\"frameRate\":15,\"bitRate\":140}}''');
     await AgoraRtcEngine.joinChannel(null, widget.channelName, null, 0);
+  }
+
+  void setSLI() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      isSLI = preferences.getBool('isSLI');
+
+    });
   }
 
   /// Create agora sdk instance and initialize
@@ -297,7 +310,14 @@ class _CallPageState extends State<CallPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Video Call Room'),
+        title: Text('Video Call Room',
+               style: GoogleFonts.lato(
+                  fontSize: FontSizes.mainTitle,
+                  fontWeight: FontWeight.bold,
+                ),
+
+        ),
+        backgroundColor: isSLI ? Colours.orange : Colours.blue,
       ),
       backgroundColor: Colors.black,
       body: Center(

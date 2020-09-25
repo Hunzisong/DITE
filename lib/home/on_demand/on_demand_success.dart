@@ -5,12 +5,16 @@ import 'package:heard/firebase_services/auth_service.dart';
 import 'package:heard/http_services/on_demand_services.dart';
 import 'package:heard/widgets/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:heard/video_chat_components/call.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 
 class OnDemandSuccessPage extends StatefulWidget {
   final Function onCancelClick;
   final AssetImage profilePic;
   final bool isSLI;
   final OnDemandStatus onDemandStatus;
+
 
   OnDemandSuccessPage(
       {this.onCancelClick,
@@ -36,7 +40,7 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
   }
 
   // TODO HERE!
-  void getVideoCallRoomID() {
+  String getVideoCallRoomID() {
 
     Details details = onDemandStatus.details;
 
@@ -44,6 +48,7 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
     String onDemandID = details.onDemandId;
 
     print("Video call on demand ID: $onDemandID");
+    return onDemandID;
   }
 
   void getOnDemandStatus() async {
@@ -278,12 +283,32 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
           );
   }
 
+
   void onTapMessage() {
     debugPrint("Message is tapped");
   }
 
-  void onTapVideo() {
-    getVideoCallRoomID();
+  void onTapVideo() async {
+    String onDemandID = getVideoCallRoomID();
     debugPrint("Video is tapped");
+
+    await _handleCameraAndMic();
+
+    await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>  CallPage(
+            channelName: onDemandID,
+          ),
+        )
+    );
+
   }
+
+  Future<void> _handleCameraAndMic() async {
+    await PermissionHandler().requestPermissions(
+      [PermissionGroup.camera, PermissionGroup.microphone],
+    );
+  }
+
 }
