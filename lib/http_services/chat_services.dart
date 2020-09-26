@@ -6,7 +6,6 @@ import 'package:heard/api/chat_item.dart';
 
 class ChatServices {
 
-  // create 3 different methods to get 3 different APIs
 
   /* First method is to retrieve the chat room list
      for each authenticated users.
