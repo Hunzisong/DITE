@@ -18,9 +18,9 @@ class UserBookingResultPage extends StatefulWidget {
 
   UserBookingResultPage(
       {this.hospitalName,
-      this.pickedDate,
-      this.pickedTime,
-      this.preferredLanguage});
+        this.pickedDate,
+        this.pickedTime,
+        this.preferredLanguage});
 
   @override
   _UserBookingResultPageState createState() => _UserBookingResultPageState();
@@ -36,6 +36,11 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
   String selectedExperience;
 
   List<Map<String, dynamic>> allSli;
+  List <Map<String, dynamic>> filterSliGenderList ;
+  List <Map<String, dynamic>> filterSliExperienceList ;
+  List <Map<String, dynamic>> filterSliList ;
+
+
   bool loading = true;
   RefreshController _refreshController = RefreshController(initialRefresh: false);
 
@@ -56,6 +61,12 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
       child: new Text('Perempuan'),
       value: "female",
     ));
+
+    genderList.add(new DropdownMenuItem(
+      child: new Text('Semua'),
+      value: "all",
+    ));
+
   }
 
   void loadExperienceList() {
@@ -66,28 +77,56 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
         value: i.toString(),
       ));
     }
+
+    experienceList.add(new DropdownMenuItem(
+      child: new Text('Semua'),
+      value: "all",
+    ));
   }
 
   Widget loadSliList() {
     return Column(
-      children: allSli
-          .map((sli) => createSLITemplate(
-              id: sli['sli_id'],
-              name: sli['name'],
-              gender: sli['gender'],
-              age: sli['age'],
-              description: sli['description']))
+      children:allSli.map((sli) => createSLITemplate(
+          id: sli['sli_id'],
+          name: sli['name'],
+          gender: sli['gender'],
+          age: sli['age'],
+          description: sli['description']))
           .toList(),
+    );
+  }
+
+  Widget loadFilteredSliList() {
+    getFilterList();
+    return ListView.builder(
+      scrollDirection: Axis.vertical,
+      controller: ScrollController(),
+      shrinkWrap: true,
+      itemCount: filterSliList.length,
+      itemBuilder: (context, index) {
+        return Column(
+          children: [
+            createSLITemplate(
+              id: filterSliList[index]['sli_id'],
+              name: filterSliList[index]['name'],
+              gender: filterSliList[index]['gender'],
+              age: filterSliList[index]['age'],
+              description: filterSliList[index]['description'],
+            ),
+            SizedBox(height: Dimensions.d_10)
+          ],
+        );
+      },
     );
   }
 
   Widget createSLITemplate(
       {String id,
-      String name,
-      String gender,
-      String age,
-      String profilePic,
-      String description}) {
+        String name,
+        String gender,
+        String age,
+        String profilePic,
+        String description}) {
     return InkWell(
       borderRadius: BorderRadius.circular(Dimensions.d_25),
       onTap: () {
@@ -95,17 +134,17 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
           context,
           MaterialPageRoute(
               builder: (context) => UserBookingResultSLIProfilePage(
-                    id: id,
-                    name: name,
-                    gender: gender,
-                    age: age,
-                    profilePic: profilePic,
-                    description: description,
-                    pickedDate: widget.pickedDate,
-                    pickedTime: widget.pickedTime,
-                    hospitalName: widget.hospitalName,
-                    preferredLanguage: widget.preferredLanguage,
-                  )),
+                id: id,
+                name: name,
+                gender: gender,
+                age: age,
+                profilePic: profilePic,
+                description: description,
+                pickedDate: widget.pickedDate,
+                pickedTime: widget.pickedTime,
+                hospitalName: widget.hospitalName,
+                preferredLanguage: widget.preferredLanguage,
+              )),
         );
       },
       child: Card(
@@ -147,10 +186,11 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
     );
   }
 
+
   Future<void> getAllSli() async {
     String _authToken = await AuthService.getToken();
     List<User> _allSli =
-        await BookingServices().getAllSLI(headerToken: _authToken);
+    await BookingServices().getAllSLI(headerToken: _authToken);
     List<Map<String, dynamic>> _allSliJson = List<Map<String, dynamic>>();
     for (User sli in _allSli) {
       _allSliJson.add(sli.toJson());
@@ -168,6 +208,109 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
     } else {
       _refreshController.refreshCompleted();
     }
+  }
+
+  void getFilterList() {
+    filterSliGenderList=[];
+    filterSliExperienceList=[];
+    filterSliList=[];
+
+//    if((selectedGender != null && selectedGender != 'all') && (selectedExperience !=null && selectedExperience != 'all' )){
+//
+//      allSli.forEach((element) {
+//        if (element['gender'] == selectedGender){
+//          filterSliGenderList.add(element);
+//        }
+//      });
+//
+//      allSli.forEach((element) {
+//        if (element['years_bim'].toString() == selectedExperience){
+//          filterSliExperienceList.add(element);
+//        }
+//      });
+//
+//      for (var item in filterSliGenderList){
+//        if(filterSliExperienceList.contains(item) && !filterSliList.contains(item)){
+//          filterSliList.add(item);
+//        }
+//      }
+//
+//      for (var item in filterSliExperienceList){
+//        if(filterSliGenderList.contains(item) && !filterSliList.contains(item)){
+//          filterSliList.add(item);
+//        }
+//      }
+//    }
+//
+//    else{
+//      allSli.forEach((element) {
+//        filterSliList.add(element);});
+//    }
+    if (selectedGender=='all' && selectedExperience == 'all'){
+      allSli.forEach((element) {
+        filterSliList.add(element);});
+    }
+
+    if(selectedGender == null && selectedExperience == null){
+      allSli.forEach((element) {
+        filterSliList.add(element);});
+    }
+
+    if (selectedGender =='all'){
+      allSli.forEach((element) {
+        filterSliGenderList.add(element);});
+
+      filterSliGenderList.forEach((element) {
+        if (element['years_bim'].toString() == selectedExperience){
+          filterSliList.add(element);
+        }
+      });
+    }
+
+    if(selectedExperience == 'all'){
+      allSli.forEach((element) {
+        filterSliExperienceList.add(element);});
+
+      filterSliExperienceList.forEach((element) {
+        if (element['gender'] == selectedGender){
+          filterSliList.add(element);
+        }
+      });
+    }
+
+    if((selectedGender != null && selectedGender != 'all') && (selectedExperience !=null && selectedExperience != 'all' )){
+
+      allSli.forEach((element) {
+        if (element['gender'] == selectedGender){
+          filterSliGenderList.add(element);
+        }
+      });
+
+      allSli.forEach((element) {
+        if (element['years_bim'].toString() == selectedExperience){
+          filterSliExperienceList.add(element);
+        }
+      });
+
+      for (var item in filterSliGenderList){
+        if(filterSliExperienceList.contains(item) && !filterSliList.contains(item)){
+          filterSliList.add(item);
+        }
+      }
+
+      for (var item in filterSliExperienceList){
+        if(filterSliGenderList.contains(item) && !filterSliList.contains(item)){
+          filterSliList.add(item);
+        }
+      }
+    }
+
+
+
+//    else{
+//      allSli.forEach((element) {
+//        filterSliList.add(element);});
+//    }
   }
 
   @override
@@ -200,65 +343,65 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
           body: loading
               ? LoadingScreen()
               : SmartRefresher(
-                  controller: _refreshController,
-                  onRefresh: _onRefresh,
-                  enablePullDown: true,
-                  header: ClassicHeader(),
-                  child: ListView(
+            controller: _refreshController,
+            onRefresh: _onRefresh,
+            enablePullDown: true,
+            header: ClassicHeader(),
+            child: ListView(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.fromLTRB(Dimensions.d_30,
+                      Dimensions.d_10, Dimensions.d_30, Dimensions.d_30),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(Dimensions.d_30,
-                            Dimensions.d_10, Dimensions.d_30, Dimensions.d_30),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Expanded(
-                                  flex: 8,
-                                  child: Container(
-                                    height: Dimensions.d_45,
-                                    child: DropdownList(
-                                      hintText: "Jantina",
-                                      selectedItem: selectedGender,
-                                      itemList: genderList,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          selectedGender = value;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: Dimensions.d_10),
-                                Expanded(
-                                  flex: 10,
-                                  child: Container(
-                                    height: Dimensions.d_45,
-                                    child: DropdownList(
-                                      hintText: "Pengalaman",
-                                      selectedItem: selectedExperience,
-                                      itemList: experienceList,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          selectedExperience = value;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ],
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Expanded(
+                            flex: 8,
+                            child: Container(
+                              height: Dimensions.d_45,
+                              child: DropdownList(
+                                hintText: "Jantina",
+                                selectedItem: selectedGender,
+                                itemList: genderList,
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedGender = value;
+                                  });
+                                },
+                              ),
                             ),
-                            SizedBox(height: Dimensions.d_20),
-                            loadSliList(),
-                          ],
-                        ),
+                          ),
+                          SizedBox(width: Dimensions.d_10),
+                          Expanded(
+                            flex: 10,
+                            child: Container(
+                              height: Dimensions.d_45,
+                              child: DropdownList(
+                                hintText: "Pengalaman",
+                                selectedItem: selectedExperience,
+                                itemList: experienceList,
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedExperience = value;
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
+                      SizedBox(height: Dimensions.d_20),
+                      loadFilteredSliList() ,
                     ],
                   ),
-                )),
+                ),
+              ],
+            ),
+          )),
     );
   }
 }
