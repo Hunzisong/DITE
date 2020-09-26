@@ -79,19 +79,19 @@ class ChatServices {
 
    */
   Future<bool> sendChatMessage(
-      {String headerToken, String bookingID, bool isAcceptBooking}) async {
+      {String headerToken, bool isSLI, String roomID, String message }) async {
     var response = await http.post(
-        'https://heard-project.herokuapp.com/chat/send',
+        'https://heard-project.herokuapp.com/chat/send?type=${isSLI ? 'sli' : 'user'}',
         headers: {
           'Authorization': headerToken,
         },
         body: {
-          'booking_id': bookingID,
-          'response': isAcceptBooking ? 'accept' : 'decline'
+          'room_id': roomID,
+          'message': message
         });
 
     print(
-        'Posted SLI Response: ${response.statusCode}, body: ${response.body}');
+        'Message successfully sent: ${response.statusCode}, body: ${response.body}');
 
     if (response.statusCode == 200) {
       return true;
@@ -99,7 +99,5 @@ class ChatServices {
       return false;
     }
   }
-
-
 
 }
