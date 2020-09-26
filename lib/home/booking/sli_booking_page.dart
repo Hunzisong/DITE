@@ -169,6 +169,25 @@ class _SLIBookingPageState extends State<SLIBookingPage>
         });
   }
 
+  Widget getUserDetails({int index}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          '${bookingRequests[index].hospitalName}',
+        ),
+        Text(
+          'Tarikh: ${bookingRequests[index].date}',
+          style: TextStyle(color: Colours.darkGrey),
+        ),
+        Text(
+          'Masa: ${bookingRequests[index].time}',
+          style: TextStyle(color: Colours.darkGrey),
+        ),
+      ],
+    );
+  }
+
   Widget getListItem({int index}) {
     return SlidableListTile(
       onDismissed: (actionType) {
@@ -180,22 +199,7 @@ class _SLIBookingPageState extends State<SLIBookingPage>
         '${bookingRequests[index].userName}',
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            '${bookingRequests[index].hospitalName}',
-          ),
-          Text(
-            'Tarikh: ${bookingRequests[index].date}',
-            style: TextStyle(color: Colours.darkGrey),
-          ),
-          Text(
-            'Masa: ${bookingRequests[index].time}',
-            style: TextStyle(color: Colours.darkGrey),
-          ),
-        ],
-      ),
+      subtitle: getUserDetails(index: index),
       slideRightActionFunctions: SlideActionBuilderDelegate(
           actionCount: 1,
           builder: (slideContext, index, animation, renderingMode) {
@@ -229,6 +233,64 @@ class _SLIBookingPageState extends State<SLIBookingPage>
                   }
                 });
           }),
+      onTrailingButtonPress: IconButton(
+        icon: Icon(Icons.info_outline),
+        color: Colours.orange,
+        iconSize: Dimensions.d_30,
+        onPressed: () {
+          showUserInformation(index: index);
+        },
+      ),
+    );
+  }
+
+  void showUserInformation({int index}) {
+    popUpDialog(
+      context: context,
+      isSLI: true,
+      height: Dimensions.d_130 * 3.5,
+      contentFlexValue: 3,
+      onClick: () {
+        Navigator.pop(context);
+      },
+      header: 'Maklumat',
+      content: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Flexible(
+            child: ListTile(
+              isThreeLine: true,
+              leading: Icon(
+                Icons.account_circle,
+                size: Dimensions.d_55,
+              ),
+              title: Text(
+                '${bookingRequests[index].userName}',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              subtitle: getUserDetails(index: index),
+            ),
+          ),
+          Flexible(
+            flex: 3,
+            child: Padding(
+              padding: EdgeInsets.only(top: Dimensions.d_35),
+              child: Container(
+                  height: Dimensions.d_280,
+                  decoration: BoxDecoration(
+                      color: Colours.lightGrey,
+                      borderRadius:
+                      BorderRadius.all(Radius.circular(Dimensions.d_10))),
+                  child: ListTile(
+                    title: Text(
+                      bookingRequests[index].notes,
+                      style: TextStyle(fontSize: FontSizes.smallerText),
+                    ),
+                  )),
+            ),
+          )
+        ],
+      ),
     );
   }
 

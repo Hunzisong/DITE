@@ -203,6 +203,7 @@ class _TransactionPageState extends State<TransactionPage>
             Column(
               children: [
                 GreyTitleBar(
+                  titleFlex: 3,
                   title: 'Transaksi Diterima',
                   trailing: Container(
                     height: Dimensions.d_25,

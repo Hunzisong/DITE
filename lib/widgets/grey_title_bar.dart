@@ -4,8 +4,9 @@ import 'package:heard/constants.dart';
 class GreyTitleBar extends StatelessWidget {
   final String title;
   final Widget trailing;
+  final int titleFlex;
 
-  GreyTitleBar({this.title, this.trailing});
+  GreyTitleBar({this.title, this.trailing, this.titleFlex = 1});
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +19,7 @@ class GreyTitleBar extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
           Expanded(
+            flex: titleFlex,
             child: Text(
               title,
               style: TextStyle(fontWeight: FontWeight.bold),

@@ -87,20 +87,6 @@ class _LoginPageState extends State<LoginPage> {
                             await verifyPhone(userDetails.phoneNumber.text);
                           },
                         ),
-                        Padding(
-                          padding: Paddings.vertical_15,
-                          child: GestureDetector(
-                            onTap: () {},
-                            child: Text(
-                              'Saya terlupa kata laluan',
-                              style: TextStyle(
-                                  color: Colours.darkBlue,
-                                  decoration: TextDecoration.underline,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: FontSizes.smallerText),
-                            ),
-                          ),
-                        ),
                       ],
                     ),
                   ),
@@ -112,7 +98,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void pushVerificationPage() {
-    Navigator.pop(context);
     print('isSLI LOGIN: ${userDetails.isSLI}');
     Navigator.push(
         context,
@@ -123,12 +108,30 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> verifyPhone(phoneNo) async {
     final auth.PhoneVerificationCompleted verified = (auth.AuthCredential authResult) {
-//      AuthService().signIn(context, authResult);
     };
 
     final auth.PhoneVerificationFailed verificationFailed =
         (auth.FirebaseAuthException authException) {
       debugPrint('${authException.message}');
+      popUpDialog(
+          context: context,
+          isSLI: userDetails.isSLI,
+          touchToDismiss: false,
+          header: 'Pengesahan',
+          content: Text(
+            'Nombor Telefon Anda Tidak Sah. Sila Isi Nombor Yang Betul.',
+            textAlign: TextAlign.left,
+            style: TextStyle(
+                color: Colours.darkGrey,
+                fontSize: FontSizes.normal),
+          ),
+          onClick: () {
+            setState(() {
+              showLoadingAnimation = false;
+            });
+            Navigator.pop(context);
+          }
+      );
     };
 
     final auth.PhoneCodeSent smsSent = (String verId, [int forceResend]) {

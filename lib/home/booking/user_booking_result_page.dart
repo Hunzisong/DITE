@@ -73,7 +73,7 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
       children: allSli
           .map((sli) => createSLITemplate(
               id: sli['sli_id'],
-              name: sli['name'].text,
+              name: sli['name'],
               gender: sli['gender'],
               age: sli['age'],
               description: sli['description']))

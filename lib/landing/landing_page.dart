@@ -37,18 +37,18 @@ class _LandingPageState extends State<LandingPage> {
     print('Firebase user: $firebaseUser');
     print('Shared Preference isSLI: ${preferences.containsKey('isSLI')}');
 
-    User user;
-    if (preferences.containsKey('isSLI')) {
-      if (preferences.getBool('isSLI')) {
-        user = await SLIServices().getSLI(headerToken: token);
-      }
-      else {
+    if (firebaseUser != null) {
+      User user;
+      user = await SLIServices().getSLI(headerToken: token);
+
+      if (user == null) {
         user = await UserServices().getUser(headerToken: token);
       }
-    }
-
-    if (firebaseUser != null) {
       if (user != null) {
+        if (!preferences.containsKey('isSLI')) {
+          bool isSLI = user.experienced_medical ?? false;
+          preferences.setBool('isSLI', isSLI);
+        }
         Navigator.pop(context);
         Navigator.push(
           context,

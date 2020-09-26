@@ -240,7 +240,6 @@ class _SignUpPageState extends State<SignUpPage> {
 
   void pushVerificationPage() {
     Navigator.pop(context);
-    Navigator.pop(context);
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -250,12 +249,30 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Future<void> verifyPhone(phoneNo) async {
     final auth.PhoneVerificationCompleted verified = (auth.AuthCredential authResult) async {
-//      AuthService().signIn(context, authResult);
     };
 
     final auth.PhoneVerificationFailed verificationFailed =
         (auth.FirebaseAuthException authException) {
       debugPrint('${authException.message}');
+      popUpDialog(
+          context: context,
+          isSLI: widget.isSLI,
+          touchToDismiss: false,
+          header: 'Pengesahan',
+          content: Text(
+            'Nombor Telefon Anda Tidak Sah. Sila Isi Nombor Yang Betul.',
+            textAlign: TextAlign.left,
+            style: TextStyle(
+                color: Colours.darkGrey,
+                fontSize: FontSizes.normal),
+          ),
+          onClick: () {
+            setState(() {
+              showLoadingAnimation = false;
+            });
+            Navigator.pop(context);
+          }
+      );
     };
 
     final auth.PhoneCodeSent smsSent = (String verId, [int forceResend]) {
@@ -289,7 +306,7 @@ class _SignUpPageState extends State<SignUpPage> {
       });
     };
 
-    auth.FirebaseAuth.instance.verifyPhoneNumber(
+    await auth.FirebaseAuth.instance.verifyPhoneNumber(
         phoneNumber: phoneNo,
         timeout: const Duration(seconds: 5),
         verificationCompleted: verified,

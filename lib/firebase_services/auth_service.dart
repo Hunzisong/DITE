@@ -47,7 +47,6 @@ class AuthService {
       print("Error caught signing in");
     }).then((user) {
       user.user.getIdToken().then((tokenResult) {
-        print('IDDD: $tokenResult');
       });
       if (user != null) {
         Navigator.pop(context);
@@ -64,29 +63,30 @@ class AuthService {
     });
   }
 
-  signInWithOTP(
+  Future<String> signInWithOTP(
       {BuildContext context,
       UserDetails userDetails,
       String smsCode,
       String verId}) async {
+    String token;
     try {
       auth.AuthCredential authCreds = auth.PhoneAuthProvider.credential(
           verificationId: verId, smsCode: smsCode);
 
       // getting auth result after signing in with credentials
-      auth.UserCredential authResult =
-          await _auth.signInWithCredential(authCreds).catchError((error) {
-        print("Error caught signing in");
-      });
+      auth.UserCredential authResult = await _auth.signInWithCredential(
+          authCreds);
 
       // getting the authentication token from current firebase user state
       String authTokenString =
-          await authResult.user.getIdToken();
+      await authResult.user.getIdToken();
+      token = authTokenString;
 
 
       if (authResult.user != null) {
         if (userDetails.isSLI == false) {
-          bool userExists = await UserServices().doesUserExist(headerToken: authTokenString);
+          bool userExists = await UserServices().doesUserExist(
+              headerToken: authTokenString);
           if (userExists == false) {
             await UserServices().createUser(
               headerToken: authTokenString,
@@ -94,7 +94,8 @@ class AuthService {
             );
           }
         } else {
-          bool sliExists = await SLIServices().doesSLIExist(headerToken: authTokenString);
+          bool sliExists = await SLIServices().doesSLIExist(
+              headerToken: authTokenString);
           if (sliExists == false) {
             await SLIServices().createSLI(
               headerToken: authTokenString,
@@ -102,21 +103,26 @@ class AuthService {
             );
           }
         }
-
+        Navigator.pop(context);
         Navigator.pop(context);
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Navigation(isSLI: userDetails.isSLI)),
+          MaterialPageRoute(
+              builder: (context) => Navigation(isSLI: userDetails.isSLI)),
         );
       } else {
+        Navigator.pop(context);
+        Navigator.pop(context);
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => LandingPage()),
         );
       }
+
     } catch (e) {
       debugPrint("Error on Sign-in");
     }
+    return token;
   }
 
   static Future<String> getToken() async {
