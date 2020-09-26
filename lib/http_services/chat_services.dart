@@ -49,9 +49,9 @@ class ChatServices {
 
    */
   Future<bool> enterChatRoom(
-      {String headerToken, String counterpartID}) async {
+      {String headerToken, bool isSLI, String counterpartID}) async {
     var response = await http.post(
-        'https://heard-project.herokuapp.com/chat/enter',
+        'https://heard-project.herokuapp.com/chat/enter?type=${isSLI ? 'sli' : 'user'}',
         headers: {
           'Authorization': headerToken,
         },
