@@ -6,7 +6,6 @@ import 'package:heard/api/chat_item.dart';
 
 class ChatServices {
 
-
   // create 3 different methods to get 3 different APIs
 
   /* First method is to retrieve the chat room list
@@ -50,21 +49,21 @@ class ChatServices {
 
    */
   Future<bool> enterChatRoom(
-      {String headerToken, String bookingID, bool isAcceptBooking}) async {
+      {String headerToken, String counterpartID}) async {
     var response = await http.post(
         'https://heard-project.herokuapp.com/chat/enter',
         headers: {
           'Authorization': headerToken,
         },
         body: {
-          'booking_id': bookingID,
-          'response': isAcceptBooking ? 'accept' : 'decline'
+          'counterpart_id': counterpartID,
         });
 
     print(
-        'Posted SLI Response: ${response.statusCode}, body: ${response.body}');
+        'Attempt to enter chat room....: ${response.statusCode}, body: ${response.body}');
 
     if (response.statusCode == 200) {
+      print('Success');
       return true;
     } else {
       return false;
@@ -75,8 +74,8 @@ class ChatServices {
   /* Third method for each authenticated users.
 
      This API is used to send chat message to counterpart,
-     it will store the message in firestore and trigger notification
-     on couterpart's device.
+     it will store the message in fire store and trigger notification
+     on counterpart's device.
 
    */
   Future<bool> sendChatMessage(
