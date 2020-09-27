@@ -33,7 +33,7 @@ class _ChatHomeScreenState extends State<ChatHomeScreen> {
     super.initState();
     setSLI();
     getCurrentUser();
-    print(isSLI);
+    getUserChatList();
   }
 
   void setSLI() async {
