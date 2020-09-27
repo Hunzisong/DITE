@@ -7,6 +7,9 @@ import 'package:heard/widgets/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:heard/video_chat_components/call.dart';
+import 'package:heard/chat_service/chatPage.dart';
+import 'package:heard/http_services/chat_services.dart';
+import 'package:heard/api/chat_item.dart';
 
 class InformationPage extends StatefulWidget {
   final Function onCancelClick;
@@ -41,6 +44,23 @@ class _InformationPageState extends State<InformationPage> {
       authToken = authTokenString;
       transaction = widget.transaction;
     });
+  }
+
+  // This method is to retrieve the person's ID that the user is chatting to.
+  String getCounterpartID(){
+
+    String counterpartID ;
+
+    if (widget.isSLI){
+      counterpartID = transaction.uid;
+    }
+
+    // if the current holder is not SLI, the opposite user must be one.
+    else {
+      counterpartID = transaction.sliId;
+    }
+
+    return  counterpartID;
   }
 
 
@@ -217,8 +237,30 @@ class _InformationPageState extends State<InformationPage> {
         );
   }
 
-  void onTapMessage() {
+  void onTapMessage() async {
     debugPrint("Message is tapped");
+
+    String counterpartID = getCounterpartID();
+
+    // call the api to chat/enter
+    ChatItem chatSessionInfo = await ChatServices().enterChatRoom(
+        headerToken: authToken, counterpartID: counterpartID, isSLI: widget.isSLI);
+
+    if (chatSessionInfo != null){
+      await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>  ChatScreen(
+                userID: transaction.uid,
+                sliID:  transaction.sliId,
+                chatRoomID: chatSessionInfo.chatroomId,
+                sliName: chatSessionInfo.sliName,
+                userName: chatSessionInfo.userName,
+
+              )
+          )
+      );
+    }
   }
 
   void onTapVideo() async {
