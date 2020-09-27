@@ -15,12 +15,14 @@ class UserBookingResultPage extends StatefulWidget {
   final String pickedTime;
   final String hospitalName;
   final String preferredLanguage;
+  final String bookingFailedMessage;
 
   UserBookingResultPage(
-      {this.hospitalName,
-        this.pickedDate,
-        this.pickedTime,
-        this.preferredLanguage});
+      {@required this.hospitalName,
+      @required this.pickedDate,
+      @required this.pickedTime,
+      @required this.preferredLanguage,
+      this.bookingFailedMessage});
 
   @override
   _UserBookingResultPageState createState() => _UserBookingResultPageState();
@@ -36,18 +38,52 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
   String selectedExperience;
 
   List<Map<String, dynamic>> allSli;
-  List <Map<String, dynamic>> filterSLIGenderList ;
-  List <Map<String, dynamic>> filterSliExperienceList ;
-  List <Map<String, dynamic>> filterSliList ;
+  List<Map<String, dynamic>> filterSLIGenderList;
 
+  List<Map<String, dynamic>> filterSliExperienceList;
+
+  List<Map<String, dynamic>> filterSliList;
 
   bool loading = true;
-  RefreshController _refreshController = RefreshController(initialRefresh: false);
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
 
   @override
   void initState() {
     super.initState();
     getAllSli();
+    Future.delayed(Duration.zero, () {
+      if (widget.bookingFailedMessage != null) {
+        bookingFailedDialog();
+      }
+    });
+  }
+
+  bookingFailedDialog() {
+    // set up the button
+    Widget closeButton = FlatButton(
+      child: Text("Close"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Booking unavailable"),
+      content: Text(widget.bookingFailedMessage),
+      actions: [
+        closeButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
   void loadGenderList() {
@@ -66,7 +102,6 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
       child: new Text('Semua'),
       value: "all",
     ));
-
   }
 
   void loadExperienceList() {
@@ -86,12 +121,13 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
 
   Widget loadSliList() {
     return Column(
-      children:allSli.map((sli) => createSLITemplate(
-          id: sli['sli_id'],
-          name: sli['name'],
-          gender: sli['gender'],
-          age: sli['age'],
-          description: sli['description']))
+      children: allSli
+          .map((sli) => createSLITemplate(
+              id: sli['sli_id'],
+              name: sli['name'],
+              gender: sli['gender'],
+              age: sli['age'],
+              description: sli['description']))
           .toList(),
     );
   }
@@ -122,11 +158,11 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
 
   Widget createSLITemplate(
       {String id,
-        String name,
-        String gender,
-        String age,
-        String profilePic,
-        String description}) {
+      String name,
+      String gender,
+      String age,
+      String profilePic,
+      String description}) {
     return InkWell(
       borderRadius: BorderRadius.circular(Dimensions.d_25),
       onTap: () {
@@ -134,17 +170,17 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
           context,
           MaterialPageRoute(
               builder: (context) => UserBookingResultSLIProfilePage(
-                id: id,
-                name: name,
-                gender: gender,
-                age: age,
-                profilePic: profilePic,
-                description: description,
-                pickedDate: widget.pickedDate,
-                pickedTime: widget.pickedTime,
-                hospitalName: widget.hospitalName,
-                preferredLanguage: widget.preferredLanguage,
-              )),
+                    id: id,
+                    name: name,
+                    gender: gender,
+                    age: age,
+                    profilePic: profilePic,
+                    description: description,
+                    pickedDate: widget.pickedDate,
+                    pickedTime: widget.pickedTime,
+                    hospitalName: widget.hospitalName,
+                    preferredLanguage: widget.preferredLanguage,
+                  )),
         );
       },
       child: Card(
@@ -186,11 +222,10 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
     );
   }
 
-
   Future<void> getAllSli() async {
     String _authToken = await AuthService.getToken();
     List<User> _allSli =
-    await BookingServices().getAllSLI(headerToken: _authToken);
+        await BookingServices().getAllSLI(headerToken: _authToken);
     List<Map<String, dynamic>> _allSliJson = List<Map<String, dynamic>>();
     for (User sli in _allSli) {
       _allSliJson.add(sli.toJson());
@@ -215,32 +250,32 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
   }
 
   void getFilterList() {
-    filterSLIGenderList=[];
-    filterSliExperienceList=[];
-    filterSliList=[];
+    filterSLIGenderList = [];
+    filterSliExperienceList = [];
+    filterSliList = [];
 
     if (selectedGender != null && selectedGender != 'all') {
       allSli.forEach((element) {
-        if (element['gender'] == selectedGender){
-           filterSLIGenderList.add(element);
-         }
-       });
-    }
-    else {
+        if (element['gender'] == selectedGender) {
+          filterSLIGenderList.add(element);
+        }
+      });
+    } else {
       allSli.forEach((element) {
-        filterSLIGenderList.add(element);});
+        filterSLIGenderList.add(element);
+      });
     }
 
     if (selectedExperience != null && selectedExperience != 'all') {
       allSli.forEach((element) {
-        if (element['years_medical'].toString() == selectedExperience){
+        if (element['years_medical'].toString() == selectedExperience) {
           filterSliExperienceList.add(element);
         }
       });
-    }
-    else {
+    } else {
       allSli.forEach((element) {
-        filterSliExperienceList.add(element);});
+        filterSliExperienceList.add(element);
+      });
     }
 
     for (var sli in filterSLIGenderList) {
@@ -279,65 +314,65 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
           body: loading
               ? LoadingScreen()
               : SmartRefresher(
-            controller: _refreshController,
-            onRefresh: _onRefresh,
-            enablePullDown: true,
-            header: ClassicHeader(),
-            child: ListView(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.fromLTRB(Dimensions.d_30,
-                      Dimensions.d_10, Dimensions.d_30, Dimensions.d_30),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  controller: _refreshController,
+                  onRefresh: _onRefresh,
+                  enablePullDown: true,
+                  header: ClassicHeader(),
+                  child: ListView(
                     children: <Widget>[
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Expanded(
-                            flex: 8,
-                            child: Container(
-                              height: Dimensions.d_45,
-                              child: DropdownList(
-                                hintText: "Jantina",
-                                selectedItem: selectedGender,
-                                itemList: genderList,
-                                onChanged: (value) {
-                                  setState(() {
-                                    selectedGender = value;
-                                  });
-                                },
-                              ),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(Dimensions.d_30,
+                            Dimensions.d_10, Dimensions.d_30, Dimensions.d_30),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Expanded(
+                                  flex: 8,
+                                  child: Container(
+                                    height: Dimensions.d_45,
+                                    child: DropdownList(
+                                      hintText: "Jantina",
+                                      selectedItem: selectedGender,
+                                      itemList: genderList,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          selectedGender = value;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: Dimensions.d_10),
+                                Expanded(
+                                  flex: 10,
+                                  child: Container(
+                                    height: Dimensions.d_45,
+                                    child: DropdownList(
+                                      hintText: "Pengalaman",
+                                      selectedItem: selectedExperience,
+                                      itemList: experienceList,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          selectedExperience = value;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                          SizedBox(width: Dimensions.d_10),
-                          Expanded(
-                            flex: 10,
-                            child: Container(
-                              height: Dimensions.d_45,
-                              child: DropdownList(
-                                hintText: "Pengalaman",
-                                selectedItem: selectedExperience,
-                                itemList: experienceList,
-                                onChanged: (value) {
-                                  setState(() {
-                                    selectedExperience = value;
-                                  });
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
+                            SizedBox(height: Dimensions.d_20),
+                            loadFilteredSliList(),
+                          ],
+                        ),
                       ),
-                      SizedBox(height: Dimensions.d_20),
-                      loadFilteredSliList() ,
                     ],
                   ),
-                ),
-              ],
-            ),
-          )),
+                )),
     );
   }
 }

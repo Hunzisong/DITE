@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
 import 'package:heard/firebase_services/auth_service.dart';
+import 'package:heard/home/booking/user_booking_result_page.dart';
 import 'package:heard/home/booking/user_booking_success.dart';
 import 'package:heard/http_services/booking_services.dart';
 import 'package:heard/widgets/loading_screen.dart';
@@ -138,6 +139,19 @@ class _UserBookingResultSLIProfilePageState
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => UserBookingSuccessPage()),
+      );
+    } else {
+      Navigator.pop(context);
+      Navigator.pop(context);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => UserBookingResultPage(
+          pickedDate: widget.pickedDate,
+          pickedTime: widget.pickedTime,
+          hospitalName: widget.hospitalName,
+          preferredLanguage: widget.preferredLanguage,
+          bookingFailedMessage: 'The chosen SLI is unavailable for the current booking.',
+        )),
       );
     }
   }

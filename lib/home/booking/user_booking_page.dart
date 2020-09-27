@@ -233,7 +233,7 @@ class _UserBookingPageState extends State<UserBookingPage> {
                           preferredLanguage: selectedLanguage,
                         )),
                       );
-                      if (canResetSearchCriteria) {
+                      if (canResetSearchCriteria != null && canResetSearchCriteria) {
                         resetSearchCriteria();
                       }
                     },
