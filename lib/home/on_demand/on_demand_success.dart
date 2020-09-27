@@ -311,14 +311,10 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
 
     String counterpartID = getCounterpartID();
 
-    print(authToken);
-    print(counterpartID);
-    print(onDemandStatus.details.sliID);
-    print(onDemandStatus.details.uid);
-
     // call the api to chat/enter
     ChatItem chatSessionInfo = await ChatServices().enterChatRoom(
         headerToken: authToken, counterpartID: counterpartID, isSLI: widget.isSLI);
+
 
     if (chatSessionInfo != null){
       await Navigator.push(
