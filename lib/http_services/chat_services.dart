@@ -64,19 +64,14 @@ class ChatServices {
     print(
         'Attempt to enter chat room....: ${response.statusCode}, body: ${response.body}');
 
-    ChatItem  
-    OnDemandStatus onDemandStatus;
-    if (response.statusCode == 200) {
-      Map<String, dynamic> statusBody = jsonDecode(response.body);
-      onDemandStatus = OnDemandStatus.fromJson(statusBody);
-    }
+    ChatItem chatItem ;
 
     if (response.statusCode == 200) {
-      print('Success');
-      return true;
-    } else {
-      return false;
+      Map<String, dynamic> statusBody = jsonDecode(response.body);
+      chatItem = ChatItem.fromJson(statusBody);
     }
+
+    return chatItem ;
   }
 
 
