@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heard/api/chat_item.dart';
 import 'package:heard/api/on_demand_status.dart';
 import 'package:heard/constants.dart';
 import 'package:heard/firebase_services/auth_service.dart';
@@ -310,28 +311,30 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
 
     String counterpartID = getCounterpartID();
 
+    print(authToken);
+    print(counterpartID);
+    print(onDemandStatus.details.sliID);
+    print(onDemandStatus.details.uid);
+
     // call the api to chat/enter
-    bool EnterResponseIsTrue = await ChatServices().enterChatRoom(
+    ChatItem chatSessionInfo = await ChatServices().enterChatRoom(
         headerToken: authToken, counterpartID: counterpartID, isSLI: widget.isSLI);
 
-    if (EnterResponseIsTrue){
+    if (chatSessionInfo != null){
       await Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) =>  ChatScreen(
                 userID: onDemandStatus.details.uid,
                 sliID:  onDemandStatus.details.sliID,
+                chatRoomID: chatSessionInfo.chatroomId,
+                sliName: chatSessionInfo.sliName,
+                userName: chatSessionInfo.userName,
 
-
-              );
+              )
           )
       );
     }
-
-
-
-
-
 
   }
 
