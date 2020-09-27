@@ -49,8 +49,8 @@ class _UserBookingPageState extends State<UserBookingPage> {
     await showDatePicker(
         context: context,
         initialDate: DateTime.now(),
-        firstDate: DateTime(2020),
-        lastDate: DateTime(2021)
+        firstDate: DateTime.now().add(new Duration(days: 0)),
+        lastDate: DateTime.now().add(new Duration(days: 366))
     );
     return selectedDate;
   }
