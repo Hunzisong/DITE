@@ -50,7 +50,7 @@ class ChatServices {
      it will return necessary data for front-end to populate and listen to fire store.
 
    */
-  Future<bool> enterChatRoom(
+  Future<ChatItem> enterChatRoom(
       {String headerToken, bool isSLI, String counterpartID}) async {
     var response = await http.post(
         'https://heard-project.herokuapp.com/chat/enter?type=${isSLI ? 'sli' : 'user'}',
@@ -64,12 +64,14 @@ class ChatServices {
     print(
         'Attempt to enter chat room....: ${response.statusCode}, body: ${response.body}');
 
+    ChatItem chatItem ;
+
     if (response.statusCode == 200) {
-      print('Success');
-      return true;
-    } else {
-      return false;
+      Map<String, dynamic> statusBody = jsonDecode(response.body);
+      chatItem = ChatItem.fromJson(statusBody);
     }
+
+    return chatItem ;
   }
 
 

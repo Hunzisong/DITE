@@ -7,6 +7,8 @@ import 'package:heard/widgets/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:heard/video_chat_components/call.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:heard/chat_service/chatPage.dart';
+import 'package:heard/http_services/chat_services.dart';
 
 
 class OnDemandSuccessPage extends StatefulWidget {
@@ -49,6 +51,24 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
 
     print("Video call on demand ID: $onDemandID");
     return onDemandID;
+  }
+
+  // This method is to retrieve the person's ID that the user is chatting to.
+  String getCounterpartID(){
+
+    Details details = onDemandStatus.details;
+    String counterpartID ;
+
+    if (widget.isSLI){
+      counterpartID = details.uid ;
+    }
+
+    // if the current holder is not SLI, the opposite user must be one.
+    else {
+      counterpartID = details.sliID;
+    }
+
+    return  counterpartID;
   }
 
   void getOnDemandStatus() async {
@@ -284,8 +304,35 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
   }
 
 
-  void onTapMessage() {
+  // this will trigger a call to the api chat/enter
+  void onTapMessage() async {
     debugPrint("Message is tapped");
+
+    String counterpartID = getCounterpartID();
+
+    // call the api to chat/enter
+    bool EnterResponseIsTrue = await ChatServices().enterChatRoom(
+        headerToken: authToken, counterpartID: counterpartID, isSLI: widget.isSLI);
+
+    if (EnterResponseIsTrue){
+      await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>  ChatScreen(
+                userID: onDemandStatus.details.uid,
+                sliID:  onDemandStatus.details.sliID,
+
+
+              );
+          )
+      );
+    }
+
+
+
+
+
+
   }
 
   void onTapVideo() async {
