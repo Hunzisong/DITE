@@ -130,7 +130,7 @@ class _UserBookingResultSLIProfilePageState
         date: widget.pickedDate,
         time: widget.pickedTime,
         hospitalName: widget.hospitalName,
-        notes: 'Preferred language is ${widget.preferredLanguage}. ${notes.text.toString()}',
+        notes: 'Bahasa Pilihan ialah ${widget.preferredLanguage}. ${notes.text.toString()}',
     );
     if (response == 200) {
       setState(() {
@@ -150,7 +150,7 @@ class _UserBookingResultSLIProfilePageState
           pickedTime: widget.pickedTime,
           hospitalName: widget.hospitalName,
           preferredLanguage: widget.preferredLanguage,
-          bookingFailedMessage: 'The chosen SLI is unavailable for the current booking.',
+          bookingFailedMessage: 'JBIM yang dipilih tidak tersedia untuk menerima tempahan pada masa ini. Sila memilih masa yang lain.',
         )),
       );
     }

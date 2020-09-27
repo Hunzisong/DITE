@@ -50,13 +50,13 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
 
     yearsBimOptions = [];
     yearsMedicalOptions = [];
-    for (int i = 0; i < 51; i++) {
+    for (int i = 0; i < 11; i++) {
       yearsBimOptions.add(DropdownMenuItem(
-        child: Text('$i Tahun'),
+        child: Text('${i != 10 ? '$i' : '$i+'} Tahun'),
         value: i.toString(),
       ));
       yearsMedicalOptions.add(DropdownMenuItem(
-        child: Text('$i Tahun'),
+        child: Text('${i != 10 ? '$i' : '$i+'} Tahun'),
         value: i.toString(),
       ));
     }
