@@ -62,7 +62,7 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
   bookingFailedDialog() {
     // set up the button
     Widget closeButton = FlatButton(
-      child: Text("Close"),
+      child: Text("Tutup"),
       onPressed: () {
         Navigator.of(context).pop();
       },
@@ -70,7 +70,7 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Booking unavailable"),
+      title: Text("Tempahan Tidak Tersedia"),
       content: Text(widget.bookingFailedMessage),
       actions: [
         closeButton,
@@ -106,9 +106,9 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
 
   void loadExperienceList() {
     experienceList = [];
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 11; i++) {
       experienceList.add(DropdownMenuItem(
-        child: Text('$i Tahun'),
+        child: Text('${i != 10 ? '$i' : '$i+'} Tahun'),
         value: i.toString(),
       ));
     }
