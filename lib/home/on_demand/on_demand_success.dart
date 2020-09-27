@@ -51,6 +51,24 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
     return onDemandID;
   }
 
+  // This method is to retrieve the person's ID that the user is chatting to.
+  String getCounterpartID(){
+
+    Details details = onDemandStatus.details;
+    String counterpartID ;
+
+    if (widget.isSLI){
+      counterpartID = details.uid ;
+    }
+
+    // if the current holder is not SLI, the opposite user must be one.
+    else {
+      counterpartID = details.sliID;
+    }
+
+    return  counterpartID;
+  }
+
   void getOnDemandStatus() async {
     String authTokenString = await AuthService.getToken();
     setState(() {
@@ -284,8 +302,12 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
   }
 
 
-  void onTapMessage() {
+  // this will trigger a call to the api chat/enter
+  void onTapMessage() async {
     debugPrint("Message is tapped");
+
+    String counterpartID = getCounterpartID();
+
   }
 
   void onTapVideo() async {
