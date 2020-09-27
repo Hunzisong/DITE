@@ -7,6 +7,8 @@ import 'package:heard/widgets/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:heard/video_chat_components/call.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:heard/chat_service/chatPage.dart';
+import 'package:heard/http_services/chat_services.dart';
 
 
 class OnDemandSuccessPage extends StatefulWidget {
@@ -307,6 +309,29 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
     debugPrint("Message is tapped");
 
     String counterpartID = getCounterpartID();
+
+    // call the api to chat/enter
+    bool EnterResponseIsTrue = await ChatServices().enterChatRoom(
+        headerToken: authToken, counterpartID: counterpartID, isSLI: widget.isSLI);
+
+    if (EnterResponseIsTrue){
+      await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>  ChatScreen(
+                userID: onDemandStatus.details.uid,
+                sliID:  onDemandStatus.details.sliID,
+
+
+              );
+          )
+      );
+    }
+
+
+
+
+
 
   }
 

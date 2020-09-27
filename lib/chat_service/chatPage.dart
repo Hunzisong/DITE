@@ -23,8 +23,11 @@ class ChatScreen extends StatefulWidget {
   static String id = 'chat_screen';
   String userID;
   String sliID ;
+  String chatRoomID;
+  String sliName;
+  String userName;
 
-  ChatScreen({this.userID, this.sliID});
+  ChatScreen({this.userID, this.sliID, this.chatRoomID, this.sliName, this.userName});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
