@@ -10,6 +10,8 @@ class ChatServices {
   /* First method is to retrieve the chat room list
      for each authenticated users.
      This API is used to populate chat history
+
+     * tested, 2nd and 3rd method not tested.
    */
 
   Future<List<ChatItem>> getChatRoomList(
@@ -34,6 +36,7 @@ class ChatServices {
         allChatRooms.add(request);
       }
     }
+
 
     return allChatRooms;
   }

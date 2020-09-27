@@ -4,20 +4,28 @@ import 'package:heard/constants.dart';
 import 'package:heard/chat_service/chatPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:heard/http_services/chat_services.dart';
+import 'package:heard/api/chat_item.dart';
+import 'package:heard/firebase_services/auth_service.dart';
+
 
 auth.User loggedInUser ;
 
+
 class ChatHomeScreen extends StatefulWidget {
+
+
   @override
   _ChatHomeScreenState createState() => _ChatHomeScreenState();
 }
 
 class _ChatHomeScreenState extends State<ChatHomeScreen> {
 
-  final List<String> entries = <String>['Bryan Yong', 'James Chadwick', 'Ariana Grande', 'Taylor Swift', 'Bruno Mars', 'Shawn Mendes', 'Emma Watson', 'James Bond'];
-  bool isSLI = false ;
-
+//  final List<String> entries = <String>['Bryan Yong', 'James Chadwick', 'Ariana Grande', 'Taylor Swift', 'Bruno Mars', 'Shawn Mendes', 'Emma Watson', 'James Bond'];
   final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
+  bool isSLI = false ;
+  String authToken;
+  List<ChatItem> entries ;
 
 
   @override
@@ -52,6 +60,24 @@ class _ChatHomeScreenState extends State<ChatHomeScreen> {
     }
   }
 
+  // retrieve the user's personal chat list based on chat history
+  void getUserChatList() async{
+
+    authToken = await AuthService.getToken();
+
+    List<ChatItem> chatList = await ChatServices().getChatRoomList(
+        isSLI: isSLI, headerToken: authToken);
+
+    // save the result to the defined state variable.
+    setState(() {
+      entries = chatList;
+    });
+
+    if (chatList == null){
+      print('Chat list retrieval failed.');
+    }
+  }
+
   
 
   @override
@@ -80,17 +106,17 @@ class _ChatHomeScreenState extends State<ChatHomeScreen> {
                         return ListTile(
                                 onTap: (){
 
-                                  // direct the user to the designated chat page
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            ChatScreen(
-                                                userID: loggedInUser.displayName,
-                                                sliID:  entries[index],
-                                        ),
-                                      )
-                                    );
+//                                  // direct the user to the designated chat page
+//                                  Navigator.push(
+//                                      context,
+//                                      MaterialPageRoute(
+//                                        builder: (context) =>
+//                                            ChatScreen(
+//                                                userID: loggedInUser.displayName,
+//                                                sliID:  entries[index],
+//                                        ),
+//                                      )
+//                                    );
                                 },
                                 leading: Icon(
                                   Icons.account_circle,
