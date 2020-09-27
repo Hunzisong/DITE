@@ -52,7 +52,6 @@ final List<String> questions = <String>[
   'Kami memerlukan nombor-nombor orang yang dekat dengan mereka\n'
 ];
 
-
 class Questionnaire extends StatefulWidget {
   @override
   _QuestionnaireState createState() => _QuestionnaireState();
@@ -61,7 +60,7 @@ class Questionnaire extends StatefulWidget {
 class _QuestionnaireState extends State<Questionnaire> {
 
   bool isSLI = false ;
-
+  final TextEditingController _controller = new TextEditingController();
 
   @override
   void initState() {
@@ -74,7 +73,6 @@ class _QuestionnaireState extends State<Questionnaire> {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       isSLI = preferences.getBool('isSLI');
-
     });
   }
 
@@ -99,7 +97,8 @@ class _QuestionnaireState extends State<Questionnaire> {
             Container(
               height: Dimensions.d_95,
               child: TextField(
-                    decoration: InputDecoration(
+               controller: _controller,
+                decoration: InputDecoration(
                     fillColor: Colours.grey,
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(
@@ -111,7 +110,8 @@ class _QuestionnaireState extends State<Questionnaire> {
                         icon: Icon(Icons.search, color: Colours.black, size: Dimensions.d_25,),
                         onPressed: (){
                           print('I got pressed!!');
-                          showSearch(context: context, delegate: Search());
+                          showSearch(context: context, delegate: Search(_controller));
+                          print(_controller.text);
                         },
                     )
                   ),
@@ -157,7 +157,9 @@ class _QuestionnaireState extends State<Questionnaire> {
   }
 }
 
-class Search extends SearchDelegate{
+class Search extends SearchDelegate<String>{
+  final TextEditingController controller;
+  Search(this.controller);
 
   String query;
 
@@ -200,26 +202,23 @@ class Search extends SearchDelegate{
 
     List<String> suggestionList = [];
 
-    query.isEmpty
+    controller.text.isEmpty
       ? suggestionList = recentList
-      : suggestionList.addAll(questions.where(
-            (element) => element.contains(query),
+      : suggestionList.addAll( questions.where(
+          (element) => element.toLowerCase().contains(controller.text.toLowerCase()),
     ));
 
     return ListView.separated(
-
         padding: const EdgeInsets.all(10),
         itemCount: suggestionList.length,
         itemBuilder: (BuildContext context, int index) {
           return Container(
             margin: const EdgeInsets.symmetric(vertical: 20.0),
             child: ListTile(
-
               title: Text(
                 '${suggestionList[index]}',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-
 //              subtitle: Image(image: AssetImage(images[index]),),
               onTap: (){
                 selectedResult = suggestionList[index];
@@ -234,11 +233,6 @@ class Search extends SearchDelegate{
           color: Colours.grey,
         )
     );
-
-
-
-
-
   }
 
 
