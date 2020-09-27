@@ -124,11 +124,18 @@ class _ChatHomeScreenState extends State<ChatHomeScreen> {
                                 ),
 
 
+                                title: isSLI ?
+                                    Text(
+                                      '${entries[index].sliName}',
+                                      style: TextStyle(fontWeight: FontWeight.bold),
+                                    )
 
-                                title: Text(
-                                  '${entries[index]}',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
+                                    :
+
+                                    Text(
+                                      '${entries[index].sliName}',
+                                      style: TextStyle(fontWeight: FontWeight.bold),
+                                    ),
 
                                 subtitle: Text('Available'),
 
