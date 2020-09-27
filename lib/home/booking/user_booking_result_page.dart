@@ -36,7 +36,7 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
   String selectedExperience;
 
   List<Map<String, dynamic>> allSli;
-  List <Map<String, dynamic>> filterSliGenderList ;
+  List <Map<String, dynamic>> filterSLIGenderList ;
   List <Map<String, dynamic>> filterSliExperienceList ;
   List <Map<String, dynamic>> filterSliList ;
 
@@ -207,117 +207,53 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
       _refreshController.refreshFailed();
     } else {
       _refreshController.refreshCompleted();
+      setState(() {
+        selectedGender = null;
+        selectedExperience = null;
+      });
     }
   }
 
   void getFilterList() {
-    filterSliGenderList=[];
+    filterSLIGenderList=[];
     filterSliExperienceList=[];
     filterSliList=[];
 
-//    if((selectedGender != null && selectedGender != 'all') && (selectedExperience !=null && selectedExperience != 'all' )){
-//
-//      allSli.forEach((element) {
-//        if (element['gender'] == selectedGender){
-//          filterSliGenderList.add(element);
-//        }
-//      });
-//
-//      allSli.forEach((element) {
-//        if (element['years_bim'].toString() == selectedExperience){
-//          filterSliExperienceList.add(element);
-//        }
-//      });
-//
-//      for (var item in filterSliGenderList){
-//        if(filterSliExperienceList.contains(item) && !filterSliList.contains(item)){
-//          filterSliList.add(item);
-//        }
-//      }
-//
-//      for (var item in filterSliExperienceList){
-//        if(filterSliGenderList.contains(item) && !filterSliList.contains(item)){
-//          filterSliList.add(item);
-//        }
-//      }
-//    }
-//
-//    else{
-//      allSli.forEach((element) {
-//        filterSliList.add(element);});
-//    }
-    if (selectedGender=='all' && selectedExperience == 'all'){
-      allSli.forEach((element) {
-        filterSliList.add(element);});
-    }
-
-    if(selectedGender == null && selectedExperience == null){
-      allSli.forEach((element) {
-        filterSliList.add(element);});
-    }
-
-    if (selectedGender =='all'){
-      allSli.forEach((element) {
-        filterSliGenderList.add(element);});
-
-      filterSliGenderList.forEach((element) {
-        if (element['years_bim'].toString() == selectedExperience){
-          filterSliList.add(element);
-        }
-      });
-    }
-
-    if(selectedExperience == 'all'){
-      allSli.forEach((element) {
-        filterSliExperienceList.add(element);});
-
-      filterSliExperienceList.forEach((element) {
-        if (element['gender'] == selectedGender){
-          filterSliList.add(element);
-        }
-      });
-    }
-
-    if((selectedGender != null && selectedGender != 'all') && (selectedExperience !=null && selectedExperience != 'all' )){
-
+    if (selectedGender != null && selectedGender != 'all') {
       allSli.forEach((element) {
         if (element['gender'] == selectedGender){
-          filterSliGenderList.add(element);
-        }
-      });
-
+           filterSLIGenderList.add(element);
+         }
+       });
+    }
+    else {
       allSli.forEach((element) {
-        if (element['years_bim'].toString() == selectedExperience){
+        filterSLIGenderList.add(element);});
+    }
+
+    if (selectedExperience != null && selectedExperience != 'all') {
+      allSli.forEach((element) {
+        if (element['years_medical'].toString() == selectedExperience){
           filterSliExperienceList.add(element);
         }
       });
-
-      for (var item in filterSliGenderList){
-        if(filterSliExperienceList.contains(item) && !filterSliList.contains(item)){
-          filterSliList.add(item);
-        }
-      }
-
-      for (var item in filterSliExperienceList){
-        if(filterSliGenderList.contains(item) && !filterSliList.contains(item)){
-          filterSliList.add(item);
-        }
-      }
+    }
+    else {
+      allSli.forEach((element) {
+        filterSliExperienceList.add(element);});
     }
 
-
-
-//    else{
-//      allSli.forEach((element) {
-//        filterSliList.add(element);});
-//    }
+    for (var sli in filterSLIGenderList) {
+      if (filterSliExperienceList.contains(sli)) {
+        filterSliList.add(sli);
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     loadGenderList();
     loadExperienceList();
-    print("Building");
     return SafeArea(
       child: Scaffold(
           backgroundColor: Colours.white,
