@@ -61,6 +61,8 @@ class _QuestionnaireState extends State<Questionnaire> {
 
   bool isSLI = false ;
   final TextEditingController _controller = new TextEditingController();
+  List<String> questionFilterList;
+  List<String> imageFilterList;
 
   @override
   void initState() {
@@ -76,21 +78,33 @@ class _QuestionnaireState extends State<Questionnaire> {
     });
   }
 
+  void filterQuestionnaire({String text}) {
+    questionFilterList = [];
+    imageFilterList = [];
+    for (int index = 0; index < questions.length; index++) {
+      if (questions[index].toLowerCase().contains(text.toLowerCase())) {
+        questionFilterList.add(questions[index]);
+        imageFilterList.add(images[index]);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (questionFilterList == null && imageFilterList == null) {
+      filterQuestionnaire(text: '');
+    }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: isSLI ? Colours.orange : Colours.blue,
 
-        title: Text('Covid-19',
+        title: Text('Soal Selidik Covid-19',
           style: GoogleFonts.lato(
           fontSize: FontSizes.mainTitle,
           fontWeight: FontWeight.bold,
           ),
         ),
         centerTitle: true,
-
-
       ),
       body: Column(
           children: <Widget>[
@@ -98,6 +112,11 @@ class _QuestionnaireState extends State<Questionnaire> {
               height: Dimensions.d_95,
               child: TextField(
                controller: _controller,
+                onChanged: (String text) {
+                 setState(() {
+                   filterQuestionnaire(text: text);
+                 });
+                },
                 decoration: InputDecoration(
                     fillColor: Colours.grey,
                     border: OutlineInputBorder(
@@ -106,17 +125,10 @@ class _QuestionnaireState extends State<Questionnaire> {
                         ),
                     ),
                     labelText: 'Cari Kata Kunci',
-                    icon: IconButton(
-                        icon: Icon(Icons.search, color: Colours.black, size: Dimensions.d_25,),
-                        onPressed: (){
-                          print('I got pressed!!');
-                          showSearch(context: context, delegate: Search(_controller));
-                          print(_controller.text);
-                        },
-                    )
+                    icon: Icon(Icons.search, color: Colours.black, size: Dimensions.d_25,),
                   ),
                 ),
-              padding: EdgeInsets.all(25),
+              padding: EdgeInsets.all(Dimensions.d_25),
             ),
             Divider(
               height: Dimensions.d_0,
@@ -126,20 +138,19 @@ class _QuestionnaireState extends State<Questionnaire> {
             /* Construct a list of questions for the users for viewing */
             Expanded(
               child: ListView.separated(
-
-                padding: const EdgeInsets.all(10),
-                itemCount: questions.length,
+                padding: EdgeInsets.all(Dimensions.d_10),
+                itemCount: questionFilterList.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Container(
-                    margin: const EdgeInsets.symmetric(vertical: 20.0),
+                    margin: EdgeInsets.symmetric(vertical: Dimensions.d_20),
                     child: ListTile(
 
                       title: Text(
-                        '${questions[index]}',
+                        '${questionFilterList[index]}',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
 
-                      subtitle: Image(image: AssetImage(images[index]),),
+                      subtitle: Image(image: AssetImage(imageFilterList[index]),),
                     ),
                   );
                 },
@@ -151,93 +162,7 @@ class _QuestionnaireState extends State<Questionnaire> {
               ),
             ),
           ],
-
         ),
     );
   }
-}
-
-class Search extends SearchDelegate<String>{
-  final TextEditingController controller;
-  Search(this.controller);
-
-  String query;
-
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    return <Widget>[
-      IconButton(
-        icon: Icon(Icons.close),
-        onPressed: (){
-          query = "";
-        },
-      )
-    ];
-  }
-
-  @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(
-      icon: Icon(Icons.arrow_back),
-      onPressed: (){
-        Navigator.pop(context);
-      },
-    );
-  }
-
-  String selectedResult;
-  @override
-  Widget buildResults(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Text(selectedResult),
-      ),
-    );
-  }
-
-  List<String> recentList = ["Text 4", "Text 3"];
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-
-    List<String> suggestionList = [];
-
-    controller.text.isEmpty
-      ? suggestionList = recentList
-      : suggestionList.addAll( questions.where(
-          (element) => element.toLowerCase().contains(controller.text.toLowerCase()),
-    ));
-
-    return ListView.separated(
-        padding: const EdgeInsets.all(10),
-        itemCount: suggestionList.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Container(
-            margin: const EdgeInsets.symmetric(vertical: 20.0),
-            child: ListTile(
-              title: Text(
-                '${suggestionList[index]}',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-//              subtitle: Image(image: AssetImage(images[index]),),
-              onTap: (){
-                selectedResult = suggestionList[index];
-                showResults(context);
-              },
-            ),
-          );
-        },
-        separatorBuilder: (BuildContext context, int index) => Divider(
-          height: Dimensions.d_2,
-          thickness: Dimensions.d_2*2,
-          color: Colours.grey,
-        )
-    );
-  }
-
-
-
-
-
-
 }
