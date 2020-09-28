@@ -147,7 +147,7 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                   title: Text('Jantina'),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(left: Dimensions.d_85 * 2.2, top: Dimensions.d_2*2.3),
+                                  padding: EdgeInsets.only(left: Dimensions.d_85 * 2.15, top: Dimensions.d_2*2.3),
                                   child: DropdownList(
                                     noColour: true,
                                     padding: EdgeInsets.all(0),
@@ -191,7 +191,7 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                         ),
                                       ),
                                       Padding(
-                                        padding: EdgeInsets.only(left: Dimensions.d_85 * 2.25, top: Dimensions.d_2*2.2),
+                                        padding: EdgeInsets.only(left: Dimensions.d_85 * 2.15, top: Dimensions.d_2*2.2),
                                         child: DropdownList(
                                           noColour: true,
                                           padding: EdgeInsets.all(0),
@@ -222,7 +222,7 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                         ),
                                       ),
                                       Padding(
-                                        padding: EdgeInsets.only(left: Dimensions.d_85 * 2.25, top: Dimensions.d_2*2.2),
+                                        padding: EdgeInsets.only(left: Dimensions.d_85 * 2.15, top: Dimensions.d_2*2.2),
                                         child: DropdownList(
                                           noColour: true,
                                           padding: EdgeInsets.all(0),
@@ -250,7 +250,7 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                         title: Text('Bahasa Isyarat'),
                                       ),
                                       Padding(
-                                        padding: EdgeInsets.only(left: Dimensions.d_85 * 2.4),
+                                        padding: EdgeInsets.only(left: Dimensions.d_85 * 2.05),
                                         child: CheckBoxTile(
                                           padding: EdgeInsets.only(top: Dimensions.d_5),
                                           value: userDetails.asl_proficient,
@@ -265,7 +265,7 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                         ),
                                       ),
                                       Padding(
-                                        padding: EdgeInsets.only(left: Dimensions.d_85 * 2.4, top: Dimensions.d_20*2),
+                                        padding: EdgeInsets.only(left: Dimensions.d_85 * 2.05, top: Dimensions.d_20*2),
                                         child: CheckBoxTile(
                                           padding: EdgeInsets.only(top: Dimensions.d_5),
                                           value: userDetails.bim_proficient,
@@ -292,7 +292,7 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                   child: Stack(
                                     children: [
                                       Padding(
-                                        padding: EdgeInsets.only(left: MediaQuery.of(context).size.width / 2, top: Dimensions.d_5),
+                                        padding: EdgeInsets.only(left: MediaQuery.of(context).size.width / 2.25, top: Dimensions.d_5),
                                         child: Text('${userDetails.education.text}', style: TextStyle(fontSize: FontSizes.normal),),
                                       ),
                                       ListTile(
