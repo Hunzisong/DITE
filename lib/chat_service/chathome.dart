@@ -25,7 +25,7 @@ class _ChatHomeScreenState extends State<ChatHomeScreen> {
   final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
   bool isSLI = false ;
   String authToken;
-  List<ChatItem> entries ;
+  List<ChatItem> entries = []; // give an initial value to prevent null error on app starting
 
 
   @override
@@ -126,7 +126,7 @@ class _ChatHomeScreenState extends State<ChatHomeScreen> {
 
                                 title: isSLI ?
                                     Text(
-                                      '${entries[index].sliName}',
+                                      '${entries[index].userName}',
                                       style: TextStyle(fontWeight: FontWeight.bold),
                                     )
 

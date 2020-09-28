@@ -187,7 +187,6 @@ class _ChatScreenState extends State<ChatScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
 
-
                   // The widget for text input
                   Expanded(
                     child: TextField(
