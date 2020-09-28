@@ -81,6 +81,7 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
   }
 
   void _onRefresh() async {
+
     authToken = await AuthService.getToken();
 
     OnDemandStatus status = await OnDemandServices().getOnDemandStatus(
@@ -97,6 +98,11 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
     } else {
       _refreshController.refreshCompleted();
     }
+
+    print(onDemandStatus.details.userName);
+    print(onDemandStatus.details.sliName);
+
+
   }
 
   @override
@@ -324,6 +330,7 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
                 chatRoomID: chatSessionInfo.chatroomId,
                 counterpartName: widget.isSLI ? chatSessionInfo.userName : chatSessionInfo.sliName,
                 counterpartPic: "No picture",
+                isSLI:           widget.isSLI,
 
               )
           )

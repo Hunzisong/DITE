@@ -254,6 +254,8 @@ class _InformationPageState extends State<InformationPage> {
                 chatRoomID: chatSessionInfo.chatroomId,
                 counterpartName: widget.isSLI ? chatSessionInfo.userName : chatSessionInfo.sliName,
                 counterpartPic: "No picture",
+                isSLI:           widget.isSLI,
+
 
               )
           )

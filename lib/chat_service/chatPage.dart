@@ -25,12 +25,13 @@ class ChatScreen extends StatefulWidget {
   static const routeName = '/chatPage';
   static String id = 'chat_screen';
 
-  String chatRoomID;
-  String counterpartName;
-  String counterpartPic;
+  final String chatRoomID;
+  final String counterpartName;
+  final String counterpartPic;
+  final bool isSLI;
 
 
-  ChatScreen({this.chatRoomID, this.counterpartName, this.counterpartPic });
+  ChatScreen({this.chatRoomID, this.counterpartName, this.counterpartPic, this.isSLI  });
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -117,6 +118,9 @@ class _ChatScreenState extends State<ChatScreen> {
         print("Message is not sent");
       }
     }
+
+    else
+      print("empty string printed");
   }
 
 
@@ -152,8 +156,10 @@ class _ChatScreenState extends State<ChatScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
 
-            // Create Message Stream over here
-            MessageStream()
+            // Create Message Stream, and specify the specific room id to pull the messages
+            MessageStream(chatRoomID: widget.chatRoomID,
+                          isSLI:      isSLI,
+            )
             ,
             Container(
               decoration: kMessageContainerDecoration,

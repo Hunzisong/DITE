@@ -14,17 +14,47 @@ import 'package:heard/http_services/chat_services.dart';
 import 'package:heard/firebase_services/auth_service.dart';
 import 'package:heard/chat_service/messageBubble.dart';
 
-final _firestore = FirebaseFirestore.instance;
+final _fireStore = FirebaseFirestore.instance;
+
 
 
 // need to modify from here ----
 class MessageStream extends StatelessWidget {
+
+  final String chatRoomID ;
+  final bool isSLI ;
+
+//  1. identification
+//  2. message order not organised
+//  3. chat read receipts last seen
+//  user.auth loggedInUser.phonenumber == the phonenumberfrom firestore database
+//  user.auth = no phon
+//  type from the firestore database == shared preference's type '
+
+  MessageStream({ this.chatRoomID, this.isSLI});
+
+
+  bool checkIsSLI(String userType){
+    bool checkforSLI = false ;
+
+    if (userType == "sli"){
+      checkforSLI = true;
+    }
+
+    print(isSLI == checkforSLI );
+    print("FKING $isSLI");
+
+    return checkforSLI;
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
 
     // errors are caused here.
     return StreamBuilder<QuerySnapshot>(
-      stream  : _firestore.collection('messages').snapshots(),
+      stream  : _fireStore.collection('chatrooms').doc(chatRoomID).collection('chat').snapshots(),
       builder : (context, snapshot){
 
         if (!snapshot.hasData) {
@@ -35,34 +65,35 @@ class MessageStream extends StatelessWidget {
           );
         }
 
-        final messages = snapshot.data.docs.reversed ;
+        final messages = snapshot.data.docs ;
         List<MessageBubble> messageBubbles = [] ;
         for (var message in messages){
-          final messageText   = message.data()['text'];
-          /*TODO */
-          final messageSender = message.data()['sender'];
-          final messageType   = message.data()['type'];
 
-          final currentUser = loggedInUser.phoneNumber;
-          final isSLI= false ;  // TODO FAKE DATA
+          final messageText   = message.data()['message'];
+          final messageType   = message.data()['mimetype'];
+          final messageSender = message.data()['sender'];
+          final messageTime   = message.data()['datetime'].toString();
+
+          final currentSender = checkIsSLI(message.data()['sender']);
+
 
 
           final messageBubble = MessageBubble(
-            messageSender,
-            messageText  ,
-            messageType,
-            currentUser == messageSender,
-            isSLI,
+            dateTime: messageTime,
+            text:     messageText,
+            type:     messageType,
+            isMe:     currentSender == isSLI,
+            sender:   messageSender,
+
           );
-          Text('$messageText from $messageSender',
+
+          Text('$messageText from Ali',
             style: TextStyle(
               fontSize: 50.0,
             ),
           );
           messageBubbles.add(messageBubble);
         }
-
-
 
 
         return Expanded(

@@ -16,13 +16,14 @@ import 'package:heard/firebase_services/auth_service.dart';
 // Modify the message bubble to encapsulate different media
 // e.g text, image, video, documents
 class MessageBubble extends StatelessWidget {
-  MessageBubble(this.sender, this.text , this.type , this.isMe, this.isSLI);
+  MessageBubble({this.dateTime, this.text, this.type, this.isMe, this.sender});
 
-  final String sender;
-  final String text  ;
-  final String type  ;
-  final bool isMe    ;
-  final bool isSLI   ;
+
+  final String text        ;
+  final String type        ;
+  final bool isMe          ;
+  final String sender      ;
+  final String dateTime    ;
 
   /* Method to activate video player */
   void showVideoPlayer(parentContext,String videoUrl) async {
@@ -56,7 +57,7 @@ class MessageBubble extends StatelessWidget {
                   topRight: Radius.circular(30.0) ,
                 )
                 ,
-                color: isSLI ? Colours.orange : Colours.blue,
+                color: (sender == 'sli') ? Colours.orange : Colours.blue,
                 child:
 
                 type == 'text/plain' ?
