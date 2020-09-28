@@ -10,7 +10,7 @@ class User {
   bool experienced_bim;
   int years_medical;
   int years_bim;
-  int age;
+  TextEditingController age = TextEditingController();
   String createdAt;
   String sli_id;
   bool asl_proficient;
@@ -44,7 +44,7 @@ class User {
     experienced_bim = json['experienced_bim'];
     years_medical = json['years_medical'];
     years_bim = json['years_bim'];
-    age = json['age'];
+    age.text = json['age'].toString();
     createdAt = json['created_at'];
     sli_id = json['sli_id'];
     asl_proficient = json['asl_proficient'];
@@ -63,7 +63,7 @@ class User {
     data['experienced_bim'] = this.experienced_bim;
     data['years_medical'] = this.years_medical;
     data['years_bim'] = this.years_bim;
-    data['age'] = this.age;
+    data['age'] = this.age.text;
     data['created_at'] = this.createdAt;
     data['sli_id'] = this.sli_id;
     data['asl_proficient'] = this.asl_proficient;

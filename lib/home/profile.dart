@@ -111,7 +111,6 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                 title: Text('Nama'),
                                 trailing: Text('${userDetails.name.text}', style: TextStyle(fontSize: FontSizes.normal),),
                                 onTap: () {
-                                  print('tapped ${userDetails.age}');
                                   showDialog<void>(
                                     context: context,
                                     builder: (BuildContext alertContext) {
@@ -170,7 +169,30 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                 ),
                                 ListTile(
                                   title: Text('Umur'),
-                                  trailing: Text('${userDetails.age ?? ''}', style: TextStyle(fontSize: FontSizes.normal),),
+                                  trailing: Text('${userDetails.age.text ?? ''}', style: TextStyle(fontSize: FontSizes.normal),),
+                                  onTap: () {
+                                    showDialog<void>(
+                                      context: context,
+                                      builder: (BuildContext alertContext) {
+                                        return AlertDialog(
+                                          title: Text('Tukar Umur'),
+                                          content: InputField(
+                                            controller: userDetails.age,
+                                            labelText: 'Umur Baru',
+                                          ),
+                                          actions: <Widget>[
+                                            FlatButton(
+                                              child: Text('Tukar'),
+                                              onPressed: () async {
+                                                Navigator.of(alertContext).pop();
+                                                editDetails(key: 'age', value: userDetails.age.text);
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
                                 ),
                               ],
                             ) : Column(
