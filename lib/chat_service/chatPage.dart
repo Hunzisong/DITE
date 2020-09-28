@@ -21,13 +21,13 @@ class ChatScreen extends StatefulWidget {
 
   static const routeName = '/chatPage';
   static String id = 'chat_screen';
-  String userID;
-  String sliID ;
-  String chatRoomID;
-  String sliName;
-  String userName;
 
-  ChatScreen({this.userID, this.sliID, this.chatRoomID, this.sliName, this.userName});
+  String chatRoomID;
+  String counterpartName;
+  String counterpartPic;
+
+
+  ChatScreen({this.chatRoomID, this.counterpartName, this.counterpartPic });
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -157,16 +157,18 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: AppBar(
         leading: null,
         actions: <Widget>[
-          IconButton(
-              icon: Icon(Icons.close),
-              onPressed: () {
-                //Implement logout functionality
-                messageStream();
-                _auth.signOut();
-                Navigator.pop(context);
-              }),
+//          IconButton(
+//              icon: Icon(Icons.close),
+//              onPressed: () {
+//                //Implement logout functionality
+//                messageStream();
+//                Navigator.pop(context);
+//              }),
         ],
-        title: Icon(Icons.question_answer
+        title: Row(
+          children: [
+            Text(widget.counterpartName),
+          ],
         ),
         backgroundColor: isSLI ? Colours.orange : Colours.blue,
       ),
