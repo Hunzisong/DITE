@@ -1,4 +1,3 @@
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/foundation.dart';
@@ -11,6 +10,9 @@ import 'package:heard/chat_service/VideoPlayerWidget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:heard/constants.dart';
 import 'package:heard/chat_service/chathome.dart';
+import 'package:heard/http_services/chat_services.dart';
+import 'package:heard/firebase_services/auth_service.dart';
+
 
 
 final _firestore = FirebaseFirestore.instance;
@@ -38,6 +40,7 @@ class _ChatScreenState extends State<ChatScreen> {
   // for text inputting usage
   final messageTextController = TextEditingController();
   final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
+  String authToken ;
 
   // To cater for various format of messages
   var messageText ;
@@ -51,7 +54,14 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
     getCurrentUser();
     setSLI();
+    getAuthToken();
+  }
 
+  void getAuthToken() async {
+    String authTokenString = await AuthService.getToken();
+    setState(() {
+      authToken = authTokenString;
+    });
   }
 
   void setSLI() async {
@@ -124,7 +134,7 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  void sendMessage(String content, var type){
+  void sendMessage(String content, var type) async{
     // clear the message input
     // int type : 0 for text strings, filetype.image for image,
     //            filetype.video for videos, filetype.any for misc files
@@ -134,14 +144,34 @@ class _ChatScreenState extends State<ChatScreen> {
       // clear the text editing controller
       messageTextController.clear();
 
+      // call the chat/send API
+      bool messageSent = await ChatServices().sendChatMessage(
+          headerToken: authToken,
+          isSLI: isSLI,
+          roomID: widget.chatRoomID,
+          message: content,
+      );
+
+      if (messageSent){
+        print('Message sent.');
+
+
+      }
+
+      else {
+        print("Message is not sent");
+      }
+
+
+
       // NOTE
       //Implement send functionality.
-      _firestore.collection('messages').add({
-        'text' : content,
-        'sender' : loggedInUser.phoneNumber,
-        'type': type.toString(),
-        'isSLI': isSLI,
-      });
+//      _firestore.collection('messages').add({
+//        'text' : content,
+//        'sender' : loggedInUser.phoneNumber,
+//        'type': type.toString(),
+//        'isSLI': isSLI,
+//      });
     }
   }
 
