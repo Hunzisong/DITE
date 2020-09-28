@@ -106,17 +106,19 @@ class _ChatHomeScreenState extends State<ChatHomeScreen> {
                         return ListTile(
                                 onTap: (){
 
-//                                  // direct the user to the designated chat page
-//                                  Navigator.push(
-//                                      context,
-//                                      MaterialPageRoute(
-//                                        builder: (context) =>
-//                                            ChatScreen(
-//                                                userID: loggedInUser.displayName,
-//                                                sliID:  entries[index],
-//                                        ),
-//                                      )
-//                                    );
+                                  // direct the user to the designated chat page
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ChatScreen(
+                                              chatRoomID: entries[index].chatroomId,
+                                              counterpartName: isSLI ? entries[index].userName : entries[index].sliName,
+                                              counterpartPic: "No picture",
+
+                                        ),
+                                      )
+                                    );
                                 },
                                 leading: Icon(
                                   Icons.account_circle,
