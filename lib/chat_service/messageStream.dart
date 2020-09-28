@@ -24,13 +24,6 @@ class MessageStream extends StatelessWidget {
   final String chatRoomID ;
   final bool isSLI ;
 
-//  1. identification
-//  2. message order not organised
-//  3. chat read receipts last seen
-//  user.auth loggedInUser.phonenumber == the phonenumberfrom firestore database
-//  user.auth = no phon
-//  type from the firestore database == shared preference's type '
-
   MessageStream({ this.chatRoomID, this.isSLI});
 
 
@@ -40,9 +33,6 @@ class MessageStream extends StatelessWidget {
     if (userType == "sli"){
       checkforSLI = true;
     }
-
-    print(isSLI == checkforSLI );
-    print("FKING $isSLI");
 
     return checkforSLI;
   }
@@ -54,7 +44,7 @@ class MessageStream extends StatelessWidget {
 
     // errors are caused here.
     return StreamBuilder<QuerySnapshot>(
-      stream  : _fireStore.collection('chatrooms').doc(chatRoomID).collection('chat').snapshots(),
+      stream  : _fireStore.collection('chatrooms').doc(chatRoomID).collection('chat').orderBy("datetime", descending: true).snapshots(),
       builder : (context, snapshot){
 
         if (!snapshot.hasData) {
