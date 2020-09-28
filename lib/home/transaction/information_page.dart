@@ -251,11 +251,9 @@ class _InformationPageState extends State<InformationPage> {
           context,
           MaterialPageRoute(
               builder: (context) =>  ChatScreen(
-                userID: transaction.uid,
-                sliID:  transaction.sliId,
                 chatRoomID: chatSessionInfo.chatroomId,
-                sliName: chatSessionInfo.sliName,
-                userName: chatSessionInfo.userName,
+                counterpartName: widget.isSLI ? chatSessionInfo.userName : chatSessionInfo.sliName,
+                counterpartPic: "No picture",
 
               )
           )

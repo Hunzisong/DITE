@@ -10,8 +10,6 @@ class ChatServices {
   /* First method is to retrieve the chat room list
      for each authenticated users.
      This API is used to populate chat history
-
-     * tested, 2nd and 3rd method not tested.
    */
 
   Future<List<ChatItem>> getChatRoomList(
@@ -86,13 +84,15 @@ class ChatServices {
   Future<bool> sendChatMessage(
       {String headerToken, bool isSLI, String roomID, String message }) async {
     var response = await http.post(
-        'https://heard-project.herokuapp.com/chat/send?type=${isSLI ? 'sli' : 'user'}',
+        'https://heard-project.herokuapp.com/chat/send',
         headers: {
           'Authorization': headerToken,
         },
         body: {
           'room_id': roomID,
-          'message': message
+          'message': message,
+          'type'   : isSLI ? 'sli' : 'user'
+
         });
 
     print(

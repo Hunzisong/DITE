@@ -321,11 +321,9 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
           context,
           MaterialPageRoute(
               builder: (context) =>  ChatScreen(
-                userID: onDemandStatus.details.uid,
-                sliID:  onDemandStatus.details.sliID,
                 chatRoomID: chatSessionInfo.chatroomId,
-                sliName: chatSessionInfo.sliName,
-                userName: chatSessionInfo.userName,
+                counterpartName: widget.isSLI ? chatSessionInfo.userName : chatSessionInfo.sliName,
+                counterpartPic: "No picture",
 
               )
           )
