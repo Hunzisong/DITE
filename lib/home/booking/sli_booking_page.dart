@@ -106,7 +106,8 @@ class _SLIBookingPageState extends State<SLIBookingPage>
 
   Future<bool> confirmationModal(
       {BuildContext context, int index, bool isAcceptBooking}) async {
-    bool response;
+    bool response = false;
+    bool hasClicked = false;
     await popUpDialog(
         context: context,
         isSLI: true,
@@ -117,11 +118,14 @@ class _SLIBookingPageState extends State<SLIBookingPage>
           style: TextStyle(color: Colours.darkGrey, fontSize: FontSizes.normal),
         ),
         buttonText: 'Teruskan',
-        onClick: () {
+        onClick: () async {
           Navigator.pop(context);
+          hasClicked = true;
         });
-    response = await postBookingResponse(
-        index: index, isAcceptBooking: isAcceptBooking);
+    if (hasClicked) {
+      response = await postBookingResponse(
+          index: index, isAcceptBooking: isAcceptBooking);
+    }
     return response;
   }
 
