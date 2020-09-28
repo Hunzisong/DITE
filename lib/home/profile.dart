@@ -74,6 +74,27 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
     });
   }
 
+  void popUpModal({String keyword, Function onTap}) {
+    popUpDialog(
+        context: context,
+        isSLI: isSLI,
+        touchToDismiss: true,
+        header: 'Pengesahan',
+        content: Text(
+          'Adakah anda pasti nak $keyword?',
+          textAlign: TextAlign.left,
+          style: TextStyle(
+              color: Colours.darkGrey,
+              fontSize: FontSizes.normal),
+        ),
+        onClick: () async {
+          Navigator.pop(context);
+          await onTap();
+        },
+        buttonText: 'Pasti'
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -390,17 +411,25 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                   children: [
                     UserButton(
                         color: isSLI ? Colours.orange : Colours.blue,
-                        text: "Log Out",
+                        text: "Log Keluar",
                         onClick: () async {
-                          showLoadingAnimation(context: context);
-                          await AuthService().signOut(context);
+                          popUpModal(
+                              keyword: 'Log Keluar',
+                              onTap: () async {
+                                showLoadingAnimation(context: context);
+                                await AuthService().signOut(context);
+                              });
                         }),
                     UserButton(
                       color: isSLI ? Colours.orange : Colours.blue,
-                      text: "Delete Account",
+                      text: "Padam Akaun",
                       onClick: () async {
-                        showLoadingAnimation(context: context);
-                        await AuthService().deleteAndSignOut(context: context);
+                        popUpModal(
+                            keyword: 'Padamkan Akaun',
+                            onTap: () async {
+                              showLoadingAnimation(context: context);
+                              await AuthService().deleteAndSignOut(context: context);
+                            });
                       },
                     ),
                   ],
