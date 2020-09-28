@@ -7,10 +7,9 @@ import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:heard/http_services/chat_services.dart';
 import 'package:heard/api/chat_item.dart';
 import 'package:heard/firebase_services/auth_service.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 
 auth.User loggedInUser ;
-
 
 class ChatHomeScreen extends StatefulWidget {
 
@@ -82,76 +81,77 @@ class _ChatHomeScreenState extends State<ChatHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: IconButton(
-            icon: Icon(Icons.question_answer,
-                       color: Colours.white,
-                      ),
+    return SafeArea(
+      child: Scaffold(
+          appBar: AppBar(
+            title: Text('Mesej', style: GoogleFonts.lato(
+              fontSize: FontSizes.mainTitle,
+              fontWeight: FontWeight.bold,
+            ),),
+            centerTitle: true,
+            backgroundColor: isSLI ? Colours.orange : Colours.blue,
           ),
 
-          backgroundColor: isSLI ? Colours.orange : Colours.blue,
-        ),
+          body: Container(
+            child: Column(
 
-        body: Container(
-          child: Column(
+                  children: <Widget>[
 
-                children: <Widget>[
+                    Expanded(
+                      child: ListView.separated(
+                        padding: const EdgeInsets.all(8),
+                        itemCount: entries.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return ListTile(
+                                  onTap: (){
 
-                  Expanded(
-                    child: ListView.separated(
-                      padding: const EdgeInsets.all(8),
-                      itemCount: entries.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return ListTile(
-                                onTap: (){
+                                    // direct the user to the designated chat page
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              ChatScreen(
+                                                chatRoomID: entries[index].chatroomId,
+                                                counterpartName: isSLI ? entries[index].userName : entries[index].sliName,
+                                                counterpartPic: "No picture",
 
-                                  // direct the user to the designated chat page
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            ChatScreen(
-                                              chatRoomID: entries[index].chatroomId,
-                                              counterpartName: isSLI ? entries[index].userName : entries[index].sliName,
-                                              counterpartPic: "No picture",
+                                          ),
+                                        )
+                                      );
+                                  },
+                                  leading: Icon(
+                                    Icons.account_circle,
+                                    size: Dimensions.d_55,
+                                  ),
 
-                                        ),
+
+                                  title: isSLI ?
+                                      Text(
+                                        '${entries[index].userName}',
+                                        style: TextStyle(fontWeight: FontWeight.bold),
                                       )
-                                    );
-                                },
-                                leading: Icon(
-                                  Icons.account_circle,
-                                  size: Dimensions.d_55,
-                                ),
 
+                                      :
 
-                                title: isSLI ?
-                                    Text(
-                                      '${entries[index].userName}',
-                                      style: TextStyle(fontWeight: FontWeight.bold),
-                                    )
+                                      Text(
+                                        '${entries[index].sliName}',
+                                        style: TextStyle(fontWeight: FontWeight.bold),
+                                      ),
 
-                                    :
+                                  subtitle: Text('Available'),
 
-                                    Text(
-                                      '${entries[index].sliName}',
-                                      style: TextStyle(fontWeight: FontWeight.bold),
-                                    ),
-
-                                subtitle: Text('Available'),
-
-                              );
-                      },
-                      separatorBuilder: (BuildContext context, int index) => const Divider(),
+                                );
+                        },
+                        separatorBuilder: (BuildContext context, int index) => const Divider(),
+                      ),
                     ),
-                  ),
 
-                ],
+                  ],
 
+            ),
           ),
-        ),
 
+      ),
     );
 
   }
