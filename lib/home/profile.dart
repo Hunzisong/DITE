@@ -417,7 +417,7 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                               keyword: 'Log Keluar',
                               onTap: () async {
                                 showLoadingAnimation(context: context);
-                                await AuthService().signOut(context);
+                                await AuthService().signOut(context: context);
                               });
                         }),
                     UserButton(

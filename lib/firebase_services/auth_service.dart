@@ -11,8 +11,13 @@ class AuthService {
   final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
 
   //Sign out
-  signOut(BuildContext context) async {
-    await _auth.signOut();
+  signOut({BuildContext context, bool isDeleteAccount = false}) async {
+    if (isDeleteAccount) {
+      await _auth.currentUser.delete();
+    }
+    else {
+      await _auth.signOut();
+    }
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.clear();
     print('preference now isSLI after logout: ${preferences.containsKey('isSLI')}');
@@ -38,7 +43,7 @@ class AuthService {
       else
         await SLIServices().deleteSLI(headerToken: authTokenString, phoneNumber: currentUser.phoneNumber);
     }
-    signOut(context);
+    signOut(context: context, isDeleteAccount: true);
   }
 
   //SignIn
