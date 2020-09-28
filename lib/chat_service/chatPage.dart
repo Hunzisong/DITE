@@ -12,10 +12,11 @@ import 'package:heard/constants.dart';
 import 'package:heard/chat_service/chathome.dart';
 import 'package:heard/http_services/chat_services.dart';
 import 'package:heard/firebase_services/auth_service.dart';
+import 'package:heard/chat_service/messageBubble.dart';
+import 'package:heard/chat_service/messageStream.dart';
 
 
 
-final _firestore = FirebaseFirestore.instance;
 auth.User loggedInUser ;
 
 
@@ -72,7 +73,6 @@ class _ChatScreenState extends State<ChatScreen> {
       print('check if is SLI');
       print(isSLI);
 
-
     });
   }
 
@@ -111,13 +111,11 @@ class _ChatScreenState extends State<ChatScreen> {
 
       if (messageSent){
         print('Message sent.');
-
       }
 
       else {
         print("Message is not sent");
       }
-
     }
   }
 
@@ -235,276 +233,9 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 }
 
-// need to modify from here ----
-class MessageStream extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-
-    // errors are caused here.
-    return StreamBuilder<QuerySnapshot>(
-      stream  : _firestore.collection('messages').snapshots(),
-      builder : (context, snapshot){
-
-        if (!snapshot.hasData) {
-          return Center(
-            child: CircularProgressIndicator(
-              backgroundColor: Colors.lightBlueAccent,
-            ),
-          );
-        }
-
-        final messages = snapshot.data.docs.reversed ;
-        List<MessageBubble> messageBubbles = [] ;
-        for (var message in messages){
-          final messageText   = message.data()['text'];
-          /*TODO */
-          final messageSender = message.data()['sender'];
-          final messageType   = message.data()['type'];
-
-          final currentUser = loggedInUser.phoneNumber;
-          final isSLI= message.data()['isSLI'];
-
-//          if (currentUser == messageSender){
-//            isMe = true ;
-//
-//          }
-
-          final messageBubble = MessageBubble(
-              messageSender,
-              messageText  ,
-              messageType,
-              currentUser == messageSender,
-              isSLI,
-          );
-          Text('$messageText from $messageSender',
-            style: TextStyle(
-              fontSize: 50.0,
-            ),
-          );
-          messageBubbles.add(messageBubble);
-        }
 
 
 
-
-        return Expanded(
-          child: ListView(
-            reverse: true,
-            padding: EdgeInsets.symmetric(
-                horizontal: 10.0,
-                vertical: 20.0
-            ),
-            children: messageBubbles,
-          ),
-        );
-
-      },
-    );
-  }
-}
-
-// Modify the message bubble to encapsulate different media
-// e.g text, image, video, documents
-class MessageBubble extends StatelessWidget {
-  MessageBubble(this.sender, this.text , this.type , this.isMe, this.isSLI);
-
-  final String sender;
-  final String text  ;
-  final String type  ;
-  final bool isMe    ;
-  final bool isSLI   ;
-
-  /* Method to activate video player */
-  void showVideoPlayer(parentContext,String videoUrl) async {
-    await showModalBottomSheet(
-        context: parentContext,
-        builder: (BuildContext bc) {
-          return VideoPlayerWidget(videoUrl);
-        });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(10.0),
-      child: Column(
-          crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-          children: <Widget>[
-
-            // this part of the widget is the sender's name/email
-            Text(sender,style: TextStyle(
-              fontSize: 12.0,
-              color: Colors.black,
-            ),
-
-            )
-
-            ,
-            Material(
-                borderRadius: isMe ?  BorderRadius.only(
-                  topLeft: Radius.circular(30.0),
-                  bottomLeft: Radius.circular(30.0),
-                  topRight: Radius.circular(30.0) ,
-                )
-
-                    :
-
-                BorderRadius.only(
-                  topLeft: Radius.circular(30.0),
-                  bottomRight: Radius.circular(30.0),
-                  topRight: Radius.circular(30.0) ,
-                )
-                ,
-                color: isSLI ? Colours.orange : Colours.blue,
-                child:
-
-                type == 'FileType.text' ?
-
-                Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                    child:
-
-                    // Modify here.
-                    Text(text,style: TextStyle(
-                      fontSize: 12.0,
-                      color: Colors.black,
-                    ),
-                    )
-                )
-
-
-                    : type == 'FileType.image' ?
-                Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 0.0),
-                    child:
-
-                    Container(
-                      child: FlatButton(
-                        child: Material(
-                          child: CachedNetworkImage(
-                            placeholder: (context, url) => Container(
-                              child: CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.lightBlueAccent),
-                              ),
-                              width: 100.0,
-                              height: 100.0,
-                              padding: EdgeInsets.all(70.0),
-                              decoration: BoxDecoration(
-                                color: Colors.grey,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(8.0),
-                                ),
-                              ),
-                            ),
-
-                            /*TODO*/
-                            errorWidget: (context, url, error) => Material(
-                              child: Image.asset(
-                                'images/logo.png',
-                                width: 100.0,
-                                height: 100.0,
-                                fit: BoxFit.cover,
-                              ),
-
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(8.0),
-                              ),
-
-                              clipBehavior: Clip.hardEdge,
-
-                            ),
-
-                            imageUrl: text,
-                            width: 150.0,
-                            height: 150.0,
-                            fit: BoxFit.cover,
-                          ),
-
-                          borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                          clipBehavior: Clip.hardEdge,
-                        ),
-
-                        onPressed: (){
-                          // enlarge the photo to full screen
-                        },
-
-                      ),
-                    )
-
-
-                )
-
-                    : type == 'FileType.video' ?
-
-
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Stack(
-                        alignment: AlignmentDirectional.center,
-                        children: <Widget>[
-                          Container(
-                            width: 130,
-                            color: Colors.black45,
-                            height: 80,
-                          ),
-
-                          Column(
-                            children: <Widget>[
-                              Icon(
-                                Icons.videocam,
-                                color: Colors.black,
-                              ),
-
-                              SizedBox(height: 5,),
-
-                              Text('Video',
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    color: Colors.black,
-                                ) ,
-                              )
-
-                            ],
-                          ),
-                        ],
-                      ),
-
-                      Container(
-                        height: 40,
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.play_arrow,
-                            color: Colors.black,
-                          ),
-
-                          // implement onPressed here
-                          // the text here is the video url
-                          onPressed: () => showVideoPlayer(context, text),
-
-                        ),
-                      ),
-
-
-                    ],
-                  ),
-                )
-
-                // if not, it must be a document
-                // requires file downloader API
-                // requires changing android permissions
-                // TODO - Do later! After integrating with the main application
-                    :
-                Container()
-
-            ),
-          ]
-      ),
-    );
-  }
-}
 
 // commented out codes
 //  Future<dynamic> uploadFile() async {
