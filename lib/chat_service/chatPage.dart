@@ -93,37 +93,6 @@ class _ChatScreenState extends State<ChatScreen> {
 
   }
 
-  Future<dynamic> uploadFile() async {
-    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-    StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
-    StorageUploadTask uploadTask = reference.putFile(file);
-
-    StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
-    var url = storageTaskSnapshot.ref.getDownloadURL();
-
-    return url ;
-
-  }
-
-  /*Follow up method to send attachments*/
-  showFilePicker(FileType fileType) async {
-
-    file = await FilePicker.getFile(type: fileType);
-
-    if (file == null) return ;
-
-    // send attachment event function implementation
-    String url = await uploadFile();
-
-    messageText = url;
-    // then, proceed to send this message
-    sendMessage(url, fileType);
-    print(fileType);
-
-    Navigator.pop(context);
-
-  }
-
 
   // implementing a listener function
   void messageStream() async {
@@ -134,10 +103,7 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  void sendMessage(String content, var type) async{
-    // clear the message input
-    // int type : 0 for text strings, filetype.image for image,
-    //            filetype.video for videos, filetype.any for misc files
+  void sendMessage(String content) async{
 
     if (content != '')
     {
@@ -155,23 +121,12 @@ class _ChatScreenState extends State<ChatScreen> {
       if (messageSent){
         print('Message sent.');
 
-
       }
 
       else {
         print("Message is not sent");
       }
 
-
-
-      // NOTE
-      //Implement send functionality.
-//      _firestore.collection('messages').add({
-//        'text' : content,
-//        'sender' : loggedInUser.phoneNumber,
-//        'type': type.toString(),
-//        'isSLI': isSLI,
-//      });
     }
   }
 
@@ -232,33 +187,34 @@ class _ChatScreenState extends State<ChatScreen> {
                   // The add attachment icon for adding other file
                   FlatButton(
                     onPressed: () {
-                      showModalBottomSheet(
-                          context: context,
-                          builder: (BuildContext bc){
-                            return Container(
-                              child: Wrap(
-                                children: <Widget>[
-                                  ListTile(
-                                    leading: Icon(Icons.image),
-                                    title: Text('Image'),
-                                    onTap: () => showFilePicker(FileType.image),
-                                  ),
-
-                                  ListTile(
-                                    leading: Icon(Icons.videocam),
-                                    title: Text('Video'),
-                                    onTap: () => showFilePicker(FileType.video),
-                                  ),
-
-                                  ListTile(
-                                    leading: Icon(Icons.insert_drive_file),
-                                    title: Text('Document'),
-                                    onTap: () => showFilePicker(FileType.any),
-                                  ),
-                                ],
-                              ),
-                            );
-                          });
+                        debugPrint('Attachment file button clicked');
+//                      showModalBottomSheet(
+//                          context: context,
+//                          builder: (BuildContext bc){
+//                            return Container(
+//                              child: Wrap(
+//                                children: <Widget>[
+//                                  ListTile(
+//                                    leading: Icon(Icons.image),
+//                                    title: Text('Image'),
+//                                    onTap: () => showFilePicker(FileType.image),
+//                                  ),
+//
+//                                  ListTile(
+//                                    leading: Icon(Icons.videocam),
+//                                    title: Text('Video'),
+//                                    onTap: () => showFilePicker(FileType.video),
+//                                  ),
+//
+//                                  ListTile(
+//                                    leading: Icon(Icons.insert_drive_file),
+//                                    title: Text('Document'),
+//                                    onTap: () => showFilePicker(FileType.any),
+//                                  ),
+//                                ],
+//                              ),
+//                            );
+//                          });
 
                     },
                     child: IconButton(
@@ -270,7 +226,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     onPressed: () {
 
                       // The code 'filetype.text' means for messageTEXT
-                      sendMessage(messageText, 'FileType.text');
+                      sendMessage(messageText);
 
                     },
                     child: IconButton(
@@ -558,3 +514,35 @@ class MessageBubble extends StatelessWidget {
     );
   }
 }
+
+// commented out codes
+//  Future<dynamic> uploadFile() async {
+//    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+//    StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
+//    StorageUploadTask uploadTask = reference.putFile(file);
+//
+//    StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
+//    var url = storageTaskSnapshot.ref.getDownloadURL();
+//
+//    return url ;
+//
+//  }
+
+/*Follow up method to send attachments*/
+//  showFilePicker(FileType fileType) async {
+//
+//    file = await FilePicker.getFile(type: fileType);
+//
+//    if (file == null) return ;
+//
+//    // send attachment event function implementation
+//    String url = await uploadFile();
+//
+//    messageText = url;
+//    // then, proceed to send this message
+//    sendMessage(url, fileType);
+//    print(fileType);
+//
+//    Navigator.pop(context);
+//
+//  }
