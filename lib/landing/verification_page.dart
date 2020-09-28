@@ -46,6 +46,27 @@ class _VerificationPageState extends State<VerificationPage> {
     );
   }
 
+  void showWrongLoginError() {
+    popUpDialog(
+        context: context,
+        isSLI: widget.userDetails.isSLI,
+        touchToDismiss: false,
+        header: 'Amaran',
+        content: Text(
+          'Anda telah memilih jenis Log Masuk yang salah. Sila cuba lagi.',
+          textAlign: TextAlign.left,
+          style: TextStyle(
+              color: Colours.darkGrey,
+              fontSize: FontSizes.normal),
+        ),
+        onClick: () {
+          Navigator.pop(context);
+          Navigator.pop(context);
+          Navigator.pop(context);
+        }
+    );
+  }
+
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
@@ -109,12 +130,17 @@ class _VerificationPageState extends State<VerificationPage> {
                                 verId: widget.verificationId);
 
                             if (token != null) {
-                              SharedPreferences preferences = await SharedPreferences
-                                  .getInstance();
-                              preferences.setBool('isSLI',
-                                  widget.userDetails.isSLI);
-                              print('preference for isSLI: ${preferences
-                                  .getBool('isSLI')}');
+                              if (token == 'wrongLogin') {
+                                showWrongLoginError();
+                              }
+                              else {
+                                SharedPreferences preferences = await SharedPreferences
+                                    .getInstance();
+                                preferences.setBool('isSLI',
+                                    widget.userDetails.isSLI);
+                                print('preference for isSLI: ${preferences
+                                    .getBool('isSLI')}');
+                              }
                             }
                             else {
                               Navigator.pop(context);

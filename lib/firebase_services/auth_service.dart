@@ -87,29 +87,37 @@ class AuthService {
         if (userDetails.isSLI == false) {
           bool userExists = await UserServices().doesUserExist(
               headerToken: authTokenString);
-          if (userExists == false) {
+          if (userExists == false && userDetails.isLogin == false) {
             await UserServices().createUser(
               headerToken: authTokenString,
               userDetails: userDetails,
             );
           }
+          else if (userExists == false && userDetails.isLogin == true) {
+            token = 'wrongLogin';
+          }
         } else {
           bool sliExists = await SLIServices().doesSLIExist(
               headerToken: authTokenString);
-          if (sliExists == false) {
+          if (sliExists == false && userDetails.isLogin == false) {
             await SLIServices().createSLI(
               headerToken: authTokenString,
               sliDetails: userDetails,
             );
           }
+          else if (sliExists == false && userDetails.isLogin == true) {
+            token = 'wrongLogin';
+          }
         }
-        Navigator.pop(context);
-        Navigator.pop(context);
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => Navigation(isSLI: userDetails.isSLI)),
-        );
+        if (token != 'wrongLogin') {
+          Navigator.pop(context);
+          Navigator.pop(context);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => Navigation(isSLI: userDetails.isSLI)),
+          );
+        }
       } else {
         Navigator.pop(context);
         Navigator.pop(context);

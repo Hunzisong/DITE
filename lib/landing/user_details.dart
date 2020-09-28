@@ -8,6 +8,7 @@ class UserDetails {
   bool isFluent = false;
   bool termsAndConditions = false;
   bool isSLI = false;
+  bool isLogin = false;
   Gender gender;
   TextEditingController age = TextEditingController();
 
@@ -19,5 +20,9 @@ class UserDetails {
 
   void setUserType({bool isSLI}) {
     this.isSLI = isSLI;
+  }
+
+  void setIsLogin({bool isLogin}) {
+    this.isLogin = isLogin;
   }
 }

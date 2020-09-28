@@ -17,6 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   String verificationId;
   bool codeSent = false;
   UserDetails userDetails;
+  bool isButtonDisabled = true;
 
   @override
   void initState() {
@@ -63,12 +64,21 @@ class _LoginPageState extends State<LoginPage> {
                           controller: userDetails.phoneNumber,
                           labelText: 'Nombor Telefon',
                           keyboardType: TextInputType.phone,
+                          onChanged: (text) {
+                            if (userDetails.phoneNumber.text.isNotEmpty) {
+                              isButtonDisabled = false;
+                            }
+                            else {
+                              isButtonDisabled = true;
+                            }
+                            setState(() {});
+                          },
                         ),
                         SizedBox(height: Dimensions.d_15),
                         UserButton(
                           text: 'Log Masuk Sebagai Pengguna',
                           color: Colours.blue,
-                          onClick: () async {
+                          onClick: isButtonDisabled ? null : () async {
                             setState(() {
                               showLoadingAnimation = true;
                               userDetails.setUserType(isSLI: false);
@@ -79,7 +89,7 @@ class _LoginPageState extends State<LoginPage> {
                         UserButton(
                           text: 'Log Masuk Sebagai JBIM',
                           color: Colours.orange,
-                          onClick: () async {
+                          onClick: isButtonDisabled ? null : () async {
                             setState(() {
                               showLoadingAnimation = true;
                               userDetails.setUserType(isSLI: true);
@@ -99,6 +109,10 @@ class _LoginPageState extends State<LoginPage> {
 
   void pushVerificationPage() {
     print('isSLI LOGIN: ${userDetails.isSLI}');
+    userDetails.setIsLogin(isLogin: true);
+    setState(() {
+      showLoadingAnimation = false;
+    });
     Navigator.push(
         context,
         MaterialPageRoute(builder: (context) =>
