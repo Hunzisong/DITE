@@ -94,15 +94,6 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
 
-  // implementing a listener function
-  void messageStream() async {
-    await for (var snapshot in _firestore.collection('messages').snapshots()) {
-      for (var message in snapshot.docs) {
-        print(message.data);
-      }
-    }
-  }
-
   void sendMessage(String content) async{
 
     if (content != '')
