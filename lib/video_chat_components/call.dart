@@ -167,8 +167,8 @@ class _CallPageState extends State<CallPage> {
         return Container(
             child: Column(
               children: <Widget>[
-                _expandedVideoRow([views[0]]),
-                _expandedVideoRow([views[1]])
+                _expandedVideoRow(isSLI ? [views[0]] : [views[1]]),
+                _expandedVideoRow(isSLI ? [views[1]] : [views[0]])
               ],
             ));
       case 3:
@@ -241,56 +241,6 @@ class _CallPageState extends State<CallPage> {
     );
   }
 
-  /// Info panel to show logs
-  Widget _panel() {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 48),
-      alignment: Alignment.bottomCenter,
-      child: FractionallySizedBox(
-        heightFactor: 0.5,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 48),
-          child: ListView.builder(
-            reverse: true,
-            itemCount: _infoStrings.length,
-            itemBuilder: (BuildContext context, int index) {
-              if (_infoStrings.isEmpty) {
-                return null;
-              }
-              return Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 3,
-                  horizontal: 10,
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Flexible(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 2,
-                          horizontal: 5,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.yellowAccent,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Text(
-                          _infoStrings[index],
-                          style: TextStyle(color: Colors.blueGrey),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              );
-            },
-          ),
-        ),
-      ),
-    );
-  }
-
   void _onCallEnd(BuildContext context) {
     Navigator.pop(context);
   }
@@ -324,7 +274,6 @@ class _CallPageState extends State<CallPage> {
         child: Stack(
           children: <Widget>[
             _viewRows(),
-            _panel(),
             _toolbar(),
           ],
         ),
