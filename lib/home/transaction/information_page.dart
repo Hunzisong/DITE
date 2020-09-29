@@ -70,7 +70,7 @@ class _InformationPageState extends State<InformationPage> {
         isSLI: widget.isSLI,
         header: 'Pengesahan',
         content: Text(
-          'Adakah Anda Pasti $keyword Temapahan?',
+          'Adakah Anda Pasti $keyword Tempahan?',
           textAlign: TextAlign.left,
           style: TextStyle(color: Colours.darkGrey, fontSize: FontSizes.normal),
         ),
