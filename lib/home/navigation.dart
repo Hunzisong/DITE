@@ -172,7 +172,7 @@ class _NavigationState extends State<Navigation> {
                 color: Colours.lightGrey,
               ),
               ListTile(
-                title: Text('Semua JBIM Didaftar'),
+                title: Text('Senarai JBIM Didaftarkan'),
                 leading: Icon(Icons.people_outline, color: Colours.darkGrey,),
                 onTap: () {
                   Navigator.push(
