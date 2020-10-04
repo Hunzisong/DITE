@@ -59,7 +59,7 @@ class User {
     data['name'] = this.name.text;
     data['gender'] = this.gender;
     data['phone_no'] = this.phoneNo;
-    data['profile_pic'] = this.profilePic.readAsStringSync();
+    data['profile_pic'] = this.profilePic;
     data['description'] = this.description;
     data['experienced_medical'] = this.experienced_medical;
     data['experienced_bim'] = this.experienced_bim;

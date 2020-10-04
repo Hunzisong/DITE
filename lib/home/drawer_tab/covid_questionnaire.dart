@@ -97,7 +97,6 @@ class _QuestionnaireState extends State<Questionnaire> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: isSLI ? Colours.orange : Colours.blue,
-
         title: Text('Soal Selidik Covid-19',
           style: GoogleFonts.lato(
           fontSize: FontSizes.mainTitle,

@@ -7,6 +7,8 @@ import 'package:heard/firebase_services/auth_service.dart';
 import 'package:heard/firebase_services/fcm.dart';
 import 'package:heard/home/booking/sli_booking_page.dart';
 import 'package:heard/home/booking/user_booking_page.dart';
+import 'package:heard/home/booking/user_booking_result_page.dart';
+import 'package:heard/home/drawer_tab/covid_questionnaire.dart';
 import 'package:heard/home/on_demand/on_demand_sli_page.dart';
 import 'package:heard/home/on_demand/on_demand_user_page.dart';
 import 'package:heard/home/profile/profile.dart';
@@ -16,7 +18,6 @@ import 'package:heard/http_services/sli_services.dart';
 import 'package:heard/http_services/user_services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:heard/chat_service/chathome.dart';
-import 'package:heard/home/covid19/questionnaire.dart';
 
 class Navigation extends StatefulWidget {
   final bool isSLI;
@@ -113,21 +114,6 @@ class _NavigationState extends State<Navigation> {
       child: Scaffold(
         backgroundColor: Colours.white,
         appBar: AppBar(
-          leading: widget.isSLI ? SizedBox.shrink() : Padding(
-            padding: EdgeInsets.only(left: Dimensions.d_10),
-            child: IconButton(
-              icon: Icon(Icons.assignment),
-              iconSize: Dimensions.d_30,
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  /// push the chat screen over here
-                  MaterialPageRoute(builder: (context) => Questionnaire()),
-                );
-              },
-              tooltip: 'Soal Selidik Covid-19',
-            ),
-          ),
           title: Text(
             _titles[_currentPageIndex],
             style: GoogleFonts.lato(
@@ -153,6 +139,55 @@ class _NavigationState extends State<Navigation> {
               ),
             )
           ],
+        ),
+        drawer: widget.isSLI ? null : Drawer(
+          child: ListView(
+            children: [
+              Container(
+                height: Dimensions.d_55,
+                child: DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Colours.blue
+                  ),
+                  child: Text('DITE', style: GoogleFonts.lato(
+                    fontWeight: FontWeight.bold,
+                  ),),
+                ),
+              ),
+              ListTile(
+                title: Text('Soal Selidik COVID-19'),
+                leading: Icon(Icons.assignment, color: Colours.darkGrey,),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    /// push the chat screen over here
+                    MaterialPageRoute(builder: (context) => Questionnaire()),
+                  );
+                },
+              ),
+              Divider(
+                height: Dimensions.d_0,
+                thickness: Dimensions.d_3,
+                color: Colours.lightGrey,
+              ),
+              ListTile(
+                title: Text('Semua JBIM Yang Terdaftar'),
+                leading: Icon(Icons.people_outline, color: Colours.darkGrey,),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => UserBookingResultPage(
+                      pickedDate: '',
+                      pickedTime: '',
+                      hospitalName: '',
+                      preferredLanguage: '',
+                      isViewOnly: true,
+                    )),
+                  );
+                },
+              )
+            ],
+          ),
         ),
         body: showLoadingAnimation
             ? Center(child: CircularProgressIndicator())

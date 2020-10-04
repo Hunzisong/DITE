@@ -16,12 +16,14 @@ class UserBookingResultPage extends StatefulWidget {
   final String hospitalName;
   final String preferredLanguage;
   final String bookingFailedMessage;
+  final bool isViewOnly;
 
   UserBookingResultPage(
       {@required this.hospitalName,
       @required this.pickedDate,
       @required this.pickedTime,
       @required this.preferredLanguage,
+      this.isViewOnly = false,
       this.bookingFailedMessage});
 
   @override
@@ -165,7 +167,7 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
       String description}) {
     return InkWell(
       borderRadius: BorderRadius.circular(Dimensions.d_25),
-      onTap: () {
+      onTap: widget.isViewOnly ? null : () {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -301,7 +303,7 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
               },
             ),
             title: Text(
-              'Hasil Carian',
+              widget.isViewOnly ? 'Semua JBIM Terdaftar' : 'Hasil Carian',
               style: GoogleFonts.lato(
                 fontSize: FontSizes.mainTitle,
                 fontWeight: FontWeight.bold,
@@ -321,51 +323,55 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
                   child: ListView(
                     children: <Widget>[
                       Padding(
-                        padding: EdgeInsets.fromLTRB(Dimensions.d_30,
-                            Dimensions.d_10, Dimensions.d_30, Dimensions.d_30),
+                        padding: EdgeInsets.fromLTRB(Dimensions.d_15,
+                            Dimensions.d_10, Dimensions.d_15, Dimensions.d_30),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Expanded(
-                                  flex: 8,
-                                  child: Container(
-                                    height: Dimensions.d_45,
-                                    child: DropdownList(
-                                      hintText: "Jantina",
-                                      selectedItem: selectedGender,
-                                      itemList: genderList,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          selectedGender = value;
-                                        });
-                                      },
+                            widget.isViewOnly ? SizedBox.shrink() : Column(
+                              children: [
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Expanded(
+                                      flex: 8,
+                                      child: Container(
+                                        height: Dimensions.d_45,
+                                        child: DropdownList(
+                                          hintText: "Jantina",
+                                          selectedItem: selectedGender,
+                                          itemList: genderList,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              selectedGender = value;
+                                            });
+                                          },
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                SizedBox(width: Dimensions.d_10),
-                                Expanded(
-                                  flex: 10,
-                                  child: Container(
-                                    height: Dimensions.d_45,
-                                    child: DropdownList(
-                                      hintText: "Pengalaman",
-                                      selectedItem: selectedExperience,
-                                      itemList: experienceList,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          selectedExperience = value;
-                                        });
-                                      },
+                                    SizedBox(width: Dimensions.d_10),
+                                    Expanded(
+                                      flex: 10,
+                                      child: Container(
+                                        height: Dimensions.d_45,
+                                        child: DropdownList(
+                                          hintText: "Pengalaman",
+                                          selectedItem: selectedExperience,
+                                          itemList: experienceList,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              selectedExperience = value;
+                                            });
+                                          },
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                  ],
                                 ),
+                                SizedBox(height: Dimensions.d_20),
                               ],
                             ),
-                            SizedBox(height: Dimensions.d_20),
                             loadFilteredSliList(),
                           ],
                         ),
