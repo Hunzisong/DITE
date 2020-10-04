@@ -124,7 +124,7 @@ class _UserBookingPageState extends State<UserBookingPage> {
               borderRadius: BorderRadius.circular(Dimensions.d_10)),
           title: Text(
             currentDate == null ?
-            'Pilih Masa ...' :
+            'Pilih Tarikh ...' :
             DateFormat('yyyy-MM-dd').format(currentDate),
           ),
           trailing: Icon(Icons.keyboard_arrow_down),
