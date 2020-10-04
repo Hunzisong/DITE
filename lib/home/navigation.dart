@@ -114,6 +114,7 @@ class _NavigationState extends State<Navigation> {
       child: Scaffold(
         backgroundColor: Colours.white,
         appBar: AppBar(
+          leading: widget.isSLI ? SizedBox.shrink() : null,
           title: Text(
             _titles[_currentPageIndex],
             style: GoogleFonts.lato(
@@ -171,7 +172,7 @@ class _NavigationState extends State<Navigation> {
                 color: Colours.lightGrey,
               ),
               ListTile(
-                title: Text('Semua JBIM Yang Terdaftar'),
+                title: Text('Semua JBIM Didaftar'),
                 leading: Icon(Icons.people_outline, color: Colours.darkGrey,),
                 onTap: () {
                   Navigator.push(
