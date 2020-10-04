@@ -1,10 +1,12 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 
 class User {
   TextEditingController name = TextEditingController();
   String gender;
   String phoneNo;
-  String profilePic;
+  File profilePic;
   String description;
   bool experienced_medical;
   bool experienced_bim;
@@ -38,7 +40,7 @@ class User {
     name.text = json['name'];
     gender = json['gender'];
     phoneNo = json['phone_no'];
-    profilePic = json['profile_pic'];
+    setProfilePicture(json['profile_pic']);
     description = json['description'];
     experienced_medical = json['experienced_medical'];
     experienced_bim = json['experienced_bim'];
@@ -57,7 +59,7 @@ class User {
     data['name'] = this.name.text;
     data['gender'] = this.gender;
     data['phone_no'] = this.phoneNo;
-    data['profile_pic'] = this.profilePic;
+    data['profile_pic'] = this.profilePic.readAsStringSync();
     data['description'] = this.description;
     data['experienced_medical'] = this.experienced_medical;
     data['experienced_bim'] = this.experienced_bim;
@@ -70,5 +72,15 @@ class User {
     data['bim_proficient'] = this.bim_proficient;
     data['education'] = this.education.text;
     return data;
+  }
+
+  void setProfilePicture(String profilePicture) {
+    if (profilePicture == 'test1') {
+      profilePic = null;
+    }
+    else {
+      profilePic = File('decodedProfilePic.png');
+      profilePic.writeAsBytesSync(base64Decode(profilePicture));
+    }
   }
 }
