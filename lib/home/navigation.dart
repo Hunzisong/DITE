@@ -32,8 +32,8 @@ class _NavigationState extends State<Navigation> {
   int _currentPageIndex = 0;
   List<Widget> _pages;
   final List<String> _titles = [
-    'Permintaan',
-    'Tempahan',
+    'Tempahan Segera',
+    'Janji Temu',
     'Transaksi',
     'Profil'
   ];
@@ -210,16 +210,16 @@ class _NavigationState extends State<Navigation> {
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                   icon: Icon(Icons.search, size: Dimensions.d_30),
-                  title: Text('Permintaan')),
+                  label: 'Permintaan'),
               BottomNavigationBarItem(
                   icon: Icon(Icons.calendar_today, size: Dimensions.d_30),
-                  title: Text('Tempahan')),
+                  label: 'Janji Temu'),
               BottomNavigationBarItem(
                   icon: Icon(Icons.history, size: Dimensions.d_30),
-                  title: Text('Transaksi')),
+                  label: 'Transaksi'),
               BottomNavigationBarItem(
                   icon: Icon(Icons.account_circle, size: Dimensions.d_30),
-                  title: Text('Profil')),
+                  label: 'Profil',)
             ]),
       ),
     );

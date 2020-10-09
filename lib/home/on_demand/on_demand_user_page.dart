@@ -125,7 +125,7 @@ class _OnDemandUserPageState extends State<OnDemandUserPage> with AutomaticKeepA
                                         fontWeight: FontWeight.bold,
                                         fontSize: FontSizes.biggerText)),
                                 subtitle: Text(
-                                  'Cari JBIM dan mulakan video call sekarang.',
+                                  'Cari JBIM dan mulakan panggilan video sekarang.',
                                   style: TextStyle(
                                       fontSize: FontSizes.normal,
                                       color: Colours.darkGrey),

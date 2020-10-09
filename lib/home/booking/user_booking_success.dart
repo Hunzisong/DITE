@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:heard/widgets/loading_screen.dart';
 import 'package:heard/widgets/user_button.dart';
 
 class UserBookingSuccessPage extends StatefulWidget {
@@ -54,6 +53,23 @@ class _UserBookingSuccessPageState extends State<UserBookingSuccessPage> {
                   fontSize: FontSizes.mainTitle,
                   color: Colours.accept,
                   fontWeight: FontWeight.bold),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: Dimensions.d_35, vertical: Dimensions.d_10),
+            child: Card(
+              elevation: Dimensions.d_3,
+              child: Padding(
+                padding: EdgeInsets.all(Dimensions.d_10),
+                child: Text(
+                  "Anda Boleh Mengurus Tempahan Yang Dibuat Dalam Tab Transaksi",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      // fontSize: FontSizes.tinyText,
+                      color: Colours.darkGrey,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
             ),
           ),
         ],

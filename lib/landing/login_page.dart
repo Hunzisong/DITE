@@ -158,9 +158,7 @@ class _LoginPageState extends State<LoginPage> {
 
     final auth.PhoneCodeAutoRetrievalTimeout autoTimeout = (String verId) {
       this.verificationId = verId;
-      setState(() {
-        this.codeSent = true;
-      });
+      this.codeSent = true;
     };
 
     await auth.FirebaseAuth.instance.verifyPhoneNumber (

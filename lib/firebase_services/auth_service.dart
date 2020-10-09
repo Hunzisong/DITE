@@ -16,9 +16,8 @@ class AuthService {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.clear();
     print('preference now isSLI after logout: ${preferences.containsKey('isSLI')}');
-    Navigator.canPop(context);
-    Navigator.canPop(context);
-    Navigator.canPop(context);
+    Navigator.pop(context);
+    Navigator.pop(context);
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => LandingPage()),
@@ -110,6 +109,8 @@ class AuthService {
           }
         }
         if (token != 'wrongLogin') {
+          Navigator.pop(context);
+          Navigator.pop(context);
           Navigator.pop(context);
           Navigator.pop(context);
           Navigator.push(
