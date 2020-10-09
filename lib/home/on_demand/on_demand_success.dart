@@ -10,7 +10,7 @@ import 'package:heard/video_chat_components/call.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:heard/chat_service/chatPage.dart';
 import 'package:heard/http_services/chat_services.dart';
-
+import 'package:wakelock/wakelock.dart';
 
 class OnDemandSuccessPage extends StatefulWidget {
   final Function onCancelClick;
@@ -354,6 +354,10 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
         )
     );
 
+    bool wakeLockEnabled = await Wakelock.enabled;
+    if (wakeLockEnabled) {
+      Wakelock.disable();
+    }
   }
 
   Future<void> _handleCameraAndMic() async {

@@ -44,7 +44,8 @@ dev_dependencies:
   shared_preferences: ^0.5.8
   pull_to_refresh: ^1.6.1
   google_fonts: ^1.1.0
-  flutter_stetho: ^0.5.2
+  wakelock: ^0.2.0+1
+  meta: ^1.2.3
 
   # chat app dependencies
   file_picker: ^1.13.3

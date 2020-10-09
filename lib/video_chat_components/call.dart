@@ -5,6 +5,7 @@ import 'settings.dart';
 import 'package:heard/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wakelock/wakelock.dart';
 
 class CallPage extends StatefulWidget {
   /// non-modifiable channel name of the page
@@ -258,6 +259,7 @@ class _CallPageState extends State<CallPage> {
 
   @override
   Widget build(BuildContext context) {
+    Wakelock.enable();
     return Scaffold(
       appBar: AppBar(
         title: Text('Video Call Room',

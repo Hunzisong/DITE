@@ -10,6 +10,7 @@ import 'package:heard/video_chat_components/call.dart';
 import 'package:heard/chat_service/chatPage.dart';
 import 'package:heard/http_services/chat_services.dart';
 import 'package:heard/api/chat_item.dart';
+import 'package:wakelock/wakelock.dart';
 
 class InformationPage extends StatefulWidget {
   final Function onCancelClick;
@@ -277,7 +278,10 @@ class _InformationPageState extends State<InformationPage> {
           ),
         )
     );
-
+    bool wakeLockEnabled = await Wakelock.enabled;
+    if (wakeLockEnabled) {
+      Wakelock.disable();
+    }
   }
 
   Future<void> _handleCameraAndMic() async {
