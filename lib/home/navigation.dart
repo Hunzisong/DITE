@@ -151,6 +151,7 @@ class _NavigationState extends State<Navigation> {
                     color: Colours.blue
                   ),
                   child: Text('DITE', style: GoogleFonts.lato(
+                    color: Colours.white,
                     fontWeight: FontWeight.bold,
                   ),),
                 ),
