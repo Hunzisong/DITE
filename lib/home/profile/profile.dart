@@ -541,6 +541,8 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                       imageUrl:
                                           'https://heard-project.herokuapp.com/attachment?filename=${userDetails.profilePic}',
                                       httpHeaders: {'Authorization': authToken},
+                                      progressIndicatorBuilder: (context, url, downloadProgress) =>
+                                          Center(child: CircularProgressIndicator(value: downloadProgress.progress)),
                                       errorWidget: (context, url, error) =>
                                           Icon(Icons.error),
                                       width: Dimensions.d_120,
