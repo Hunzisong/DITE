@@ -9,6 +9,7 @@ import 'package:heard/widgets/user_button.dart';
 import 'package:heard/widgets/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class Profile extends StatefulWidget {
   final User userDetails;
@@ -532,11 +533,15 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                                 ? Image(image: AssetImage('images/avatar.png'))
                                 : ClipRRect(
                                 borderRadius: BorderRadius.circular(Dimensions.d_65),
-                                child: Image.network('https://heard-project.herokuapp.com/attachment?filename=${userDetails.profilePic}',
-                                    headers: {'Authorization': authToken},
-                                    width: Dimensions.d_120,
-                                    height: Dimensions.d_120,
-                                    fit: BoxFit.fitHeight,)),
+                                child: CachedNetworkImage(
+                                  imageUrl: 'https://heard-project.herokuapp.com/attachment?filename=${userDetails.profilePic}',
+                                  httpHeaders: {'Authorization': authToken},
+                                  errorWidget: (context, url, error) => Icon(Icons.error),
+                                  width: Dimensions.d_120,
+                                  height: Dimensions.d_120,
+                                  fit: BoxFit.fitHeight,
+                                ),
+                                  ),
                           ),
                         ),
                       ),
