@@ -37,7 +37,7 @@ class MessageBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(10.0),
+      padding: EdgeInsets.all(2.0),
       child: Column(
           crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: <Widget>[
@@ -68,7 +68,7 @@ class MessageBubble extends StatelessWidget {
 
                     // Modify here.
                     Text(text,style: TextStyle(
-                      fontSize: 12.0,
+                      fontSize: FontSizes.smallerText,
                       color: Colors.black,
                     ),
                     )
