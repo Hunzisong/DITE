@@ -331,6 +331,7 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
                 counterpartName: widget.isSLI ? chatSessionInfo.userName : chatSessionInfo.sliName,
                 counterpartPic: "No picture",
                 isSLI:           widget.isSLI,
+                fromChatHistoryPage: false,
 
               )
           )
