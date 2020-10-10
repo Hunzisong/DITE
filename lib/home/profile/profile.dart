@@ -74,19 +74,22 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
     });
   }
 
-  Future<void> editDetails({String key, dynamic value, bool isProfilePicture = false}) async {
+  Future<void> editDetails(
+      {String key, dynamic value, bool isProfilePicture = false}) async {
     showLoadingAnimation(context: context);
     String authTokenString = await AuthService.getToken();
     if (isProfilePicture) {
-      !isSLI ? await UserServices().uploadProfilePicture(headerToken: authTokenString, image: value) :
-          await SLIServices().uploadProfilePicture(headerToken: authTokenString, image: value);
-    }
-    else {
+      !isSLI
+          ? await UserServices()
+              .uploadProfilePicture(headerToken: authTokenString, image: value)
+          : await SLIServices()
+              .uploadProfilePicture(headerToken: authTokenString, image: value);
+    } else {
       isSLI
           ? await SLIServices()
-          .editSLI(headerToken: authTokenString, key: key, value: value)
+              .editSLI(headerToken: authTokenString, key: key, value: value)
           : await UserServices()
-          .editUser(headerToken: authTokenString, key: key, value: value);
+              .editUser(headerToken: authTokenString, key: key, value: value);
     }
     User userDetailsTest = isSLI
         ? await SLIServices().getSLI(headerToken: authTokenString)
@@ -532,15 +535,18 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                             child: userDetails.profilePic == null
                                 ? Image(image: AssetImage('images/avatar.png'))
                                 : ClipRRect(
-                                borderRadius: BorderRadius.circular(Dimensions.d_65),
-                                child: CachedNetworkImage(
-                                  imageUrl: 'https://heard-project.herokuapp.com/attachment?filename=${userDetails.profilePic}',
-                                  httpHeaders: {'Authorization': authToken},
-                                  errorWidget: (context, url, error) => Icon(Icons.error),
-                                  width: Dimensions.d_120,
-                                  height: Dimensions.d_120,
-                                  fit: BoxFit.fitHeight,
-                                ),
+                                    borderRadius:
+                                        BorderRadius.circular(Dimensions.d_65),
+                                    child: CachedNetworkImage(
+                                      imageUrl:
+                                          'https://heard-project.herokuapp.com/attachment?filename=${userDetails.profilePic}',
+                                      httpHeaders: {'Authorization': authToken},
+                                      errorWidget: (context, url, error) =>
+                                          Icon(Icons.error),
+                                      width: Dimensions.d_120,
+                                      height: Dimensions.d_120,
+                                      fit: BoxFit.fitHeight,
+                                    ),
                                   ),
                           ),
                         ),
