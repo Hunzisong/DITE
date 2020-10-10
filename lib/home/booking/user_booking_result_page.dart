@@ -303,7 +303,7 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
               },
             ),
             title: Text(
-              widget.isViewOnly ? 'Senarai JBIM Didaftarkan' : 'Hasil Carian',
+              widget.isViewOnly ? 'JBIM Didaftarkan' : 'Hasil Carian',
               style: GoogleFonts.lato(
                 fontSize: FontSizes.mainTitle,
                 fontWeight: FontWeight.bold,
