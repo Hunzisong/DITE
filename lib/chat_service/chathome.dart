@@ -114,6 +114,7 @@ class _ChatHomeScreenState extends State<ChatHomeScreen> {
                                                 chatRoomID: entries[index].chatroomId,
                                                 counterpartName: isSLI ? entries[index].userName : entries[index].sliName,
                                                 counterpartPic: "No picture",
+                                                fromChatHistoryPage: true,
 
                                           ),
                                         )

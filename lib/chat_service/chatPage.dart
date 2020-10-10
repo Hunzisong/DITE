@@ -29,9 +29,10 @@ class ChatScreen extends StatefulWidget {
   final String counterpartName;
   final String counterpartPic;
   final bool isSLI;
+  final bool fromChatHistoryPage;
 
 
-  ChatScreen({this.chatRoomID, this.counterpartName, this.counterpartPic, this.isSLI  });
+  ChatScreen({this.chatRoomID, this.counterpartName, this.counterpartPic, this.isSLI, this.fromChatHistoryPage  });
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -161,28 +162,30 @@ class _ChatScreenState extends State<ChatScreen> {
                           isSLI:      isSLI,
             )
             ,
-            Container(
-              decoration: kMessageContainerDecoration,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
+            Visibility(
+              visible: !widget.fromChatHistoryPage,
+              child: Container(
+                decoration: kMessageContainerDecoration,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
 
-                  // The widget for text input
-                  Expanded(
-                    child: TextField(
-                      controller: messageTextController,
-                      onChanged: (value) {
-                        //Do something with the user input.
-                        messageText = value ;
-                      },
-                      decoration: kMessageTextFieldDecoration,
+                    // The widget for text input
+                    Expanded(
+                      child: TextField(
+                        controller: messageTextController,
+                        onChanged: (value) {
+                          //Do something with the user input.
+                          messageText = value ;
+                        },
+                        decoration: kMessageTextFieldDecoration,
+                      ),
                     ),
-                  ),
 
-                  // The add attachment icon for adding other file
-                  FlatButton(
-                    onPressed: () {
-                        debugPrint('Attachment file button clicked');
+                    // The add attachment icon for adding other file
+                    FlatButton(
+                      onPressed: () {
+                          debugPrint('Attachment file button clicked');
 //                      showModalBottomSheet(
 //                          context: context,
 //                          builder: (BuildContext bc){
@@ -211,25 +214,26 @@ class _ChatScreenState extends State<ChatScreen> {
 //                            );
 //                          });
 
-                    },
-                    child: IconButton(
-                        icon : Icon(Icons.attach_file, color: Colors.black,)
-                    ),
-                  ),
-
-                  FlatButton(
-                    onPressed: () {
-
-                      // The code 'filetype.text' means for messageTEXT
-                      sendMessage(messageText);
-
-                    },
-                    child: IconButton(
-                        icon : Icon(Icons.send, color: Colors.black45,)
+                      },
+                      child: IconButton(
+                          icon : Icon(Icons.attach_file, color: Colors.black,)
+                      ),
                     ),
 
-                  ),
-                ],
+                    FlatButton(
+                      onPressed: () {
+
+                        // The code 'filetype.text' means for messageTEXT
+                        sendMessage(messageText);
+
+                      },
+                      child: IconButton(
+                          icon : Icon(Icons.send, color: Colors.black45,)
+                      ),
+
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
