@@ -94,12 +94,15 @@ class _OnDemandUserPageState extends State<OnDemandUserPage> with AutomaticKeepA
                 ? OnDemandUserLoadingPage(
                     reNavigation: reNavigation,
                     onDemandInputs: onDemandInputs,
-                    onCancelClick: () {
+                    onCancelClick: ({String message}) {
                       setState(() {
                         refreshFlag = !refreshFlag;
                         reNavigation = true;
                       });
                       prefs.setString("userOnDemandStatus", "None");
+                      if (message != null) {
+                        Scaffold.of(context).showSnackBar(SnackBar(content: Text('$message')));
+                      }
                     },
                     onSearchComplete: () async {
                       await getOnDemandStatus();

@@ -31,16 +31,46 @@ class OnDemandUserLoadingPage extends StatefulWidget {
 
 class OnDemandUserLoadingPageState extends State<OnDemandUserLoadingPage> {
   String _authToken;
+  int _countdownValue = 60;
+  Timer _countdownTimer;
+  Widget inputs;
 
   @override
   void initState() {
     super.initState();
+    setState(() {
+      inputs = Column(children: [
+        Text('Nama Hospital: ${widget.onDemandInputs.hospital.text}'),
+        Text('Jabatan Hospital: ${widget.onDemandInputs.department.text}'),
+        Text('Jantina: ${widget.onDemandInputs.genderType.toString().split('.').last == 'male' ? 'Lelaki' : 'Perempuan'}'),
+        Text('Kecemasan: ${widget.onDemandInputs.isEmergency ? 'Ya' : 'Tidak'}'),
+        Text('Permintaan bagi orang lain: ${widget.onDemandInputs.isBookingForOthers ? 'Ya' : 'Tidak'}')
+      ]);
+    });
     getAuthToken().whenComplete(() {
       if (!widget.reNavigation) {
         onDemandRequest();
       }
       subscribeFCMListener();
+      startTimer();
     });
+  }
+
+  void startTimer() {
+    const oneSec = const Duration(seconds: 1);
+    _countdownTimer = new Timer.periodic(
+      oneSec,
+      (Timer timer) => setState(
+        () {
+          if (_countdownValue < 1) {
+            OnDemandServices().cancelOnDemandRequest(headerToken: _authToken);
+            widget.onCancelClick(message: "No response to request");
+          } else {
+            _countdownValue = _countdownValue - 1;
+          }
+        },
+      ),
+    );
   }
 
   Future<void> getAuthToken() async {
@@ -48,6 +78,12 @@ class OnDemandUserLoadingPageState extends State<OnDemandUserLoadingPage> {
     setState(() {
       _authToken = _authTokenString;
     });
+  }
+
+  @override
+  void dispose() {
+    _countdownTimer.cancel();
+    super.dispose();
   }
 
   void subscribeFCMListener() {
@@ -76,7 +112,7 @@ class OnDemandUserLoadingPageState extends State<OnDemandUserLoadingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colours.white,
-      body: LoadingScreen(),
+      body: LoadingScreen(topWidget: inputs),
       bottomNavigationBar: UserButton(
           text: 'Batal',
           padding: EdgeInsets.all(Dimensions.d_30),
