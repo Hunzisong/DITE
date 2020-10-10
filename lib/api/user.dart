@@ -75,7 +75,7 @@ class User {
   }
 
   void setProfilePicture(String profilePicture) {
-    if (profilePicture == 'test1') {
+    if (profilePicture == 'test1' || profilePicture == null) {
       profilePic = null;
     }
     else {
