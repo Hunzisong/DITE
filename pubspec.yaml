@@ -46,6 +46,7 @@ dev_dependencies:
   google_fonts: ^1.1.0
   wakelock: ^0.2.0+1
   meta: ^1.2.3
+  dio: ^3.0.10
 
   # chat app dependencies
   file_picker: ^1.13.3
