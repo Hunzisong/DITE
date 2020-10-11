@@ -9,6 +9,7 @@ class OnDemandRequest {
   String gender;
   String patientName;
   String note;
+  String userProfilePicture;
   String status;
 
   OnDemandRequest(
@@ -22,6 +23,7 @@ class OnDemandRequest {
         this.gender,
         this.patientName,
         this.note,
+        this.userProfilePicture,
         this.status});
 
   OnDemandRequest.fromJson(Map<String, dynamic> json) {
@@ -35,6 +37,7 @@ class OnDemandRequest {
     gender = json['gender'];
     patientName = json['patient_name'];
     note = json['note'];
+    userProfilePicture = json['user_profile_pic'] == 'test1' ? null : json['user_profile_pic'];
     status = json['status'];
   }
 
@@ -50,6 +53,7 @@ class OnDemandRequest {
     data['gender'] = this.gender;
     data['patient_name'] = this.patientName;
     data['note'] = this.note;
+    data['user_profile_pic'] = this.userProfilePicture;
     data['status'] = this.status;
     return data;
   }

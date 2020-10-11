@@ -12,3 +12,4 @@ export 'package:heard/widgets/dropdown_list.dart';
 export 'package:heard/widgets/field_label.dart';
 export 'package:heard/widgets/show_loading_animation.dart';
 export 'package:heard/widgets/rich_text_field.dart';
+export 'package:heard/widgets/get_cached_network_image.dart';

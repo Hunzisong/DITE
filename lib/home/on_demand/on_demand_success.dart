@@ -14,16 +14,11 @@ import 'package:wakelock/wakelock.dart';
 
 class OnDemandSuccessPage extends StatefulWidget {
   final Function onCancelClick;
-  final AssetImage profilePic;
   final bool isSLI;
   final OnDemandStatus onDemandStatus;
 
-
   OnDemandSuccessPage(
-      {this.onCancelClick,
-      this.profilePic,
-      this.onDemandStatus,
-      this.isSLI = false});
+      {this.onCancelClick, this.onDemandStatus, this.isSLI = false});
 
   @override
   _OnDemandSuccessPageState createState() => _OnDemandSuccessPageState();
@@ -31,7 +26,7 @@ class OnDemandSuccessPage extends StatefulWidget {
 
 class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
   RefreshController _refreshController =
-  RefreshController(initialRefresh: false);
+      RefreshController(initialRefresh: false);
   final double paddingLR = Dimensions.d_20;
   String authToken;
   OnDemandStatus onDemandStatus;
@@ -42,9 +37,7 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
     getOnDemandStatus();
   }
 
-
   String getVideoCallRoomID() {
-
     Details details = onDemandStatus.details;
 
     // get the unique two party on demand ID from on demand status object
@@ -55,13 +48,12 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
   }
 
   // This method is to retrieve the person's ID that the user is chatting to.
-  String getCounterpartID(){
-
+  String getCounterpartID() {
     Details details = onDemandStatus.details;
-    String counterpartID ;
+    String counterpartID;
 
-    if (widget.isSLI){
-      counterpartID = details.uid ;
+    if (widget.isSLI) {
+      counterpartID = details.uid;
     }
 
     // if the current holder is not SLI, the opposite user must be one.
@@ -69,7 +61,7 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
       counterpartID = details.sliID;
     }
 
-    return  counterpartID;
+    return counterpartID;
   }
 
   void getOnDemandStatus() async {
@@ -81,11 +73,10 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
   }
 
   void _onRefresh() async {
-
     authToken = await AuthService.getToken();
 
-    OnDemandStatus status = await OnDemandServices().getOnDemandStatus(
-        isSLI: widget.isSLI, headerToken: authToken);
+    OnDemandStatus status = await OnDemandServices()
+        .getOnDemandStatus(isSLI: widget.isSLI, headerToken: authToken);
 
     if (status.status != 'ongoing' && widget.isSLI == true) {
       widget.onCancelClick();
@@ -101,8 +92,6 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
 
     print(onDemandStatus.details.userName);
     print(onDemandStatus.details.sliName);
-
-
   }
 
   @override
@@ -138,103 +127,120 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
                                     fontWeight: FontWeight.bold))
                           ]),
                           SizedBox(height: Dimensions.d_20),
-                          SizedBox(
-                            height: Dimensions.d_100,
-                            child: Image(
-                                image: this.widget.profilePic ??
-                                    AssetImage('images/avatar.png')),
+                          CircleAvatar(
+                            backgroundColor: Colours.lightGrey,
+                            radius: Dimensions.d_65,
+                            child: widget.isSLI
+                                ? onDemandStatus.details.userProfilePicture ==
+                                        null
+                                    ? Image(
+                                        image: AssetImage('images/avatar.png'))
+                                    : GetCachedNetworkImage(
+                                        profilePicture: onDemandStatus
+                                            .details.userProfilePicture,
+                                        authToken: authToken,
+                                        dimensions: Dimensions.d_120,)
+                                : onDemandStatus.details.sliProfilePicture ==
+                                        null
+                                    ? Image(
+                                        image: AssetImage('images/avatar.png'))
+                                    : GetCachedNetworkImage(
+                                        profilePicture: onDemandStatus
+                                            .details.sliProfilePicture,
+                                        authToken: authToken,
+                                        dimensions: Dimensions.d_120,),
                           ),
                           SizedBox(height: Dimensions.d_15),
-                          Text("${widget.isSLI ? onDemandStatus.details.patientName : onDemandStatus.details.sliName}",
+                          Text(
+                              "${widget.isSLI ? onDemandStatus.details.patientName : onDemandStatus.details.sliName}",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: Dimensions.d_25)),
                           Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: Dimensions.d_45,
-                                vertical: Dimensions.d_15),
-                            child: (widget.isSLI) ?
-                              Column(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: Dimensions.d_10),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: Dimensions.d_45,
+                                  vertical: Dimensions.d_15),
+                              child: (widget.isSLI)
+                                  ? Column(
                                       children: [
-                                        Flexible(
-                                          child: Text('Nombor Telefon'),
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: Dimensions.d_10),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Flexible(
+                                                child: Text('Nombor Telefon'),
+                                              ),
+                                              Expanded(
+                                                child: Text(
+                                                  ': ${onDemandStatus.details.userPhone}',
+                                                  textAlign: TextAlign.left,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                        Expanded(
-                                          child: Text(
-                                            ': ${onDemandStatus.details.userPhone}',
-                                            textAlign: TextAlign.left,
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: Dimensions.d_10),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Flexible(
+                                                child: Text('Nota'),
+                                              ),
+                                              Expanded(
+                                                child: Text(
+                                                    ': ${onDemandStatus.details.note}'),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: Dimensions.d_10),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                    )
+                                  : Column(
                                       children: [
-                                        Flexible(
-                                          child: Text('Nota'),
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: Dimensions.d_10),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Flexible(
+                                                child: Text('Jantina'),
+                                              ),
+                                              Expanded(
+                                                child: Text(
+                                                  ': ${onDemandStatus.details.sliGender}',
+                                                  textAlign: TextAlign.left,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                        Expanded(
-                                          child: Text(
-                                              ': ${onDemandStatus.details.note}'),
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: Dimensions.d_10),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Flexible(
+                                                child: Text('Penerangan'),
+                                              ),
+                                              Expanded(
+                                                child: Text(
+                                                    ': ${this.onDemandStatus.details.sliDesc}'),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ],
-                                    ),
-                                  ),
-                                ],
-                              ) :
-                            Column(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: Dimensions.d_10),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Flexible(
-                                        child: Text('Jantina'),
-                                      ),
-                                      Expanded(
-                                        child: Text(
-                                          ': ${onDemandStatus.details.sliGender}',
-                                          textAlign: TextAlign.left,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: Dimensions.d_10),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Flexible(
-                                        child: Text('Penerangan'),
-                                      ),
-                                      Expanded(
-                                        child: Text(
-                                            ': ${this.onDemandStatus.details.sliDesc}'),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            )
-                          ),
+                                    )),
                           Container(
                               decoration: BoxDecoration(
                                   border: Border(
@@ -272,7 +278,8 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
                                                 decoration: BoxDecoration(
                                                     border: Border(
                                                         left: BorderSide(
-                                                            width: Dimensions.d_3,
+                                                            width:
+                                                                Dimensions.d_3,
                                                             color:
                                                                 Colours.grey))),
                                                 child: FloatingActionButton(
@@ -285,9 +292,7 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
                                                   child: Icon(
                                                     Icons.videocam,
                                                     size: Dimensions.d_35,
-
                                                   ),
-
                                                 ))),
                                       ),
                                     ],
@@ -304,12 +309,12 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
                     padding: EdgeInsets.all(Dimensions.d_30),
                     color: Colours.cancel,
                     onClick: () {
-                      OnDemandServices().endOnDemandRequest(headerToken: authToken);
+                      OnDemandServices()
+                          .endOnDemandRequest(headerToken: authToken);
                       widget.onCancelClick();
                     }),
           );
   }
-
 
   // this will trigger a call to the api chat/enter
   void onTapMessage() async {
@@ -319,25 +324,26 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
 
     // call the api to chat/enter
     ChatItem chatSessionInfo = await ChatServices().enterChatRoom(
-        headerToken: authToken, counterpartID: counterpartID, isSLI: widget.isSLI);
+        headerToken: authToken,
+        counterpartID: counterpartID,
+        isSLI: widget.isSLI);
 
-
-    if (chatSessionInfo != null){
+    if (chatSessionInfo != null) {
       await Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>  ChatScreen(
-                chatRoomID: chatSessionInfo.chatroomId,
-                counterpartName: widget.isSLI ? chatSessionInfo.userName : chatSessionInfo.sliName,
-                counterpartPic: "No picture",
-                isSLI:           widget.isSLI,
-                fromChatHistoryPage: false,
-
-              )
-          )
-      );
+              builder: (context) => ChatScreen(
+                    chatRoomID: chatSessionInfo.chatroomId,
+                    counterpartName: widget.isSLI
+                        ? chatSessionInfo.userName
+                        : chatSessionInfo.sliName,
+                    counterpartPic: widget.isSLI
+                        ? onDemandStatus.details.userProfilePicture
+                        : onDemandStatus.details.sliProfilePicture,
+                    isSLI: widget.isSLI,
+                    fromChatHistoryPage: false,
+                  )));
     }
-
   }
 
   void onTapVideo() async {
@@ -349,11 +355,10 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
     await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) =>  CallPage(
+          builder: (context) => CallPage(
             channelName: onDemandID,
           ),
-        )
-    );
+        ));
 
     bool wakeLockEnabled = await Wakelock.enabled;
     if (wakeLockEnabled) {
@@ -366,5 +371,4 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
       [PermissionGroup.camera, PermissionGroup.microphone],
     );
   }
-
 }

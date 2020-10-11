@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:heard/api/transaction.dart';
+import 'package:heard/api/transaction_history.dart';
 import 'package:heard/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:heard/firebase_services/auth_service.dart';
@@ -19,13 +19,13 @@ class HistoryPage extends StatefulWidget {
 class _HistoryPageState extends State<HistoryPage> {
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
-  List<Transaction> transactionHistory;
+  List<TransactionHistory> transactionHistory;
 
   void _onRefresh() async {
     /// added get token again because token constantly changes
     String authToken = await AuthService.getToken();
-    List<Transaction> transactions = await BookingServices()
-        .getAllTransactions(headerToken: authToken, isSLI: widget.isSLI);
+    List<TransactionHistory> transactions = await BookingServices()
+        .getTransactionHistory(headerToken: authToken, isSLI: widget.isSLI);
     setState(() {
       transactionHistory = transactions;
     });
@@ -37,10 +37,8 @@ class _HistoryPageState extends State<HistoryPage> {
     }
   }
 
-  Widget getListItem({Transaction transaction}) {
-    return (transaction.status == 'complete' ||
-            transaction.status == 'declined')
-        ? Column(
+  Widget getListItem({TransactionHistory transaction}) {
+    return Column(
             children: [
               ListTile(
                 contentPadding: EdgeInsets.all(Dimensions.d_20),
@@ -51,10 +49,18 @@ class _HistoryPageState extends State<HistoryPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${!widget.isSLI ? 'BIM: ${transaction.sliName}' : 'Pesakit: ${transaction.userName}'}',
+                      '${!widget.isSLI ? 'BIM:' : 'Pesakit:'} ${transaction.counterpartName}',
                       style: TextStyle(
                           color: Colours.black,
                           fontSize: FontSizes.smallerText),
+                    ),
+                    Text(
+                      'Jenis: ${transaction.type == 'booking' ? 'Janji Temu' : 'Tempahan Segera'}',
+                      style: TextStyle(
+                          color: Colours.black,
+                          fontSize: FontSizes.smallerText,
+                          fontWeight: FontWeight.w600,
+                          fontStyle: FontStyle.italic),
                     ),
                     Text(
                       'Tarikh: ${transaction.date}',
@@ -96,8 +102,7 @@ class _HistoryPageState extends State<HistoryPage> {
                 color: Colours.lightGrey,
               )
             ],
-          )
-        : SizedBox.shrink();
+          );
   }
 
   @override

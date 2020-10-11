@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:heard/api/booking_request.dart';
 import 'package:heard/api/transaction.dart';
+import 'package:heard/api/transaction_history.dart';
 import 'package:http/http.dart' as http;
 import 'package:heard/api/user.dart';
 
@@ -72,6 +72,27 @@ class BookingServices {
     }
 
     return allTransactions;
+  }
+
+  Future<List<TransactionHistory>> getTransactionHistory({String headerToken, bool isSLI}) async {
+    var response = await http.get(
+        'https://heard-project.herokuapp.com/booking/history?type=${isSLI ? 'sli' : 'user'}',
+        headers: {
+          'Authorization': headerToken,
+        });
+
+    print('Get all transaction history: ${response.statusCode}, body: ${response.body}');
+
+    List<TransactionHistory> transactionHistory = [];
+    if (response.statusCode == 200) {
+      List<dynamic> requestsBody = jsonDecode(response.body);
+      for (int i = 0; i < requestsBody.length; i++) {
+        TransactionHistory request = TransactionHistory.fromJson(requestsBody[i]);
+        transactionHistory.add(request);
+      }
+    }
+
+    return transactionHistory;
   }
 
   Future<bool> cancelBooking({String headerToken, String bookingID}) async {

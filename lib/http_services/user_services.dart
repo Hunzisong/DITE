@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:heard/api/user.dart';
 import 'package:heard/landing/user_details.dart';
 import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 
 class UserServices {
 
@@ -46,6 +48,25 @@ class UserServices {
     });
 
     print('Edit User response: ${response.statusCode}, body: ${response.body}');
+  }
+
+  Future<void> uploadProfilePicture({String headerToken, File image}) async {
+    FormData formData = FormData.fromMap({
+      'image': await MultipartFile.fromFile(
+        image.path,
+      ),
+    });
+
+    Dio dio = Dio();
+    var response = await dio.post('https://heard-project.herokuapp.com/user/profile_pic',
+      data: formData,
+      options: Options(
+        headers: {
+          'Authorization': headerToken, // set content-length
+        },
+      ),);
+
+    print('Upload Profile Picture: ${response.statusCode}, body: ${response.data}');
   }
 
   Future<bool> doesUserExist({String headerToken}) async {

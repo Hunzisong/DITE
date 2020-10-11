@@ -1,12 +1,10 @@
-import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/cupertino.dart';
 
 class User {
   TextEditingController name = TextEditingController();
   String gender;
   String phoneNo;
-  File profilePic;
+  String profilePic;
   String description;
   bool experienced_medical;
   bool experienced_bim;
@@ -74,13 +72,12 @@ class User {
     return data;
   }
 
-  void setProfilePicture(String profilePicture) {
+  Future<void> setProfilePicture(String profilePicture) async {
     if (profilePicture == 'test1' || profilePicture == null) {
       profilePic = null;
     }
     else {
-      profilePic = File('decodedProfilePic.png');
-      profilePic.writeAsBytesSync(base64Decode(profilePicture));
+      profilePic = profilePicture;
     }
   }
 }

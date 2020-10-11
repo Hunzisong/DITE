@@ -1,5 +1,4 @@
-import 'dart:io';
-import 'dart:convert';
+import 'dart:io' as io;
 import 'package:flutter/material.dart';
 import 'package:heard/api/user.dart';
 import 'package:heard/constants.dart';
@@ -23,6 +22,7 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
   bool isSLI;
   User userDetails;
+  String authToken;
   List<DropdownMenuItem<String>> genderOptions;
   List<DropdownMenuItem<String>> yearsBimOptions;
   List<DropdownMenuItem<String>> yearsMedicalOptions;
@@ -31,6 +31,7 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
   void initState() {
     super.initState();
     setSLI();
+    setAuthToken();
   }
 
   void setSLI() async {
@@ -65,14 +66,30 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
     }
   }
 
-  Future<void> editDetails({String key, dynamic value}) async {
+  void setAuthToken() async {
+    String authTokenString = await AuthService.getToken();
+    setState(() {
+      authToken = authTokenString;
+    });
+  }
+
+  Future<void> editDetails(
+      {String key, dynamic value, bool isProfilePicture = false}) async {
     showLoadingAnimation(context: context);
     String authTokenString = await AuthService.getToken();
-    isSLI
-        ? await SLIServices()
-            .editSLI(headerToken: authTokenString, key: key, value: value)
-        : await UserServices()
-            .editUser(headerToken: authTokenString, key: key, value: value);
+    if (isProfilePicture) {
+      !isSLI
+          ? await UserServices()
+              .uploadProfilePicture(headerToken: authTokenString, image: value)
+          : await SLIServices()
+              .uploadProfilePicture(headerToken: authTokenString, image: value);
+    } else {
+      isSLI
+          ? await SLIServices()
+              .editSLI(headerToken: authTokenString, key: key, value: value)
+          : await UserServices()
+              .editUser(headerToken: authTokenString, key: key, value: value);
+    }
     User userDetailsTest = isSLI
         ? await SLIServices().getSLI(headerToken: authTokenString)
         : await UserServices().getUser(headerToken: authTokenString);
@@ -105,9 +122,8 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
     final pickedFile = await ImagePicker().getImage(source: imageSource);
 
     if (pickedFile != null) {
-      File image = File(pickedFile.path);
-      String base64Image = base64Encode(image.readAsBytesSync());
-      editDetails(key: 'profile_pic', value: base64Image);
+      io.File image = io.File(pickedFile.path);
+      editDetails(value: image, isProfilePicture: true);
     }
   }
 
@@ -148,7 +164,7 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
       userDetails = widget.userDetails;
       initialize();
     }
-    return isSLI == null
+    return (isSLI == null && authToken == null)
         ? Container()
         : Scaffold(
             backgroundColor: Colours.white,
@@ -517,12 +533,11 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                             radius: Dimensions.d_65,
                             child: userDetails.profilePic == null
                                 ? Image(image: AssetImage('images/avatar.png'))
-                                : ClipRRect(
-                                borderRadius: BorderRadius.circular(Dimensions.d_65),
-                                child: Image.file(userDetails.profilePic,
-                                    width: Dimensions.d_120,
-                                    height: Dimensions.d_120,
-                                    fit: BoxFit.fitHeight,)),
+                                : GetCachedNetworkImage(
+                              profilePicture: userDetails.profilePic,
+                              authToken: authToken,
+                              dimensions: Dimensions.d_120
+                            )
                           ),
                         ),
                       ),

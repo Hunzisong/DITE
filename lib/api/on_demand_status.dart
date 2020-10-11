@@ -29,6 +29,7 @@ class Details {
   String hospitalDepartment;
   bool emergency;
   bool onBehalf;
+  String userProfilePicture;
   String patientName;
   String note;
   String requestedAt;
@@ -37,6 +38,7 @@ class Details {
   String sliGender;
   String sliPhone;
   String sliDesc;
+  String sliProfilePicture;
 
 
   Details(
@@ -48,6 +50,7 @@ class Details {
         this.hospitalDepartment,
         this.emergency,
         this.onBehalf,
+        this.userProfilePicture,
         this.patientName,
         this.note,
         this.requestedAt,
@@ -56,6 +59,7 @@ class Details {
         this.sliGender,
         this.sliPhone,
         this.sliDesc,
+        this.sliProfilePicture
       });
 
   Details.fromJson(Map<String, dynamic> json) {
@@ -70,14 +74,14 @@ class Details {
     patientName = json['patient_name'];
     note = json['note'];
     requestedAt = json['requested_at'];
-
+    userProfilePicture = json['user_profile_pic'] == 'test1' ? null : json['user_profile_pic'];
     // sli details
     sliID = json['sli_id'];
     sliName = json['sli_name'];
     sliGender = json['sli_gender'];
     sliPhone = json['sli_phone'];
     sliDesc = json['sli_desc'];
-
+    sliProfilePicture = json['sli_profile_pic'] == 'test1' ? null : json['user_profile_pic'];
   }
 
   Map<String, dynamic> toJson() {
@@ -90,6 +94,7 @@ class Details {
     data['hospital_department'] = this.hospitalDepartment;
     data['emergency'] = this.emergency;
     data['on_behalf'] = this.onBehalf;
+    data['user_profile_pic'] = this.userProfilePicture;
     data['patient_name'] = this.patientName;
     data['note'] = this.note;
     data['requested_at'] = this.requestedAt;
@@ -98,6 +103,7 @@ class Details {
     data['sli_gender'] = this.sliGender;
     data['sli_phone'] = this.sliPhone;
     data['sli_desc'] = this.sliDesc;
+    data['sli_profile_pic'] = this.sliProfilePicture;
     return data;
   }
 }
