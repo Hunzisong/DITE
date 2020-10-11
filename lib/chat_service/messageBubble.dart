@@ -42,165 +42,168 @@ class MessageBubble extends StatelessWidget {
           crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: <Widget>[
 
-            Material(
-                borderRadius: isMe ?  BorderRadius.only(
-                  topLeft: Radius.circular(30.0),
-                  bottomLeft: Radius.circular(30.0),
-                  topRight: Radius.circular(30.0) ,
-                )
+            Container(
+              constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width*0.70),
+              child: Material(
+                  borderRadius: isMe ?  BorderRadius.only(
+                    topLeft: Radius.circular(30.0),
+                    bottomLeft: Radius.circular(30.0),
+                    topRight: Radius.circular(30.0) ,
+                  )
 
-                    :
+                      :
 
-                BorderRadius.only(
-                  topLeft: Radius.circular(30.0),
-                  bottomRight: Radius.circular(30.0),
-                  topRight: Radius.circular(30.0) ,
-                )
-                ,
-                color: (sender == 'sli') ? Colours.orange : Colours.blue,
-                child:
+                  BorderRadius.only(
+                    topLeft: Radius.circular(30.0),
+                    bottomRight: Radius.circular(30.0),
+                    topRight: Radius.circular(30.0) ,
+                  )
+                  ,
+                  color: (sender == 'sli') ? Colours.orange : Colours.blue,
+                  child:
 
-                type == 'text/plain' ?
+                  type == 'text/plain' ?
 
-                Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                    child:
+                  Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                      child:
 
-                    // Modify here.
-                    Text(text,style: TextStyle(
-                      fontSize: FontSizes.smallerText,
-                      color: Colors.black,
-                    ),
-                    )
-                )
+                      // Modify here.
+                      Text(text,style: TextStyle(
+                        fontSize: FontSizes.smallerText,
+                        color: Colors.black,
+                      ),
+                      )
+                  )
 
 
-                    : type == 'FileType.image' ?
-                Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 0.0),
-                    child:
+                      : type == 'FileType.image' ?
+                  Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 0.0),
+                      child:
 
-                    Container(
-                      child: FlatButton(
-                        child: Material(
-                          child: CachedNetworkImage(
-                            placeholder: (context, url) => Container(
-                              child: CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.lightBlueAccent),
+                      Container(
+                        child: FlatButton(
+                          child: Material(
+                            child: CachedNetworkImage(
+                              placeholder: (context, url) => Container(
+                                child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.lightBlueAccent),
+                                ),
+                                width: 100.0,
+                                height: 100.0,
+                                padding: EdgeInsets.all(70.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(8.0),
+                                  ),
+                                ),
                               ),
-                              width: 100.0,
-                              height: 100.0,
-                              padding: EdgeInsets.all(70.0),
-                              decoration: BoxDecoration(
-                                color: Colors.grey,
+
+                              /*TODO*/
+                              errorWidget: (context, url, error) => Material(
+                                child: Image.asset(
+                                  'images/logo.png',
+                                  width: 100.0,
+                                  height: 100.0,
+                                  fit: BoxFit.cover,
+                                ),
+
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(8.0),
                                 ),
+
+                                clipBehavior: Clip.hardEdge,
+
                               ),
+
+                              imageUrl: text,
+                              width: 150.0,
+                              height: 150.0,
+                              fit: BoxFit.cover,
                             ),
 
-                            /*TODO*/
-                            errorWidget: (context, url, error) => Material(
-                              child: Image.asset(
-                                'images/logo.png',
-                                width: 100.0,
-                                height: 100.0,
-                                fit: BoxFit.cover,
-                              ),
-
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(8.0),
-                              ),
-
-                              clipBehavior: Clip.hardEdge,
-
-                            ),
-
-                            imageUrl: text,
-                            width: 150.0,
-                            height: 150.0,
-                            fit: BoxFit.cover,
+                            borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                            clipBehavior: Clip.hardEdge,
                           ),
 
-                          borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                          clipBehavior: Clip.hardEdge,
+                          onPressed: (){
+                            // enlarge the photo to full screen
+                          },
+
                         ),
-
-                        onPressed: (){
-                          // enlarge the photo to full screen
-                        },
-
-                      ),
-                    )
+                      )
 
 
-                )
+                  )
 
-                    : type == 'FileType.video' ?
+                      : type == 'FileType.video' ?
 
 
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Stack(
-                        alignment: AlignmentDirectional.center,
-                        children: <Widget>[
-                          Container(
-                            width: 130,
-                            color: Colors.black45,
-                            height: 80,
-                          ),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Stack(
+                          alignment: AlignmentDirectional.center,
+                          children: <Widget>[
+                            Container(
+                              width: 130,
+                              color: Colors.black45,
+                              height: 80,
+                            ),
 
-                          Column(
-                            children: <Widget>[
-                              Icon(
-                                Icons.videocam,
-                                color: Colors.black,
-                              ),
-
-                              SizedBox(height: 5,),
-
-                              Text('Video',
-                                style: TextStyle(
-                                  fontSize: 15,
+                            Column(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.videocam,
                                   color: Colors.black,
-                                ) ,
-                              )
+                                ),
 
-                            ],
-                          ),
-                        ],
-                      ),
+                                SizedBox(height: 5,),
 
-                      Container(
-                        height: 40,
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.play_arrow,
-                            color: Colors.black,
-                          ),
+                                Text('Video',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.black,
+                                  ) ,
+                                )
 
-                          // implement onPressed here
-                          // the text here is the video url
-                          onPressed: () => showVideoPlayer(context, text),
-
+                              ],
+                            ),
+                          ],
                         ),
-                      ),
+
+                        Container(
+                          height: 40,
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.play_arrow,
+                              color: Colors.black,
+                            ),
+
+                            // implement onPressed here
+                            // the text here is the video url
+                            onPressed: () => showVideoPlayer(context, text),
+
+                          ),
+                        ),
 
 
-                    ],
-                  ),
-                )
+                      ],
+                    ),
+                  )
 
-                // if not, it must be a document
-                // requires file downloader API
-                // requires changing android permissions
-                // TODO - Do later! After integrating with the main application
-                    :
-                Container()
+                  // if not, it must be a document
+                  // requires file downloader API
+                  // requires changing android permissions
+                  // TODO - Do later! After integrating with the main application
+                      :
+                  Container()
 
+              ),
             ),
           ]
       ),
