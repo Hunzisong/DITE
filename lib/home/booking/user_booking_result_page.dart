@@ -152,6 +152,7 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
               age: filterSliList[index]['age'],
               profilePic: filterSliList[index]['profile_pic'],
               description: filterSliList[index]['description'],
+              sli: allSLI[index]
             ),
             SizedBox(height: Dimensions.d_10)
           ],
@@ -166,7 +167,8 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
       String gender,
       String age,
       String profilePic,
-      String description}) {
+      String description,
+      User sli}) {
     return InkWell(
       borderRadius: BorderRadius.circular(Dimensions.d_25),
       onTap: widget.isViewOnly ? null : () {
@@ -184,6 +186,7 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
                     pickedTime: widget.pickedTime,
                     hospitalName: widget.hospitalName,
                     preferredLanguage: widget.preferredLanguage,
+                    sli: sli,
                   )),
         );
       },

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:heard/api/user.dart';
 import 'package:heard/constants.dart';
 import 'package:heard/firebase_services/auth_service.dart';
 import 'package:heard/home/booking/user_booking_result_page.dart';
@@ -20,6 +21,7 @@ class UserBookingResultSLIProfilePage extends StatefulWidget {
   final String pickedTime;
   final String hospitalName;
   final String preferredLanguage;
+  final User sli;
 
   UserBookingResultSLIProfilePage({
     this.id,
@@ -32,6 +34,7 @@ class UserBookingResultSLIProfilePage extends StatefulWidget {
     this.pickedDate,
     this.hospitalName,
     this.preferredLanguage,
+    this.sli
   });
 
   @override
@@ -207,9 +210,10 @@ class _UserBookingResultSLIProfilePageState
                   Center(
                     child: RichTextField("Jantina", widget.gender),
                   ),
-//                  Center(
-//                    child: RichTextField("Umur", widget.age),
-//                  ),
+                 Center(
+                   /// change to malay
+                   child: RichTextField("ASL Proficient", widget.sli.asl_proficient == true ? 'Yes' : 'No'),
+                 ),
                   Padding(
                     padding: EdgeInsets.all(Dimensions.d_35),
                     child: Container(
