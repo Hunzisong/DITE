@@ -31,7 +31,7 @@ class OnDemandUserLoadingPage extends StatefulWidget {
 
 class OnDemandUserLoadingPageState extends State<OnDemandUserLoadingPage> {
   String _authToken;
-  int _countdownValue = 60;
+  int _countdownValue = 5;
   Timer _countdownTimer;
   Widget inputs;
 
@@ -65,6 +65,7 @@ class OnDemandUserLoadingPageState extends State<OnDemandUserLoadingPage> {
           if (_countdownValue < 1) {
             OnDemandServices().cancelOnDemandRequest(headerToken: _authToken);
             widget.onCancelClick(message: "No response to request");
+            _countdownTimer.cancel();
           } else {
             _countdownValue = _countdownValue - 1;
           }
@@ -78,12 +79,6 @@ class OnDemandUserLoadingPageState extends State<OnDemandUserLoadingPage> {
     setState(() {
       _authToken = _authTokenString;
     });
-  }
-
-  @override
-  void dispose() {
-    _countdownTimer.cancel();
-    super.dispose();
   }
 
   void subscribeFCMListener() {
