@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:heard/api/user.dart';
@@ -31,22 +32,15 @@ class OnDemandUserLoadingPage extends StatefulWidget {
 
 class OnDemandUserLoadingPageState extends State<OnDemandUserLoadingPage> {
   String _authToken;
-  int _countdownValue = 5;
+  int _countdownValue = 60;
   Timer _countdownTimer;
-  Widget inputs;
+  Widget inputWidget;
+  final _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    setState(() {
-      inputs = Column(children: [
-        Text('Nama Hospital: ${widget.onDemandInputs.hospital.text}'),
-        Text('Jabatan Hospital: ${widget.onDemandInputs.department.text}'),
-        Text('Jantina: ${widget.onDemandInputs.genderType.toString().split('.').last == 'male' ? 'Lelaki' : 'Perempuan'}'),
-        Text('Kecemasan: ${widget.onDemandInputs.isEmergency ? 'Ya' : 'Tidak'}'),
-        Text('Permintaan bagi orang lain: ${widget.onDemandInputs.isBookingForOthers ? 'Ya' : 'Tidak'}')
-      ]);
-    });
+    initializeInputWidget();
     getAuthToken().whenComplete(() {
       if (!widget.reNavigation) {
         onDemandRequest();
@@ -54,6 +48,102 @@ class OnDemandUserLoadingPageState extends State<OnDemandUserLoadingPage> {
       subscribeFCMListener();
       startTimer();
     });
+  }
+
+  void initializeInputWidget() {
+    setState(() {
+      inputWidget = Card(
+          margin: EdgeInsets.only(
+            top: Dimensions.d_25,
+            left: Dimensions.d_25,
+            right: Dimensions.d_25,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Dimensions.d_10),
+          ),
+          elevation: Dimensions.d_5,
+          child: Padding(
+              padding: EdgeInsets.all(Dimensions.d_10),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Perincian Permintaan'),
+                    Divider(thickness: Dimensions.d_2),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Nama Hospital:'),
+                          Text('${widget.onDemandInputs.hospital.text}')
+                        ]),
+                    Padding(padding: EdgeInsets.all(Dimensions.d_2)),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Jabatan Hospital:'),
+                          Text('${widget.onDemandInputs.department.text}')
+                        ]),
+                    Padding(padding: EdgeInsets.all(Dimensions.d_2)),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Jantina:'),
+                          Text(
+                              '${widget.onDemandInputs.genderType.toString().split('.').last == 'male' ? 'Lelaki' : 'Perempuan'}')
+                        ]),
+                    Padding(padding: EdgeInsets.all(Dimensions.d_2)),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Kecemasan:'),
+                          Text(
+                              '${widget.onDemandInputs.isEmergency ? 'Ya' : 'Tidak'}')
+                        ]),
+                    Padding(padding: EdgeInsets.all(Dimensions.d_2)),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Permintaan bagi orang lain:'),
+                          Text(
+                              '${widget.onDemandInputs.isBookingForOthers ? 'Ya' : 'Tidak'}')
+                        ]),
+                    Padding(padding: EdgeInsets.all(Dimensions.d_2)),
+                    widget.onDemandInputs.isBookingForOthers
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                                Text('Name Pesakit:'),
+                                Text(
+                                    '${widget.onDemandInputs.patientName.text}')
+                              ])
+                        : SizedBox.shrink(),
+                    widget.onDemandInputs.isBookingForOthers
+                        ? Padding(padding: EdgeInsets.all(Dimensions.d_2))
+                        : SizedBox.shrink(),
+                    widget.onDemandInputs.isBookingForOthers
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                                Text('Note kepada JBIM:'),
+                                Flexible(
+                                    child: Padding(
+                                        padding: EdgeInsets.only(
+                                            left: Dimensions.d_15),
+                                        child: Text(
+                                            '${widget.onDemandInputs.noteToSLI.text ?? 'Tiada'}')))
+                              ])
+                        : SizedBox.shrink(),
+                    widget.onDemandInputs.isBookingForOthers
+                        ? Padding(padding: EdgeInsets.all(Dimensions.d_2))
+                        : SizedBox.shrink(),
+                  ])));
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _countdownTimer?.cancel();
   }
 
   void startTimer() {
@@ -107,7 +197,12 @@ class OnDemandUserLoadingPageState extends State<OnDemandUserLoadingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colours.white,
-      body: LoadingScreen(topWidget: inputs),
+      body: Scrollbar(
+          controller: _scrollController,
+          isAlwaysShown: true,
+          child: SingleChildScrollView(
+              controller: _scrollController,
+              child: LoadingScreen(topWidget: inputWidget))),
       bottomNavigationBar: UserButton(
           text: 'Batal',
           padding: EdgeInsets.all(Dimensions.d_30),
