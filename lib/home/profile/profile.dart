@@ -9,7 +9,6 @@ import 'package:heard/widgets/user_button.dart';
 import 'package:heard/widgets/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class Profile extends StatefulWidget {
   final User userDetails;
@@ -534,22 +533,11 @@ class _ProfileState extends State<Profile> with AutomaticKeepAliveClientMixin {
                             radius: Dimensions.d_65,
                             child: userDetails.profilePic == null
                                 ? Image(image: AssetImage('images/avatar.png'))
-                                : ClipRRect(
-                                    borderRadius:
-                                        BorderRadius.circular(Dimensions.d_65),
-                                    child: CachedNetworkImage(
-                                      imageUrl:
-                                          'https://heard-project.herokuapp.com/attachment?filename=${userDetails.profilePic}',
-                                      httpHeaders: {'Authorization': authToken},
-                                      progressIndicatorBuilder: (context, url, downloadProgress) =>
-                                          Center(child: CircularProgressIndicator(value: downloadProgress.progress)),
-                                      errorWidget: (context, url, error) =>
-                                          Icon(Icons.error),
-                                      width: Dimensions.d_120,
-                                      height: Dimensions.d_120,
-                                      fit: BoxFit.fitHeight,
-                                    ),
-                                  ),
+                                : GetCachedNetworkImage(
+                              profilePicture: userDetails.profilePic,
+                              authToken: authToken,
+                              dimensions: Dimensions.d_120
+                            )
                           ),
                         ),
                       ),
