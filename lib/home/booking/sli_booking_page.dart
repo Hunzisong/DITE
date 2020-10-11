@@ -194,6 +194,11 @@ class _SLIBookingPageState extends State<SLIBookingPage>
 
   Widget getListItem({int index}) {
     return SlidableListTile(
+      profilePicture: bookingRequests[index].userProfilePicture == null ? null : GetCachedNetworkImage(
+        profilePicture: bookingRequests[index].userProfilePicture,
+        authToken: authToken,
+        dimensions: Dimensions.d_55,
+      ),
       onDismissed: (actionType) {
         setState(() {
           bookingRequests.removeAt(index);
@@ -262,12 +267,9 @@ class _SLIBookingPageState extends State<SLIBookingPage>
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Flexible(
+            flex: 2,
             child: ListTile(
               isThreeLine: true,
-              leading: Icon(
-                Icons.account_circle,
-                size: Dimensions.d_55,
-              ),
               title: Text(
                 '${bookingRequests[index].userName}',
                 style: TextStyle(fontWeight: FontWeight.bold),
@@ -276,7 +278,7 @@ class _SLIBookingPageState extends State<SLIBookingPage>
             ),
           ),
           Flexible(
-            flex: 3,
+            flex: 5,
             child: Padding(
               padding: EdgeInsets.only(top: Dimensions.d_35),
               child: Container(

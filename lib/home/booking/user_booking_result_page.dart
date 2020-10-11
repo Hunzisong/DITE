@@ -36,10 +36,10 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
   String selectedGender;
 
   List<DropdownMenuItem<String>> experienceList;
-
+  String authToken;
   String selectedExperience;
-
-  List<Map<String, dynamic>> allSli;
+  List<User> allSLI;
+  List<Map<String, dynamic>> allSliMap;
   List<Map<String, dynamic>> filterSLIGenderList;
 
   List<Map<String, dynamic>> filterSliExperienceList;
@@ -123,12 +123,13 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
 
   Widget loadSliList() {
     return Column(
-      children: allSli
+      children: allSliMap
           .map((sli) => createSLITemplate(
               id: sli['sli_id'],
               name: sli['name'],
               gender: sli['gender'],
               age: sli['age'],
+              profilePic: sli['profile_pic'],
               description: sli['description']))
           .toList(),
     );
@@ -149,6 +150,7 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
               name: filterSliList[index]['name'],
               gender: filterSliList[index]['gender'],
               age: filterSliList[index]['age'],
+              profilePic: filterSliList[index]['profile_pic'],
               description: filterSliList[index]['description'],
             ),
             SizedBox(height: Dimensions.d_10)
@@ -190,38 +192,24 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
           borderRadius: BorderRadius.circular(Dimensions.d_20),
         ),
         elevation: Dimensions.d_10,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              width: Dimensions.d_100,
-              height: Dimensions.d_100,
-              child: Padding(
-                padding: EdgeInsets.all(Dimensions.d_10),
-                child: ClipRRect(
-                  borderRadius: new BorderRadius.circular(Dimensions.d_20),
-                  child: Image(
-                    image: AssetImage(profilePic ?? 'images/avatar.png'),
-                  ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: Dimensions.d_10),
+          child: ListTile(
+            leading: CircleAvatar(
+                backgroundColor: Colours.lightGrey,
+                radius: Dimensions.d_35,
+                child: profilePic == null ? Image(
+                  image: AssetImage('images/avatar.png'),
+                ) : GetCachedNetworkImage(
+                  profilePicture: profilePic,
+                  authToken: authToken,
+                  dimensions: Dimensions.d_55,
                 ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(Dimensions.d_20),
-              child: Container(
-                width: Dimensions.d_200+30,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    RichTextField("Nama", name),
-                    RichTextField("Jantina", gender),
-                    //RichTextField("Umur", age),
-                  ],
-                ),
-              ),
-            ),
-          ],
+            title: RichTextField("Nama", name),
+            subtitle: RichTextField("Jantina", gender),
+            isThreeLine: true,
+          ),
         ),
       ),
     );
@@ -236,14 +224,16 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
       _allSliJson.add(sli.toJson());
     }
     setState(() {
-      allSli = _allSliJson;
+      allSLI = _allSli;
+      allSliMap = _allSliJson;
       loading = false;
+      authToken = _authToken;
     });
   }
 
   void _onRefresh() async {
     await getAllSli();
-    if (allSli == null) {
+    if (allSliMap == null) {
       _refreshController.refreshFailed();
     } else {
       _refreshController.refreshCompleted();
@@ -260,25 +250,25 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
     filterSliList = [];
 
     if (selectedGender != null && selectedGender != 'all') {
-      allSli.forEach((element) {
+      allSliMap.forEach((element) {
         if (element['gender'] == selectedGender) {
           filterSLIGenderList.add(element);
         }
       });
     } else {
-      allSli.forEach((element) {
+      allSliMap.forEach((element) {
         filterSLIGenderList.add(element);
       });
     }
 
     if (selectedExperience != null && selectedExperience != 'all') {
-      allSli.forEach((element) {
+      allSliMap.forEach((element) {
         if (element['years_medical'].toString() == selectedExperience) {
           filterSliExperienceList.add(element);
         }
       });
     } else {
-      allSli.forEach((element) {
+      allSliMap.forEach((element) {
         filterSliExperienceList.add(element);
       });
     }
