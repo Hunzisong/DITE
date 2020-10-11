@@ -4,6 +4,7 @@ import 'package:heard/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:heard/firebase_services/auth_service.dart';
 import 'package:heard/http_services/booking_services.dart';
+import 'package:heard/widgets/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -20,14 +21,16 @@ class _HistoryPageState extends State<HistoryPage> {
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
   List<TransactionHistory> transactionHistory;
+  String authToken;
 
   void _onRefresh() async {
     /// added get token again because token constantly changes
-    String authToken = await AuthService.getToken();
+    String _authToken = await AuthService.getToken();
     List<TransactionHistory> transactions = await BookingServices()
-        .getTransactionHistory(headerToken: authToken, isSLI: widget.isSLI);
+        .getTransactionHistory(headerToken: _authToken, isSLI: widget.isSLI);
     setState(() {
       transactionHistory = transactions;
+      authToken = _authToken;
     });
     print('Refreshing all transaction history ... ');
     if (transactionHistory == null) {
@@ -43,8 +46,17 @@ class _HistoryPageState extends State<HistoryPage> {
               ListTile(
                 contentPadding: EdgeInsets.all(Dimensions.d_20),
                 isThreeLine: true,
-                leading: Image(
-                    image: AssetImage('images/avatar.png')),
+                leading: CircleAvatar(
+                  backgroundColor: Colours.lightGrey,
+                  radius: Dimensions.d_35,
+                  child: transaction.profilePicture == null ? Image(
+                    image: AssetImage('images/avatar.png'),
+                  ) : GetCachedNetworkImage(
+                    profilePicture: transaction.profilePicture,
+                    authToken: authToken,
+                    dimensions: Dimensions.d_55,
+                  ),
+                ),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
