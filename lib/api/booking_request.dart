@@ -37,7 +37,7 @@ class BookingRequest {
     date = json['date'].toString().substring(0, 10); // get date only
     time = json['time'].toString().substring(0, 5); // get hour & minute only
     formatDateTime(); // format time to have am and pm displayed, and date
-    userProfilePicture = json['profile_pic'];
+    userProfilePicture = json['user_profile_pic'] == 'test1' ? null : json['user_profile_pic'];
     notes = json['notes'];
     status = json['status'];
     hospitalName = json['hospital_name'];
@@ -57,7 +57,7 @@ class BookingRequest {
     data['notes'] = this.notes;
     data['status'] = this.status;
     data['hospital_name'] = this.hospitalName;
-    data['profile_pic'] = this.userProfilePicture;
+    data['user_profile_pic'] = this.userProfilePicture;
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
     return data;
