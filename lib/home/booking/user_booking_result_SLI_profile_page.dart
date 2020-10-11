@@ -88,7 +88,6 @@ class _UserBookingResultSLIProfilePageState
                   children: <Widget>[
                     RichTextField("Nama", widget.name),
                     RichTextField("Jantina", widget.gender),
-                    //RichTextField("Umur", widget.age),
                     RichTextField("Tarikh", widget.pickedDate),
                     RichTextField("Masa", widget.pickedTime),
                   ],
@@ -207,13 +206,34 @@ class _UserBookingResultSLIProfilePageState
                     ),
                   ),
                   SizedBox(height: Dimensions.d_20),
-                  Center(
-                    child: RichTextField("Jantina", widget.gender),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: Dimensions.d_35),
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(Dimensions.d_20),
+                      ),
+                      elevation: Dimensions.d_10,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: Dimensions.d_20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            SizedBox(height: Dimensions.d_20),
+                            RichTextField("Jantina", widget.gender),
+                            RichTextField("Nombor Telefon", widget.sli.phoneNo),
+                            RichTextField("Kemahiran Dalam Bidang Perubatan", widget.sli.experienced_medical == true? 'Mahir':'Tiada' ),
+                            RichTextField("Kemahiran Menterjemah", widget.sli.experienced_bim == true? 'Mahir':'Tiada' ),
+                            RichTextField("Pengalaman Dalam Bidang Perubatan", widget.sli.years_medical.toString()),
+                            RichTextField("Pengalaman Menterjemah", widget.sli.years_bim.toString()),
+                            RichTextField("Bahasa Isyarat ASL", widget.sli.asl_proficient == true ? 'Mahir' : 'Tiada'),
+                            RichTextField("Bahasa Isyarat BIM", widget.sli.bim_proficient == true ? 'Mahir' : 'Tiada'),
+                            RichTextField("Pendidikan", widget.sli.education.text.toString()),
+                            SizedBox(height: Dimensions.d_20),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                 Center(
-                   /// change to malay
-                   child: RichTextField("ASL Proficient", widget.sli.asl_proficient == true ? 'Yes' : 'No'),
-                 ),
                   Padding(
                     padding: EdgeInsets.all(Dimensions.d_35),
                     child: Container(
