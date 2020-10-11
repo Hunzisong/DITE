@@ -209,13 +209,16 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
             ),
             Padding(
               padding: EdgeInsets.all(Dimensions.d_20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  RichTextField("Nama", name),
-                  RichTextField("Jantina", gender),
-                  //RichTextField("Umur", age),
-                ],
+              child: Container(
+                width: Dimensions.d_200+30,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    RichTextField("Nama", name),
+                    RichTextField("Jantina", gender),
+                    //RichTextField("Umur", age),
+                  ],
+                ),
               ),
             ),
           ],
