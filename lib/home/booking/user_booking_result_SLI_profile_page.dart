@@ -181,12 +181,16 @@ class _UserBookingResultSLIProfilePageState
                   Center(
                     child: Padding(
                       padding: EdgeInsets.fromLTRB(Dimensions.d_0,
-                          Dimensions.d_55, Dimensions.d_0, Dimensions.d_10),
-                      child: Container(
-                        height: Dimensions.d_100,
-                        child: Image(
-                          image: AssetImage(
-                              widget.profilePic ?? 'images/avatar.png'),
+                          Dimensions.d_25, Dimensions.d_0, Dimensions.d_10),
+                      child: CircleAvatar(
+                        backgroundColor: Colours.lightGrey,
+                        radius: Dimensions.d_65,
+                        child: widget.profilePic == null ? Image(
+                          image: AssetImage('images/avatar.png'),
+                        ) : GetCachedNetworkImage(
+                          profilePicture: widget.profilePic,
+                          authToken: authToken,
+                          dimensions: Dimensions.d_120,
                         ),
                       ),
                     ),
