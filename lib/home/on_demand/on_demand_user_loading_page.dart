@@ -130,7 +130,7 @@ class OnDemandUserLoadingPageState extends State<OnDemandUserLoadingPage> {
                                         padding: EdgeInsets.only(
                                             left: Dimensions.d_15),
                                         child: Text(
-                                            '${widget.onDemandInputs.noteToSLI.text ?? 'Tiada'}')))
+                                            '${widget.onDemandInputs.noteToSLI.text.isEmpty ? 'Tiada' : widget.onDemandInputs.noteToSLI.text}')))
                               ])
                         : SizedBox.shrink(),
                     widget.onDemandInputs.isBookingForOthers
