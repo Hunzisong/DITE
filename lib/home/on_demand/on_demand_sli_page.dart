@@ -132,12 +132,9 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Flexible(
+            flex: 2,
             child: ListTile(
               isThreeLine: true,
-              leading: Icon(
-                Icons.account_circle,
-                size: Dimensions.d_55,
-              ),
               title: Text(
                 '${onDemandRequests[index].patientName}',
                 style: TextStyle(fontWeight: FontWeight.bold),
@@ -164,7 +161,7 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
             ),
           ),
           Flexible(
-            flex: 3,
+            flex: 5,
             child: Padding(
               padding: EdgeInsets.only(top: Dimensions.d_35),
               child: Container(
@@ -233,7 +230,11 @@ class _OnDemandSLIPageState extends State<OnDemandSLIPage>
                             itemCount: onDemandRequests.length,
                             itemBuilder: (context, index) {
                               return SlidableListTile(
-                                // userInfo: onDemandRequests[index],
+                                profilePicture: onDemandRequests[index].userProfilePicture == null ? null : GetCachedNetworkImage(
+                                  profilePicture: onDemandRequests[index].userProfilePicture,
+                                  authToken: authToken,
+                                  dimensions: Dimensions.d_55,
+                                ),
                                 tileColour:
                                     onDemandRequests[index].emergency
                                         ? Colours.lightOrange

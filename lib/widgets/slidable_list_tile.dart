@@ -7,12 +7,13 @@ class SlidableListTile extends StatelessWidget {
   final SlideActionBuilderDelegate slideLeftActionFunctions;
   final SlideActionBuilderDelegate slideRightActionFunctions;
   final Widget onTrailingButtonPress;
+  final Widget profilePicture;
   final Color tileColour;
   final Widget title;
   final Widget subtitle;
   final Function onDismissed;
 
-  SlidableListTile({this.slideLeftActionFunctions, this.slideRightActionFunctions, this.onTrailingButtonPress, this.tileColour, this.title, this.subtitle, this.onDismissed});
+  SlidableListTile({this.slideLeftActionFunctions, this.profilePicture, this.slideRightActionFunctions, this.onTrailingButtonPress, this.tileColour, this.title, this.subtitle, this.onDismissed});
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +33,12 @@ class SlidableListTile extends StatelessWidget {
             child: ListTile(
               contentPadding: EdgeInsets.all(Dimensions.d_20),
               isThreeLine: true,
-              leading: Image(
-                  image: AssetImage('images/avatar.png')),
+              leading: CircleAvatar(
+                backgroundColor: Colours.lightGrey,
+                radius: Dimensions.d_35,
+                child: profilePicture ?? Image(
+                    image: AssetImage('images/avatar.png')),
+              ),
               title: title,
               subtitle: subtitle,
               trailing: onTrailingButtonPress != null ? onTrailingButtonPress : SizedBox.shrink(),
