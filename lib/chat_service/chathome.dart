@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:heard/constants.dart';
 import 'package:heard/chat_service/chatPage.dart';
+import 'package:heard/widgets/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:heard/http_services/chat_services.dart';
@@ -120,9 +121,16 @@ class _ChatHomeScreenState extends State<ChatHomeScreen> {
                                         )
                                       );
                                   },
-                                  leading: Icon(
-                                    Icons.account_circle,
-                                    size: Dimensions.d_55,
+                                  leading: CircleAvatar(
+                                    backgroundColor: Colours.lightGrey,
+                                    radius: Dimensions.d_35,
+                                    child: entries[index].profilePicture == null ? Image(
+                                      image: AssetImage('images/avatar.png'),
+                                    ) : GetCachedNetworkImage(
+                                      profilePicture: entries[index].profilePicture,
+                                      authToken: authToken,
+                                      dimensions: Dimensions.d_55,
+                                    ),
                                   ),
 
 
