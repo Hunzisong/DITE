@@ -26,6 +26,7 @@ class _ChatHomeScreenState extends State<ChatHomeScreen> {
   bool isSLI = false ;
   String authToken;
   List<ChatItem> entries = []; // give an initial value to prevent null error on app starting
+  String profilePicture;
 
 
   @override
@@ -103,6 +104,12 @@ class _ChatHomeScreenState extends State<ChatHomeScreen> {
                         padding: const EdgeInsets.all(8),
                         itemCount: entries.length,
                         itemBuilder: (BuildContext context, int index) {
+                          if (isSLI) {
+                            profilePicture = entries[index].userProfilePicture;
+                          }
+                          else {
+                            profilePicture = entries[index].sliProfilePicture;
+                          }
                           return ListTile(
                                   onTap: (){
 
@@ -124,10 +131,10 @@ class _ChatHomeScreenState extends State<ChatHomeScreen> {
                                   leading: CircleAvatar(
                                     backgroundColor: Colours.lightGrey,
                                     radius: Dimensions.d_35,
-                                    child: entries[index].profilePicture == null ? Image(
+                                    child: profilePicture == null ? Image(
                                       image: AssetImage('images/avatar.png'),
                                     ) : GetCachedNetworkImage(
-                                      profilePicture: entries[index].profilePicture,
+                                      profilePicture: profilePicture,
                                       authToken: authToken,
                                       dimensions: Dimensions.d_55,
                                     ),
