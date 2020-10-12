@@ -7,6 +7,7 @@ Future<void> popUpDialog(
     bool isSLI,
     bool touchToDismiss = true,
     double height,
+      EdgeInsets padding,
     String header = '',
     @required Widget content,
     int contentFlexValue = 1,
@@ -20,7 +21,7 @@ Future<void> popUpDialog(
           child: Container(
             height: height != null ? height : Dimensions.d_280,
             child: Padding(
-              padding: EdgeInsets.symmetric(
+              padding: padding ?? EdgeInsets.symmetric(
                   vertical: Dimensions.d_15, horizontal: Dimensions.d_30),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
