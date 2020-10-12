@@ -14,7 +14,7 @@ import 'package:wakelock/wakelock.dart';
 
 class InformationPage extends StatefulWidget {
   final Function onCancelClick;
-  final AssetImage profilePic;
+  final String profilePic;
   final bool isSLI;
   final Transaction transaction;
 
@@ -133,11 +133,16 @@ class _InformationPageState extends State<InformationPage> {
                       child: Column(
                         children: <Widget>[
                           SizedBox(height: Dimensions.d_35),
-                          SizedBox(
-                            height: Dimensions.d_100,
-                            child: Image(
-                                image: this.widget.profilePic ??
-                                    AssetImage('images/avatar.png')),
+                          CircleAvatar(
+                            backgroundColor: Colours.lightGrey,
+                            radius: Dimensions.d_65,
+                            child: widget.profilePic == null ? Image(
+                              image: AssetImage('images/avatar.png'),
+                            ) : GetCachedNetworkImage(
+                              profilePicture: widget.profilePic,
+                              authToken: authToken,
+                              dimensions: Dimensions.d_120,
+                            ),
                           ),
                           SizedBox(height: Dimensions.d_15),
                           Text(

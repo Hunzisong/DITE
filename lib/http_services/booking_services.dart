@@ -19,9 +19,9 @@ class BookingServices {
 
     List<BookingRequest> bookingRequests = [];
     if (response.statusCode == 200) {
-      Map<String, dynamic> requestsBody = jsonDecode(response.body);
-      for (int i = 0; i < requestsBody['result'].length; i++) {
-        BookingRequest request = BookingRequest.fromJson(requestsBody['result'][i]);
+      List<dynamic> requestsBody = jsonDecode(response.body);
+      for (int i = 0; i < requestsBody.length; i++) {
+        BookingRequest request = BookingRequest.fromJson(requestsBody[i]);
         bookingRequests.add(request);
       }
     }

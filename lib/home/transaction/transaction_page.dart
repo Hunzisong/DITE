@@ -73,10 +73,11 @@ class _TransactionPageState extends State<TransactionPage>
 
   Future<void> _onRefresh() async {
     /// added get token again because token constantly changes
-    authToken = await AuthService.getToken();
-    List<Transaction> allRequests = await BookingServices().getAllTransactions(headerToken: authToken, isSLI: isSLI);
+    String _authToken = await AuthService.getToken();
+    List<Transaction> allRequests = await BookingServices().getAllTransactions(headerToken: _authToken, isSLI: isSLI);
     setState(() {
       transactionRequests = allRequests;
+      authToken = _authToken;
       separateTransactions();
     });
     print('Refreshing all booking requests ...');
@@ -122,8 +123,27 @@ class _TransactionPageState extends State<TransactionPage>
         ListTile(
           contentPadding: EdgeInsets.all(Dimensions.d_20),
           isThreeLine: true,
-          leading: Image(
-              image: AssetImage('images/avatar.png')),
+          leading: CircleAvatar(
+            backgroundColor: Colours.lightGrey,
+            radius: Dimensions.d_35,
+            child: isSLI
+                ? transaction.userProfilePicture ==
+                null
+                ? Image(
+                image: AssetImage('images/avatar.png'))
+                : GetCachedNetworkImage(
+              profilePicture: transaction.userProfilePicture,
+              authToken: authToken,
+              dimensions: Dimensions.d_55,)
+                : transaction.sliProfilePicture ==
+                null
+                ? Image(
+                image: AssetImage('images/avatar.png'))
+                : GetCachedNetworkImage(
+              profilePicture: transaction.sliProfilePicture,
+              authToken: authToken,
+              dimensions: Dimensions.d_55,),
+          ),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -146,6 +166,7 @@ class _TransactionPageState extends State<TransactionPage>
                         InformationPage(
                           isSLI: isSLI,
                           transaction: transaction,
+                          profilePic: isSLI ? transaction.userProfilePicture : transaction.sliProfilePicture,
                           onCancelClick: () async {
                             Navigator.pop(routeContext);
                             showLoadingAnimation(context: context);

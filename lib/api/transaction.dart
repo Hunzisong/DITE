@@ -9,6 +9,8 @@ class Transaction {
   String notes;
   String status;
   String hospitalName;
+  String sliProfilePicture;
+  String userProfilePicture;
   String createdAt;
   String updatedAt;
 
@@ -23,6 +25,8 @@ class Transaction {
         this.notes,
         this.status,
         this.hospitalName,
+        this.sliProfilePicture,
+        this.userProfilePicture,
         this.createdAt,
         this.updatedAt});
 
@@ -30,8 +34,10 @@ class Transaction {
     bookingId = json['booking_id'];
     uid = json['uid'];
     userName = json['user_name'];
+    userProfilePicture = json['user_profile_pic'] == 'test1' ? null : json['user_profile_pic'];
     sliName = json['sli_name'];
     sliId = json['sli_id'];
+    sliProfilePicture = json['sli_profile_pic'] == 'test1' ? null : json['sli_profile_pic'];
     date = json['date'].toString().substring(0, 10); // get date only
     time = json['time'].toString().substring(0, 5); // get hour & minute only
     formatDateTime(); // format time to have am and pm displayed, and date
@@ -47,8 +53,10 @@ class Transaction {
     data['booking_id'] = this.bookingId;
     data['uid'] = this.uid;
     data['user_name'] = this.userName;
+    data['user_profile_pic'] = this.userProfilePicture;
     data['sli_name'] = this.sliName;
     data['sli_id'] = this.sliId;
+    data['sli_profile_pic'] = this.sliProfilePicture;
     data['date'] = this.date;
     data['time'] = this.time;
     data['notes'] = this.notes;
