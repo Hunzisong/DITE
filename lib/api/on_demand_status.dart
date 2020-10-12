@@ -81,7 +81,7 @@ class Details {
     sliGender = json['sli_gender'];
     sliPhone = json['sli_phone'];
     sliDesc = json['sli_desc'];
-    sliProfilePicture = json['sli_profile_pic'] == 'test1' ? null : json['user_profile_pic'];
+    sliProfilePicture = json['sli_profile_pic'] == 'test1' ? null : json['sli_profile_pic'];
   }
 
   Map<String, dynamic> toJson() {

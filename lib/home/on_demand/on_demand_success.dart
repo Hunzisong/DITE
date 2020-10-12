@@ -215,7 +215,7 @@ class _OnDemandSuccessPageState extends State<OnDemandSuccessPage> {
                                               ),
                                               Expanded(
                                                 child: Text(
-                                                  ': ${onDemandStatus.details.sliGender}',
+                                                  ': ${onDemandStatus.details.sliGender == 'male' ? 'Lelaki' : 'Perempuan'}',
                                                   textAlign: TextAlign.left,
                                                 ),
                                               ),
