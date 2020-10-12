@@ -66,6 +66,8 @@ class _UserBookingResultSLIProfilePageState
       context: context,
       isSLI: false,
       height: Dimensions.d_160 * 3.5,
+      padding: EdgeInsets.symmetric(
+          vertical: Dimensions.d_15, horizontal: Dimensions.d_20),
       contentFlexValue: 5,
       buttonText: 'Mengesah',
       onClick: () {
@@ -77,21 +79,18 @@ class _UserBookingResultSLIProfilePageState
       },
       header: 'Pengesahan',
       content: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Flexible(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: Dimensions.d_20),
-              child: ListTile(
-                isThreeLine: true,
-                subtitle: ListView(
-                  children: <Widget>[
-                    RichTextField("Nama", widget.name),
-                    RichTextField("Jantina", widget.gender),
-                    RichTextField("Tarikh", widget.pickedDate),
-                    RichTextField("Masa", widget.pickedTime),
-                  ],
-                ),
+            child: ListTile(
+              isThreeLine: true,
+              subtitle: ListView(
+                children: <Widget>[
+                  RichTextField("Nama", widget.name),
+                  RichTextField("Jantina", widget.gender == 'female' ? 'Perempuan' : 'Lelaki'),
+                  RichTextField("Tarikh", widget.pickedDate),
+                  RichTextField("Masa", widget.pickedTime),
+                ],
               ),
             ),
           ),
@@ -219,14 +218,22 @@ class _UserBookingResultSLIProfilePageState
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             SizedBox(height: Dimensions.d_20),
-                            RichTextField("Jantina", widget.gender),
+                            RichTextField("Jantina", widget.gender == 'female' ? 'Perempuan' : 'Lelaki'),
+                            SizedBox(height: Dimensions.d_10),
                             RichTextField("Nombor Telefon", widget.sli.phoneNo),
+                            SizedBox(height: Dimensions.d_10),
                             RichTextField("Kemahiran Dalam Bidang Perubatan", widget.sli.experienced_medical == true? 'Mahir':'Tiada' ),
+                            SizedBox(height: Dimensions.d_10),
                             RichTextField("Kemahiran Menterjemah", widget.sli.experienced_bim == true? 'Mahir':'Tiada' ),
+                            SizedBox(height: Dimensions.d_10),
                             RichTextField("Pengalaman Dalam Bidang Perubatan", widget.sli.years_medical.toString()),
+                            SizedBox(height: Dimensions.d_10),
                             RichTextField("Pengalaman Menterjemah", widget.sli.years_bim.toString()),
+                            SizedBox(height: Dimensions.d_10),
                             RichTextField("Bahasa Isyarat ASL", widget.sli.asl_proficient == true ? 'Mahir' : 'Tiada'),
+                            SizedBox(height: Dimensions.d_10),
                             RichTextField("Bahasa Isyarat BIM", widget.sli.bim_proficient == true ? 'Mahir' : 'Tiada'),
+                            SizedBox(height: Dimensions.d_10),
                             RichTextField("Pendidikan", widget.sli.education.text.toString()),
                             SizedBox(height: Dimensions.d_20),
                           ],

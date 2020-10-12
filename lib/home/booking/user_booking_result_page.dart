@@ -210,7 +210,7 @@ class _UserBookingResultPageState extends State<UserBookingResultPage> {
                 ),
               ),
             title: RichTextField("Nama", name),
-            subtitle: RichTextField("Jantina", gender),
+            subtitle: RichTextField("Jantina", gender == 'female' ? 'Perempuan' : 'Lelaki'),
             isThreeLine: true,
           ),
         ),
