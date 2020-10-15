@@ -6,6 +6,9 @@ import 'package:heard/widgets/widgets.dart';
 import 'package:intl/intl.dart';
 
 class UserBookingPage extends StatefulWidget {
+  final PageController pageController;
+
+  UserBookingPage({this.pageController});
   @override
   _UserBookingPageState createState() => _UserBookingPageState();
 }
@@ -235,6 +238,9 @@ class _UserBookingPageState extends State<UserBookingPage> {
                       );
                       if (canResetSearchCriteria != null && canResetSearchCriteria) {
                         resetSearchCriteria();
+                        setState(() {
+                          widget.pageController.jumpToPage(2);
+                        });
                       }
                     },
                   ),

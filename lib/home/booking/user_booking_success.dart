@@ -75,7 +75,7 @@ class _UserBookingSuccessPageState extends State<UserBookingSuccessPage> {
         ],
       ),
       bottomNavigationBar: UserButton(
-        text: 'Balik Ke Laman Utama',
+        text: 'Menuju Ke Tab Transaksi',
         color: Colours.blue,
         padding: EdgeInsets.all(Dimensions.d_30),
         onClick: () {

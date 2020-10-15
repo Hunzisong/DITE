@@ -102,7 +102,7 @@ class _NavigationState extends State<Navigation> {
             ]
           : [
               OnDemandUserPage(),
-              UserBookingPage(),
+              UserBookingPage(pageController: pageController,),
               TransactionPage(),
               Profile(userDetails: userDetails)
             ];
