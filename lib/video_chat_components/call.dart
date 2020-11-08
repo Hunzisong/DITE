@@ -23,6 +23,11 @@ class _CallPageState extends State<CallPage> {
   final _infoStrings = <String>[];
   bool muted = false;
   bool isSLI = false;
+  String hoursStr = '00';
+  String minutesStr = '00';
+  String secondsStr = '00';
+  Stream<int> timerStream;
+  StreamSubscription<int> timerSubscription;
 
   @override
   void dispose() {
@@ -160,11 +165,32 @@ class _CallPageState extends State<CallPage> {
     final views = _getRenderViews();
     switch (views.length) {
       case 1:
+        if (timerStream != null) {
+          timerSubscription.cancel();
+          timerStream = null;
+        }
         return Container(
             child: Column(
               children: <Widget>[_videoView(views[0])],
             ));
       case 2:
+        if (timerStream == null) {
+          timerStream = stopWatchStream();
+          timerSubscription = timerStream.listen((int newTick) {
+            setState(() {
+              hoursStr = ((newTick / (60 * 60)) % 60)
+                  .floor()
+                  .toString()
+                  .padLeft(2, '0');
+              minutesStr = ((newTick / 60) % 60)
+                  .floor()
+                  .toString()
+                  .padLeft(2, '0');
+              secondsStr =
+                  (newTick % 60).floor().toString().padLeft(2, '0');
+            });
+          });
+        }
         return Container(
             child: Column(
               children: <Widget>[
@@ -193,50 +219,109 @@ class _CallPageState extends State<CallPage> {
     return Container();
   }
 
+  Stream<int> stopWatchStream() {
+    StreamController<int> streamController;
+    Timer timer;
+    Duration timerInterval = Duration(seconds: 1);
+    int counter = 0;
+
+    void stopTimer() {
+      if (timer != null) {
+        timer.cancel();
+        timer = null;
+        counter = 0;
+        streamController.close();
+      }
+    }
+
+    void tick(_) {
+      counter++;
+      streamController.add(counter);
+    }
+
+    void startTimer() {
+      timer = Timer.periodic(timerInterval, tick);
+    }
+
+    streamController = StreamController<int>(
+      onListen: startTimer,
+      onCancel: stopTimer,
+      onResume: startTimer,
+      onPause: stopTimer,
+    );
+
+    return streamController.stream;
+  }
+
   /// Toolbar layout
   Widget _toolbar() {
     return Container(
       alignment: Alignment.bottomCenter,
-      padding: const EdgeInsets.symmetric(vertical: 48),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          RawMaterialButton(
-            onPressed: _onToggleMute,
-            child: Icon(
-              muted ? Icons.mic_off : Icons.mic,
-              color: muted ? Colors.white : Colors.blueAccent,
-              size: 20.0,
-            ),
-            shape: CircleBorder(),
-            elevation: 2.0,
-            fillColor: muted ? Colors.blueAccent : Colors.white,
-            padding: const EdgeInsets.all(12.0),
+      padding: const EdgeInsets.symmetric(vertical: 24),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              RawMaterialButton(
+                onPressed: _onToggleMute,
+                child: Icon(
+                  muted ? Icons.mic_off : Icons.mic,
+                  color: muted ? Colors.white : Colors.blueAccent,
+                  size: 20.0,
+                ),
+                shape: CircleBorder(),
+                elevation: 2.0,
+                fillColor: muted ? Colors.blueAccent : Colors.white,
+                padding: const EdgeInsets.all(12.0),
+              ),
+              RawMaterialButton(
+                onPressed: () {
+                  if (timerSubscription != null) {
+                    timerSubscription.cancel();
+                  }
+                  _onCallEnd(context);
+                },
+                child: Icon(
+                  Icons.call_end,
+                  color: Colors.white,
+                  size: 35.0,
+                ),
+                shape: CircleBorder(),
+                elevation: 2.0,
+                fillColor: Colors.redAccent,
+                padding: const EdgeInsets.all(15.0),
+              ),
+              RawMaterialButton(
+                onPressed: _onSwitchCamera,
+                child: Icon(
+                  Icons.switch_camera,
+                  color: Colors.blueAccent,
+                  size: 20.0,
+                ),
+                shape: CircleBorder(),
+                elevation: 2.0,
+                fillColor: Colors.white,
+                padding: const EdgeInsets.all(12.0),
+              )
+            ],
           ),
-          RawMaterialButton(
-            onPressed: () => _onCallEnd(context),
-            child: Icon(
-              Icons.call_end,
-              color: Colors.white,
-              size: 35.0,
+          Padding(
+            padding: EdgeInsets.only(top: 10),
+            child: Container(
+              alignment: Alignment.center,
+              width: Dimensions.d_140,
+              child: Text(
+                "$hoursStr:$minutesStr:$secondsStr",
+                style: TextStyle(
+                    fontSize: 20.0,
+                    color: Colours.white,
+                    fontWeight: FontWeight.bold
+                ),
+              ),
             ),
-            shape: CircleBorder(),
-            elevation: 2.0,
-            fillColor: Colors.redAccent,
-            padding: const EdgeInsets.all(15.0),
           ),
-          RawMaterialButton(
-            onPressed: _onSwitchCamera,
-            child: Icon(
-              Icons.switch_camera,
-              color: Colors.blueAccent,
-              size: 20.0,
-            ),
-            shape: CircleBorder(),
-            elevation: 2.0,
-            fillColor: Colors.white,
-            padding: const EdgeInsets.all(12.0),
-          )
         ],
       ),
     );
@@ -260,24 +345,28 @@ class _CallPageState extends State<CallPage> {
   @override
   Widget build(BuildContext context) {
     Wakelock.enable();
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Video Call Room',
-               style: GoogleFonts.lato(
-                  fontSize: FontSizes.mainTitle,
-                  fontWeight: FontWeight.bold,
-                ),
-
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text('Video Call Room',
+                 style: GoogleFonts.lato(
+                    fontSize: FontSizes.mainTitle,
+                    fontWeight: FontWeight.bold,
+                  ),
+          ),
+          backgroundColor: isSLI ? Colours.orange : Colours.blue,
+          leading: SizedBox.shrink(),
         ),
-        backgroundColor: isSLI ? Colours.orange : Colours.blue,
-      ),
-      backgroundColor: Colors.black,
-      body: Center(
-        child: Stack(
-          children: <Widget>[
-            _viewRows(),
-            _toolbar(),
-          ],
+        backgroundColor: Colors.black,
+        body: Center(
+          child: Stack(
+            children: <Widget>[
+              _viewRows(),
+              _toolbar(),
+            ],
+          ),
         ),
       ),
     );
